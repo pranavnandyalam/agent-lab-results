@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+results/*.tmp
+*.safetensors
+*.bin
+*.pt
+*.gguf
+data/

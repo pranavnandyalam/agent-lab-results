@@ -32,5 +32,5 @@ Answer (Pranav, 2026-10-05 20:29 via owner message): A. `us.aws.cdn.hf.co` and `
 ### Q-20261006-1 [OPEN] OK to spend ~2-4 h CPU on small-judge-reversal core sweep?
 Context: projects/small-judge-reversal (plan rev 3) runs 4 small judges (0.5-1.7B) on RewardBench pairs, inference only, est. 2-4 h total across cycles, downloads <3 GB. Options: A) proceed B) cut to a smaller sweep C) pick another project. Default if unanswered in 48h: A.
 
-### Q-20261006-2 [OPEN] [team beta] OK to spend ~2-3 h CPU on quant-cot-looping core run?
-Context: Qwen3-0.6B fake-quantized, 30 GSM8K problems x 5 bit levels x 3 seeds, measured 61 tok/s -> ~2.7 h in resumable chunks (shares CPU with team main's small-judge sweep; I will not run both heavy jobs at once). Options: A) go ahead B) cut to ~1.5 h (24 problems, 4 levels) C) skip. Default if unanswered in 48h: A.
+### Q-20261006-2 [OPEN] [team beta] OK to spend ~2.15 h CPU on quant-cot-looping core run?
+Context: Qwen3-0.6B fake-quantized, 16 GSM8K problems x 4 bit levels x 3 seeds = 8 batches of ~15 min (measured 902 s/batch of 24 at 2048 tokens) + ~0.15 h dev; range 2.0-2.7 h, never concurrent with another heavy job. Options: A) go ahead B) cut to 3 levels (~1.5 h) C) skip. Default if unanswered in 48h: keep waiting (no run).

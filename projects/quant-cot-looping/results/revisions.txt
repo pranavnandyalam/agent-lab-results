@@ -1,0 +1,2 @@
+Qwen/Qwen3-0.6B c1899de289a04d12100db370d81485cdf75e47ca ~/models/hf/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca
+openai/gsm8k 740312add88f781978c0658806c59bc2815b9866 ~/models/hf/hub/datasets--openai--gsm8k/snapshots/740312add88f781978c0658806c59bc2815b9866
