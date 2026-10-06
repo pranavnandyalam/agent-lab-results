@@ -3,6 +3,12 @@ import os, sys, json, datetime
 from huggingface_hub import HfApi, snapshot_download
 
 CORE = ["Qwen/Qwen2.5-0.5B-Instruct", "Qwen/Qwen2.5-1.5B-Instruct", "Qwen/Qwen3-0.6B", "Qwen/Qwen3-1.7B"]
+PINNED = {
+    "Qwen/Qwen2.5-0.5B-Instruct": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "Qwen/Qwen2.5-1.5B-Instruct": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+    "Qwen/Qwen3-0.6B": "c1899de289a04d12100db370d81485cdf75e47ca",
+    "Qwen/Qwen3-1.7B": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+}
 RB = "allenai/reward-bench"
 RB_REV = "168d848cdbbea9764fae4a544dc9ca1e6cca4931"
 ALLOW = ["*.safetensors", "*.json", "tokenizer*", "merges.txt", "vocab.json", "LICENSE*"]
@@ -11,7 +17,7 @@ def main(out_md):
     api = HfApi()
     rows = []
     for m in CORE:
-        info = api.model_info(m)
+        info = api.model_info(m, revision=PINNED[m])
         sha = info.sha
         lic = (info.card_data or {}).get("license") if info.card_data else None
         files = [s.rfilename for s in info.siblings]
