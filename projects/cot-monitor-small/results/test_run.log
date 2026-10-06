@@ -1,0 +1,7 @@
+qwen2.5-0.5b v2 test: 1440 total, 0 done, 1440 to score
+scored 1440 in 657.6s = 2.190 passes/s; mean tokens 190
+qwen3-0.6b v2 test: 1440 total, 0 done, 1440 to score
+scored 1440 in 829.8s = 1.735 passes/s; mean tokens 194
+qwen2.5-1.5b v2 test: 1440 total, 0 done, 1440 to score
+qwen2.5-1.5b v2 test: 1440 total, 128 done, 1312 to score
+scored 1312 in 1894.3s = 0.693 passes/s; mean tokens 194

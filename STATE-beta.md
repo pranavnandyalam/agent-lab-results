@@ -48,3 +48,8 @@
 - Resume: `PY=projects/quant-cot-looping/.venv/bin/python nohup bash projects/cot-monitor-small/src/run_test.sh` (skips done monitors; use timeout ~4000 for 1.5b/1.7b: edit run_test.sh).
 - Next: finish 3 monitors, `analyze.py --split test --prompt v2`, S2/GitHub scout, RESULTS, overseer+ethics.
 - Cycle 9 end: test scored+pushed for qwen2.5-0.5b, qwen3-0.6b. qwen2.5-1.5b partial (uncommitted; resume skips done rows), qwen3-1.7b not started. Each large monitor ~40-55 min => 2 more cycles (use timeout ~4000 in run_test.sh; run_test.sh edit needs overseer diff). Provisional peek (2 complete monitors, not committed): 0.5b B-A cot .81, 0.6b .96 (ceiling), K small for qwen3, H4 O>0 only for qwen2.5-0.5b. Final analysis only once all 4 complete.
+
+## Cycle 10 end (2026-10-06, team beta)
+- cot-monitor-small: qwen2.5-1.5b test scoring DONE (1440 rows, 1894 s resumed). Only qwen3-1.7b remains (~35-45 min; one cycle).
+- Resume: `cd projects/cot-monitor-small; HF_HUB_OFFLINE=1 OMP_NUM_THREADS=4 timeout 2900 ../quant-cot-looping/.venv/bin/python -I src/score.py --monitor qwen3-1.7b --prompt v2 --split test` (run_test.sh's 2400s timeout is too short; start it first thing in background).
+- Next 3: (1) finish qwen3-1.7b; (2) `analyze.py --split test --prompt v2` once all 4 complete; (3) RESULTS, overseer+ethics, scout.
