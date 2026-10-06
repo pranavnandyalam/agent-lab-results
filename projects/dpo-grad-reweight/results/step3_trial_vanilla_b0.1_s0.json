@@ -1,0 +1,45 @@
+{
+  "args": {
+    "mode": "full",
+    "method": "vanilla",
+    "beta": 0.1,
+    "seed": 0,
+    "lr": 5e-06,
+    "n_dev": 50,
+    "n_train": 100,
+    "n_eval": 80,
+    "n_arc": 200,
+    "max_seq_len": 256,
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "dataset_id": "HuggingFaceH4/ultrafeedback_binarized",
+    "dataset_revision": "3949bf5f8c17c394422ccfab0c31ea9c20bdeb85",
+    "arc_dataset_id": "allenai/ai2_arc",
+    "arc_revision": "210d026faf9955653af8916fad021475a3f00453",
+    "hf_home": "/home/agent/models/hf_cache",
+    "out_json": "results/step3_trial_vanilla_b0.1_s0.json"
+  },
+  "n_train_truncated": 78,
+  "n_eval_truncated": 65,
+  "final_train_loss": 2.3394134044647217,
+  "mean_train_loss": 1.4096636394514643,
+  "metrics": {
+    "n_eval": 80,
+    "length_norm_logprob_acc": 0.4875,
+    "raw_sumlogprob_acc_secondary": 0.4625,
+    "implicit_reward_margin_sign_acc": 0.5,
+    "implicit_reward_margin_mean": 0.5679047344624997,
+    "chosen_logprob_drift_mean": -0.20395736740902065,
+    "kl_policy_ref_first_token_mean": 2.591669901460409,
+    "arc_easy_loglik_acc": 0.48,
+    "n_arc": 200
+  },
+  "timing": {
+    "load_s": 21.513241291046143,
+    "precompute_ref_s": 144.95791268348694,
+    "train_s": 371.54039454460144,
+    "eval_metrics_s": 111.2064995765686,
+    "eval_arc_s": 139.88369059562683,
+    "total_s": 789.1017446517944
+  }
+}

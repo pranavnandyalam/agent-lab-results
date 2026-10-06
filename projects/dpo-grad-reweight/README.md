@@ -29,12 +29,7 @@ Full transitive `pip freeze` recorded in `results/pip_freeze.txt`.
 bash fetch_data.sh
 ```
 
-**Currently BLOCKED** — see `results/fetch_notes.md`. Every Hugging Face LFS file
-(any model's `.safetensors`, this dataset's `.parquet` files) 302-redirects to
-`us.aws.cdn.hf.co` / `cas-server.xethub.hf.co` (HF's Xet storage CDN), which the
-sandbox network proxy rejects (403 Forbidden / approval required). Licenses and
-revision hashes were still confirmed via the metadata-only API (no file download
-needed):
+Unblocked 2026-10-05 (Pranav allow-listed the HF Xet CDN hosts, Q-20261005-1). Downloads succeed; cache is ~2.5 GB under `~/models/hf_cache` (not in git). Licenses and revision hashes:
 
 - Model `Qwen/Qwen2.5-0.5B-Instruct` rev `7ae557604adf67be50417f59c2c2f167def9a775`, license apache-2.0.
 - Dataset `HuggingFaceH4/ultrafeedback_binarized` rev `3949bf5f8c17c394422ccfab0c31ea9c20bdeb85`, license MIT.

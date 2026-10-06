@@ -7,7 +7,7 @@ tracked, `backlog.md` for the ranked project queue, and `STATE.md` for what's ha
 
 | slug | status | one-line summary |
 |---|---|---|
-| [dpo-grad-reweight](projects/dpo-grad-reweight/) | BLOCKED (infra) | Conceptual reconstruction of GAW-PO's gradient-aligned token-weighted DPO (arXiv:2610.01511); vanilla-DPO + GAW-PO-lite code implemented and pipeline-validated, but the mandatory timed trial can't run because the sandbox blocks Hugging Face's Xet CDN — see `questions.md` Q-20261005-1. |
+| [dpo-grad-reweight](projects/dpo-grad-reweight/) | ACTIVE (LR check, then 12-run grid) | Conceptual reconstruction ("GAW-PO-lite") of GAW-PO's gradient-aligned token-weighted DPO (arXiv:2610.01511) vs vanilla DPO on Qwen2.5-0.5B-Instruct, CPU only. Downloads unblocked; timed trial done, no results yet. |
 
 ## AI authorship
 
