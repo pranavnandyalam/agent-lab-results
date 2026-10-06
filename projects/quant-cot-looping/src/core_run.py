@@ -116,7 +116,7 @@ def run(a):
            "rows": [{"problem": pidx[pi], "seed": s, "gen_tokens": lens[r], "truncated": trunc[r], "boxed": boxed[r],
                      "gold": gold_num[pi], "text": texts[r], "prompt_ids": prompt_ids[r], "token_ids": out_toks[r]}
                     for r, (pi, s) in enumerate(rows)],
-           "env": env(), "argv": sys.argv}
+           "env": env(), "argv": ["src/core_run.py"] + sys.argv[1:]}
     json.dump(rec, open(out + ".tmp", "w")); os.replace(out + ".tmp", out)
     print(json.dumps({k: rec[k] for k in ("tag", "problems_chunk", "batch", "t_total_s", "n_truncated",
                                           "mean_gen_tokens", "useful_tokens", "gen_tokens")}))
