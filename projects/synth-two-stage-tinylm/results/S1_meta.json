@@ -1,0 +1,27 @@
+{
+ "tokens": 4260887,
+ "docs": 19602,
+ "truncated_docs": 0,
+ "refills": 6063,
+ "steps": 8897,
+ "batch": 512,
+ "seconds": 201.1,
+ "tok_per_s": 21188.5,
+ "ckpt": "ckpt/G0_8M_s0",
+ "ckpt_run_hash": "99d11e120dff2afdb260f5bded14cada1c90efd037eddc7bfd5fe3c22090861d",
+ "seed": 0,
+ "temperature": 1.0,
+ "max_doc": 2048,
+ "target_tokens": 4194304,
+ "out": "data/S1.bin",
+ "out_sha256": "65e5fba80a082ab14503c7dde258a8a6d69885a0cf5f70fa0f9ca9439fd89f80",
+ "doc_len_mean": 217.37001326395267,
+ "doc_len_pct50_90_99": [
+  207.0,
+  322.0,
+  567.0
+ ],
+ "doc_len_max": 1411,
+ "torch": "2.14.1+cpu",
+ "threads": 4
+}

@@ -1,0 +1,5 @@
+# 2026-10-06, run from project dir, python .venv (torch 2.14.1+cpu, see results/pip_freeze.txt), 4 threads
+for lr in 1e-3 3e-3 6e-3; do OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 300 .venv/bin/python -I src/train.py --plan plans/lr_dev_1M.json --ckpt ckpt/lr_dev_1M_lr${lr}_s0 --seed 0 --lr $lr --log_every 32 --eval R_dev=data/R_dev.bin; done
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 600 .venv/bin/python -I src/train.py --plan plans/G0_8M.json --ckpt ckpt/G0_8M_s0 --seed 0 --lr 3e-3 --log_every 64 --eval R_dev=data/R_dev.bin R_val=data/R_val.bin
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 120 .venv/bin/python -I src/sample.py --selftest --ckpt ckpt/G0_8M_s0 --meta results/sample_selftest.json
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 900 .venv/bin/python -I src/sample.py --ckpt ckpt/G0_8M_s0 --out data/S1.bin --tokens 4194304 --seed 0 --batch 512 --n_text 5 --meta results/S1_meta.json

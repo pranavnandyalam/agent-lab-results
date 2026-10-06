@@ -1,0 +1,27 @@
+{
+ "purpose": "LR sanity for G0, R_dev only (R_val not used)",
+ "plan": "plans/lr_dev_1M.json",
+ "seed": 0,
+ "runs": {
+  "1e-3": {
+   "R_dev_ppl": 96.21881374773356,
+   "R_dev_nll": 4.566624907653776,
+   "tok_per_s": 35470.1,
+   "final_loss": 4.5919
+  },
+  "3e-3": {
+   "R_dev_ppl": 93.7103804247658,
+   "R_dev_nll": 4.540208966723755,
+   "tok_per_s": 32809.9,
+   "final_loss": 4.5681
+  },
+  "6e-3": {
+   "R_dev_ppl": 156.4076181452631,
+   "R_dev_nll": 5.052465536293638,
+   "tok_per_s": 32201.7,
+   "final_loss": 5.0699
+  }
+ },
+ "chosen_lr": "3e-3",
+ "command": "for lr in 1e-3 3e-3 6e-3; do OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 300 .venv/bin/python -I src/train.py --plan plans/lr_dev_1M.json --ckpt ckpt/lr_dev_1M_lr${lr}_s0 --seed 0 --lr $lr --log_every 32 --eval R_dev=data/R_dev.bin; done"
+}

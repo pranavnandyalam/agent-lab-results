@@ -1,0 +1,8 @@
+{
+ "a_incremental_vs_full_maxabs": 1.430511474609375e-05,
+ "b_prefill_vs_full_maxabs": 1.049041748046875e-05,
+ "c_mixed_positions_maxabs": 1.621246337890625e-05,
+ "d_fullctx_maxabs": 1.811981201171875e-05,
+ "atol": 0.0001,
+ "pass": true
+}

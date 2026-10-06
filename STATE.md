@@ -1,5 +1,11 @@
 # STATE (loop: main)
 
+## Cycle 16 summary (2026-10-06)
+- synth-two-stage-tinylm: sampler (KV cache, selftest pass), LR check on R_dev (3e-3 best of 1e-3/3e-3/6e-3; 1M-token runs undertrained, may not transfer), G0 trained 8.4M tok (R_val ppl 15.43, report only), S1 corpus 4.26M tok sampled (21k tok/s). 0.75% empty docs in S1 (decide: filter before grid).
+- Next: (1) filter empty docs in S1, write arm-plan generator + run Family A grid in resumable chunks (N=1M,4M first; 3.4 h est total, cut N=2M); (2) check whether G0 should be fed LR retune at 8M; (3) analysis + RESULTS.
+- Data in data/ (gitignored); S1.bin regenerable via results/commands_G0_S1.txt. Nothing running.
+
+
 ## Cycle 15 summary (2026-10-06)
 - synth-two-stage-tinylm: pipeline built (fetch, BPE, GPT 0.79M non-emb, resumable trainer); timed trial 27.5k tok/s, full grid est 3.4 h (2.8 h without N=2M). Novelty scout: PARTLY TAKEN (Li&Zou ran a WikiText-103 LM test themselves); reframed as replication+extension (TinyStories, recency controls, N-scaling).
 - Next: (1) read 2609.09572 LM section in full; (2) write sampling (KV cache) + G0 training + synthetic corpus; LR tune on R_dev; (3) run grid in resumable chunks. Data in data/ (gitignored; rerun ./fetch_data.sh, src/tok.py if gone). Nothing running.

@@ -39,3 +39,8 @@ Record Semantic Scholar + GitHub queries, date, top hits, how each differs (S2 w
 
 ## Novelty check result (2026-10-06, scout, web-search only; S2 API 429, arXiv export timed out)
 Verdict PARTLY TAKEN, medium confidence. Li & Zou 2609.09572 themselves report a small-LM experiment (per search snippets, not fully read): ~16M 4-layer transformer on WikiText-103, DistilGPT-2 teacher, synthetic fractions 0.3/0.6/0.9; two-stage closer to real-only than mixed. Not found on TinyStories, nor with a real-token-budget axis, recency controls (reverse, mixed->real-tail) or Family A/B accounting. Other neighbours: 2609.38764 (abstract-data first phase), 2606.22942 (distillation), 2410.04840, 2404.01413, 2401.16380, 2510.08245. No GitHub repo found. Reframing: this is an independent replication + extension (recency controls, N-scaling), NOT a first test. To do: read the full text of 2609.09572's LM section before RESULTS.
+
+## Cycle 16 notes (overseer DIFF APPROVE)
+- Limitation: sampler restarts a full-context row from its last 127 tokens (6063 restarts); S1 docs shorter than real (mean 217 vs 250, p99 567 vs 718).
+- S1 has 147/19602 empty docs (0.75%); any filtering is a logged deviation producing a NEW file with new sha256.
+- LR 3e-3 chosen at 1M tokens (R_dev); arm-budget LR decisions must also use R_dev only.
