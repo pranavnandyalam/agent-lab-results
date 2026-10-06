@@ -10,3 +10,4 @@
 {"monitor": "qwen3-1.7b", "prompt": "v1", "split": "dev", "views": ["cot"], "n": 96, "sec": 120.31, "passes_per_s": 0.7979, "mean_tokens": 136.26041666666666, "batch": 8, "limit": 0, "out": "results/scores_dev_v1_qwen3-1.7b.jsonl"}
 {"monitor": "qwen3-1.7b", "prompt": "v2", "split": "dev", "views": ["cot"], "n": 96, "sec": 154.3, "passes_per_s": 0.6221, "mean_tokens": 174.26041666666666, "batch": 8, "limit": 0, "out": "results/scores_dev_v2_qwen3-1.7b.jsonl"}
 {"monitor": "qwen3-1.7b", "prompt": "v3", "split": "dev", "views": ["cot"], "n": 96, "sec": 125.77, "passes_per_s": 0.7633, "mean_tokens": 143.26041666666666, "batch": 8, "limit": 0, "out": "results/scores_dev_v3_qwen3-1.7b.jsonl"}
+{"monitor": "qwen2.5-0.5b", "prompt": "v2", "split": "test", "views": ["action", "cot", "both"], "n": 1440, "sec": 657.61, "passes_per_s": 2.1897, "mean_tokens": 190.47986111111112, "batch": 8, "limit": 0, "out": "results/scores_test_v2_qwen2.5-0.5b.jsonl"}

@@ -52,3 +52,10 @@ Additional prior work to cite: 2601.21112 (CoT-only monitor can beat CoT+action)
 - Dev and test share action/task/slot-phrase templates; only reasoning skeletons and instance tuples differ (4-gram overlap negligible).
 - Dev v1 on qwen2.5-0.5b is inverted (AUROC B vs A 0.21, compliance 1.0): report as a finding.
 - Runs reuse the quant-cot-looping venv via PY=... (same pins).
+
+## Pre-registration of analysis choices (2026-10-06, cycle 9; written BEFORE any test analysis was run; overseer DIFF review flagged these as unwritten)
+- H2 ceiling scope: GLOBAL, as coded. If the point estimate of AUROC(B vs A, CoT-only) exceeds 0.95 for ANY of the 4 monitors, H2 is declared ceiling-limited for both families. Per-pair flags and differences are reported alongside as exploratory.
+- K and Acue-minus-A (H3) use the CoT-only view as primary; CoT+action versions are secondary.
+- H1 BoW rule uses CV grouped by skeleton p (primary). CV grouped by family x p is also reported; RESULTS must disclose that on dev it gives 1.000 (wording leaks across families sharing skeletons). The skeleton-grouped rule is close to unfalsifiable with few training skeletons; stated as a limitation.
+- Action-only B vs A = 0.5 is a structural check (identical inputs), and P3 action-only D vs A equals P2 action-only C vs A by construction.
+- run_test.sh timeout (2400 s/monitor) may truncate the larger monitors; score.py resumes, rerun until 1440 rows; only complete files enter RESULTS.
