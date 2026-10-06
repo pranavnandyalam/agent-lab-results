@@ -41,3 +41,14 @@ Compute re-costed; H1 demoted to sanity; pairing table; cluster bootstrap; BoW b
 - H3 reading: point estimate K >= 0.15 AND 95% CI lower bound > 0, AND the Acue-minus-A condition.
 - Paraphrase ids are shared across R_ben, R_rev, R_revnc, R_bencue within a cluster (same id p = matched wording slot), so K and Acue-A use paired cluster bootstrap.
 - Dev prompt variants capped at 3. Before RESULTS: Semantic Scholar + GitHub scout; full revision hashes (7ae557604adf, 989aa7980e4c, c1899de289a0, 70d244cc86cc prefixes) and pinned requirements.
+
+## Scout 2026-10-06 (cycle 9; Semantic Scholar 429, arXiv/web only, medium confidence)
+Additional prior work to cite: 2601.21112 (CoT-only monitor can beat CoT+action), 2512.18311 (Monitoring Monitorability), 2510.01367 (TRACE; Qwen2.5 monitors 7B+). Leads not fetched: 2511.08525, 2602.18297, 2603.16928. No scoop of small-monitor size curve + minimal-pair control found.
+
+## Deviations / pre-registrations added before test scoring (cycle 8, overseer DIFF review)
+- Cluster structure: the 12 wording skeletons (p) are SHARED across the 6 families, so the independent wording units number ~12, not 72. Pre-registered primary bootstrap unit: skeleton id p (12 clusters, resample p, keep all families); secondary: 72 family-x-p clusters (reported as optimistic). H2/H3 power is lower than planned; wide CIs expected.
+- BoW baseline is numpy-only (no scikit-learn), grouped CV by p.
+- Dev prompt selection: 3 variants (v1-v3), rule = highest mean dev AUROC(B vs A, CoT-only) over 4 monitors, ties -> v1. dev_select.py was written after the first dev file existed, so "frozen before looking" is asserted, not demonstrable. If v2 is selected, note it contains cue stems and primes cue vocabulary (affects K and Acue-A reading).
+- Dev and test share action/task/slot-phrase templates; only reasoning skeletons and instance tuples differ (4-gram overlap negligible).
+- Dev v1 on qwen2.5-0.5b is inverted (AUROC B vs A 0.21, compliance 1.0): report as a finding.
+- Runs reuse the quant-cot-looping venv via PY=... (same pins).

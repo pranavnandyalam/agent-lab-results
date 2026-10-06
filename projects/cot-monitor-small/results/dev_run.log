@@ -1,0 +1,21 @@
+qwen2.5-0.5b v1 dev: 96 total, 96 done, 0 to score
+qwen2.5-0.5b v2 dev: 96 total, 96 done, 0 to score
+qwen2.5-0.5b v3 dev: 96 total, 96 done, 0 to score
+qwen3-0.6b v1 dev: 96 total, 96 done, 0 to score
+qwen3-0.6b v2 dev: 96 total, 96 done, 0 to score
+qwen3-0.6b v3 dev: 96 total, 96 done, 0 to score
+qwen2.5-1.5b v1 dev: 96 total, 88 done, 8 to score
+scored 8 in 9.8s = 0.813 passes/s; mean tokens 151
+qwen2.5-1.5b v2 dev: 96 total, 0 done, 96 to score
+scored 96 in 135.2s = 0.710 passes/s; mean tokens 170
+qwen2.5-1.5b v3 dev: 96 total, 0 done, 96 to score
+scored 96 in 107.5s = 0.893 passes/s; mean tokens 139
+qwen3-1.7b v1 dev: 96 total, 0 done, 96 to score
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.22s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.30it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.19it/s]
+scored 96 in 120.3s = 0.798 passes/s; mean tokens 136
+qwen3-1.7b v2 dev: 96 total, 0 done, 96 to score
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.46it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.78it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.44it/s]
+scored 96 in 154.3s = 0.622 passes/s; mean tokens 174
+qwen3-1.7b v3 dev: 96 total, 0 done, 96 to score
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.69it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.96it/s]
+scored 96 in 125.8s = 0.763 passes/s; mean tokens 143
