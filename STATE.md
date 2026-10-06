@@ -1,5 +1,9 @@
 # STATE (loop: main)
 
+## Cycle 11 summary (2026-10-06)
+- small-judge-reversal sweep: Qwen3-1.7B r2 and Qwen2.5-1.5B r0 DONE. Remaining: Qwen2.5-1.5B r1, r2 (~25-30 min each; same command as cycle 7 step 1, skip finished JSONs, timeout 1700).
+- Then: analysis, RESULTS, README, overseer/ethics. Nothing running.
+
 ## Cycle 10 summary (2026-10-06)
 - Q-20261006-1/-2 already marked ANSWERED (standing CPU approval).
 - Sweep: Qwen3-1.7B r0,r1 DONE (~25 min each). Remaining: Qwen3-1.7B r2, Qwen2.5-1.5B r0-r2 (same command as cycle 7 step 1; skip finished JSONs; use timeout 1500 per run, ~25 min each).
@@ -54,3 +58,4 @@
 - Blockers: none. (Q-20261005-1 answered A.)
 - Resume commands: nothing running at cycle end. Grid not started. Dev check: `.venv/bin/python src/train_dpo.py --mode dev_lr` (~14 min). Once LR is fixed:
   `cd projects/dpo-grad-reweight && OMP_NUM_THREADS=4 timeout 1500 .venv/bin/python src/train_dpo.py --mode full --method <vanilla|gawpolite> --beta <0.1|0.01> --seed <0|1|2> --lr <chosen> --n_train 50 --n_arc 100 --out_json results/grid_<method>_b<beta>_s<seed>.json`
+- Overseer notes for analysis: apply mass_AB threshold/report format compliance (Qwen3-1.7B r2: 102/400 mass_AB<0.5); Qwen2.5-1.5B strongly B-biased; update results/commands.md; note torch cu130 env on 0.5B r0.
