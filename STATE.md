@@ -1,5 +1,11 @@
 # STATE (loop: main)
 
+## Cycle 9 summary (2026-10-06)
+- Sweep: Qwen3-0.6B r0,r1,r2 DONE (~4-11 min each). Remaining: Qwen3-1.7B, Qwen2.5-1.5B x 3 resamples (each ~25 min?, one process at a time, skip finished JSONs; same command as cycle 7 step 1).
+- fetch.py now pins revisions, pyarrow added (overseer APPROVE). Novelty re-check done (scout): intact but narrower (2609.32407 closest; see PLAN.md). 0.5B dev A/B mass 0.9998 >= 0.5, so it stays in H1/H2 (not excluded).
+- Q-20261006-1 still OPEN (default proceed 2026-10-08 evening).
+- Next: finish sweep (1.7B, 1.5B), analysis, RESULTS, README, overseer/ethics. Write README early.
+
 ## Cycle 8 summary (2026-10-06)
 - Owner request done: `team: main` added to small-judge-reversal PLAN.md; CLAIMS.md created and pushed.
 - Sweep progress: Qwen2.5-0.5B-Instruct resamples 0,1,2 DONE (results/raw_*.json, ~9 min each). Remaining: Qwen2.5-1.5B, Qwen3-0.6B, Qwen3-1.7B x 3 resamples (same command as cycle 7 step 1; skip finished JSONs).
