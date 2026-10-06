@@ -282,12 +282,66 @@ def eval_arc_loglik(model, tokenizer, arc_items, max_len):
     return correct / len(arc_items) if arc_items else float("nan")
 
 
+DEV_LRS = (1e-6, 5e-6, 1e-5)  # pre-registered in PLAN.md; do not add more
+
+
+def run_dev_lr(args):
+    """PLAN.md dev-split LR sanity check: vanilla DPO on the 50 dev pairs only, 3 LRs.
+    Touches neither the eval split nor ARC. Dev-split sanity numbers, NOT results."""
+    t0 = time.time()
+    ref_model, tokenizer = common.load_model_and_tokenizer(args.model_id, args.model_revision, args.hf_home)
+    # n_train=n_eval=0 -> only the first n_dev shuffled indices are used (same dev split as full mode)
+    dev_pairs, _, _ = load_ultrafeedback_pairs(
+        args.dataset_id, args.dataset_revision, args.hf_home, args.n_dev, 0, 0
+    )
+    dev_cache = precompute_reference(ref_model, tokenizer, dev_pairs, args.max_seq_len)
+    per_lr = {}
+    for lr in DEV_LRS:
+        tl = time.time()
+        policy_model, _ = common.load_model_and_tokenizer(args.model_id, args.model_revision, args.hf_home)
+        losses = train_one_epoch(policy_model, dev_cache, args.beta, "vanilla", lr, args.seed)
+        train_s = time.time() - tl
+        metrics, _ = eval_metrics(policy_model, dev_cache, args.beta)
+        k = min(10, len(losses))
+        per_lr[f"{lr:g}"] = {
+            "lr": lr,
+            "mean_train_loss": sum(losses) / len(losses),
+            "first10_mean_loss": sum(losses[:k]) / k,
+            "last10_mean_loss": sum(losses[-k:]) / k,
+            "final_train_loss": losses[-1],
+            "train_losses": losses,
+            "metrics_on_dev": metrics,
+            "train_s": train_s,
+            "total_s": time.time() - tl,
+        }
+        del policy_model
+        print(f"[dev_lr] lr={lr:g} mean_loss={per_lr[f'{lr:g}']['mean_train_loss']:.4f} "
+              f"first10={per_lr[f'{lr:g}']['first10_mean_loss']:.4f} "
+              f"last10={per_lr[f'{lr:g}']['last10_mean_loss']:.4f} "
+              f"drift={metrics['chosen_logprob_drift_mean']:.4f}", flush=True)
+    result = {
+        "NOTE": "DEV-SPLIT SANITY NUMBERS ONLY (50 dev pairs, train==eval==dev). NOT RESULTS. "
+                "Do not report or compare as experimental results.",
+        "args": vars(args),
+        "method": "vanilla",
+        "ln2_init_loss": 0.6931471805599453,
+        "n_dev": len(dev_cache),
+        "per_lr": per_lr,
+        "timing": {"total_s": time.time() - t0},
+    }
+    out = args.out_json or str(RESULTS_DIR / "dev_lr_check.json")
+    with open(out, "w") as f:
+        json.dump(result, f, indent=2)
+    print(f"[dev_lr] wrote {out}")
+    return result
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--mode", choices=["full", "smoke_test"], default="smoke_test")
+    ap.add_argument("--mode", choices=["full", "smoke_test", "dev_lr"], default="smoke_test")
     ap.add_argument("--method", choices=["vanilla", "gawpolite"], default="vanilla")
     ap.add_argument("--beta", type=float, default=0.1)
     ap.add_argument("--seed", type=int, default=0)
@@ -306,6 +360,9 @@ def main():
     ap.add_argument("--hf_home", default=str(Path.home() / "models" / "hf_cache"))
     ap.add_argument("--out_json", default=None)
     args = ap.parse_args()
+
+    if args.mode == "dev_lr":
+        return run_dev_lr(args)
 
     common.set_all_seeds(args.seed)
     t0 = time.time()

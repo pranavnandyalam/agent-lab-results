@@ -1,4 +1,10 @@
-# PLAN: dpo-grad-reweight (rev 2 — revised after overseer REJECT)
+# PLAN: dpo-grad-reweight (rev 2 base; rev 4b extension appended)
+
+## What's new here (north-star novelty bar)
+A quantitative, small-model study of what GAW-PO-style token weights actually track: does a cheap proxy
+(logit-space, NTHR-style, or plain token overlap) recover a parameter-space gradient-alignment weight, and
+which rejected tokens does that weight down-weight? The vanilla-vs-GAW-PO-lite training comparison is a
+baseline only. See "PLAN rev 4b" for the literature check and design.
 
 ## Trend this responds to
 GAW-PO ("GAW-PO: Preference Optimization with Gradient-Aligned Token Weights", Dutulescu et al.,
@@ -137,8 +143,7 @@ revision hash, dataset revision hash, git commit.
   "GAW-PO-lite, our best-effort conceptual reconstruction" everywhere, never shortened to "replication."
 - No held-out generation-quality judge (no GPU/API budget) — logprob-based metrics are a proxy, weaker
   evidence than human/judge-rated win rate.
-- No related-work check yet of existing token-level DPO variants (e.g. TDPO, SePO) — add a quick
-  novelty-check scout pass before finalizing the write-up, to situate (or retract) any novelty claim.
+- Related-work check: done in rev 4b (see its list); NTHR's arXiv ID (overseer found 2505.18830, a GRPO paper) still needs confirming.
 - Cross-seed variance likely understates true uncertainty (see Reporting above).
 - An already-instruction/preference-tuned base checkpoint may compress method differences — note which
   checkpoint was actually used and flag this if it looks like it's suppressing all effects.
@@ -179,6 +184,85 @@ revision hash, dataset revision hash, git commit.
 - **Red flag**: trial mean train loss 1.41, final 2.34, above ln2=0.69 (init loss) -> lr 5e-6 with RMSprop at
   batch size 1 looks unstable. The pre-registered dev-split LR check (3 LRs max: 1e-6, 5e-6, 1e-5) was not
   yet implemented; a builder is adding `--mode dev_lr` and running it. LR is chosen on dev pairs only.
+
+## PLAN rev 4b (cycle 4) — baseline trimmed + original extension (after overseer REJECT of rev 4; fixes applied)
+
+Overseer REJECT fixes applied: NTHR cited + added as third proxy; GAW-PO D.2 controls acknowledged; extension
+moved off the eval split; LR rule pre-registered; metric details pinned; feasibility/time stop rules; middle-
+block second probe; What's-new at top of file; overlap formula pre-registered. Status: overseer APPROVED (re-review, cycle 4).
+
+### Closest prior work (scout + overseer checks 2026-10-06; IDs fetched by those agents, Lead re-verified none)
+- GAW-PO 2610.01511: true gradient probe (PiSSA rank-64), 7B, global direction over train set; qualitative
+  weight analysis (App. D.1) and uniform/random-weight controls (App. D.2, 3 runs each) - not a quantitative
+  token-property analysis and not a proxy-agreement test.
+- NTHR (Deng et al., NeurIPS 2025; GAW-PO's "closest work"): estimates gradient interactions cheaply from
+  hidden states x prediction errors. Our logit-error proxy is a reduced relative of this; we add an NTHR-style
+  proxy as a third weight and compare, instead of claiming the proxy idea is new. arXiv ID not yet fetched.
+- Gradient Entanglement 2410.13828 (theory), ADPO 2609.32445 (fixed frequency mask, token types),
+  OTPO 2505.18720 (overlap weights, upweights shared tokens), Gate-DPO 2605.02626 (probability gating, 0.5B
+  tested), TIS-DPO 2410.04350, TDPO 2404.11999, SePO 2408.13518.
+- Remaining claimed gap (narrowed): a quantitative agreement study between cheap token weights (logit proxy,
+  NTHR-style proxy, overlap) and a parameter-space gradient-alignment weight, and a breakdown of that weight by
+  token position/frequency/overlap/probability, on a <=0.5B model.
+
+### Extension work (forward/backward only, NO extra training)
+Data: the 50 DEV pairs plus 50 of the TRAIN pairs (never the eval split). Base (untrained) model.
+Per rejected token (first 64 tokens of each rejected response, 40 pairs max; pairs = first 20 dev + first 20 train-split pairs by index):
+1. s_true: parameter-space alignment: s_t = <grad_theta logp(y_t | rejected prefix), g_chosen>, theta = the
+   last transformer block (primary probe) and the middle block (second probe, to test whether last-block
+   proximity to the output inflates proxy agreement). g_chosen = alpha-weighted mean chosen-token gradient
+   (GAW-PO Eq. 7, alpha = 1/(2(1-p))) over the pair's chosen response (paired term) and over the whole analysis
+   batch (stand-in for GAW-PO's global term; labelled as such). Backward is cut at the input of the probed
+   block (detach earlier activations) to keep it cheap.
+2. Proxies: (a) logit-space cosine (rev-2 GAW-PO-lite score a_t), (b) NTHR-style: hidden-state-times-
+   prediction-error inner product with the same chosen aggregate, (c) overlap: 1 if the token id occurs in the
+   chosen response.
+Sign convention: all scores use gradients of the log-prob (so a positive score means pushing the rejected
+token down also pushes chosen down); the logit proxy's CE-gradient sign is flipped to match. Correlations use
+RAW scores before clipping or sigmoid. Spearman is computed within each pair, then averaged over pairs (with a
+pair-level bootstrap 95% CI), plus pooled over all tokens as a secondary number. The 0/1 overlap proxy is scored
+with AUROC against (s_true > median) rather than Spearman. Breakdowns of s_true by position decile, token-
+frequency bucket (counts from train-split rejected+chosen text), in-chosen vs not, and token-probability
+bucket. No directional claim; a null (proxy uncorrelated) is a reportable finding.
+Feasibility: timed trial on 3 pairs first; extrapolate. Budget 25 min CPU wall-clock, 4 threads; if projected
+beyond that, reduce pairs (not probes). Stop rule: abort and report infeasible if a 3-pair trial projects >45 min.
+Limitations: base model only; last/middle blocks, not PiSSA rank-64; the global term is a batch mean;
+last-block proximity may flatter the proxies (hence the middle-block probe).
+Optional (only if the cycle budget allows after the grid): one run per seed with overlap weighting
+w_t = 1 - 0.5*overlap_t on the rejected-side log-ratio, beta 0.01, 3 seeds.
+
+### Ethics conditions (APPROVE_WITH_CONDITIONS, rev 4) baked in
+README/RESULTS/figures carry the AI-authorship + not-peer-reviewed note; call the work "GAW-PO-lite / proxy
+analysis, not a replication", w_true is an approximation; null results in plain language with SE/MDE, the
+40-pair cap and the base-model-only caveat; record model/dataset revisions; note UltraFeedback completions are
+model-generated with mixed upstream prompts (possible upstream terms); no per-example text >15 words and no
+raw-data redistribution (ARC only as aggregates with attribution); no PII/toxicity screen done unless stated;
+scout citations flagged as not Lead-verified until checked.
+
+### LR selection rule (pre-registered here, before the dev run is read)
+Dev check = vanilla beta 0.1 seed 0 on the 50 dev pairs at lr in {1e-6, 5e-6, 1e-5} only. Choose the LARGEST lr
+whose dev mean loss is finite and < ln2 and whose dev implicit-margin mean is > 0 (policy moved in the intended
+direction). If none qualifies, report "no stable LR among the 3" and skip the grid; extension still runs.
+Disclosure: the Step 3 trial (lr 5e-6) logged eval-split metrics before the dev check; they are NOT used for any
+LR/design choice (only its timing and its training loss, a training-set quantity, informed the decision to run
+the dev check). Optimizer: RMSprop (the DPO paper's optimizer family) at batch size 1 (the DPO paper used 64; ours is a CPU shortcut and
+a likely cause of the instability below); chosen before looking at any results. "Dev mean loss" = mean loss while training
+one pass over the 50 dev pairs (each pair seen once, so it is an online loss); dev margin is measured after training on the
+same pairs (train==eval, only a movement check).
+
+### Dev LR check OUTCOME (cycle 4; results/dev_lr_check.json; dev-split sanity numbers, not results)
+vanilla, beta 0.1, seed 0, 50 dev pairs, one pass. Mean online loss: lr 1e-6 -> 0.80, 5e-6 -> 1.18, 1e-5 -> 2.36
+(ln2 = 0.693). First-10 vs last-10 loss: 0.64 -> 1.01 at 1e-6 (noisy one-pass online loss; no firm trend claimed). Chosen drift on dev:
++0.39, +0.31, -0.55. By the pre-registered rule above NO lr qualifies (none has mean loss < ln2): "no stable LR among
+the 3". Per the rule the 12-run grid is NOT run under this configuration. Not relaxed after seeing the numbers.
+Next (needs a new rev + overseer review, because it changes the design): the likeliest cause is RMSprop at batch size 1
+(step size ~lr per parameter regardless of gradient scale, large for a 0.5B model); a candidate fix is gradient
+accumulation to batch 8-16 and/or a lower lr, with a fresh pre-registered rule, chosen on dev pairs only.
+
+### Baseline trimming and total time
+Grid: 2 methods x 2 betas x 3 seeds, train pairs 50, ARC 100, ~83 min. Total this-project CPU: ~10 min dev check
++ ~83 min grid + <=25 min extension = ~118 min <= the 2 h cap, with no room for the optional overlap run; the
+optional run only proceeds if the cap is not exceeded.
 
 ## PLAN rev 3 (SHELVED, not executed) — synthetic no-download mechanistic pivot
 
