@@ -1,0 +1,83 @@
+{
+ "letter_share_A": {
+  "Qwen2.5-0.5B-Instruct": {
+   "better": {
+    "share_A": 1.0,
+    "n_passes": 600
+   },
+   "W1": {
+    "share_A": 1.0,
+    "n_passes": 600
+   },
+   "W2": {
+    "share_A": 1.0,
+    "n_passes": 200
+   },
+   "length": {
+    "share_A": 1.0,
+    "n_passes": 200
+   }
+  },
+  "Qwen2.5-1.5B-Instruct": {
+   "better": {
+    "share_A": 0.198,
+    "n_passes": 600
+   },
+   "W1": {
+    "share_A": 0.008,
+    "n_passes": 600
+   },
+   "W2": {
+    "share_A": 0.005,
+    "n_passes": 200
+   },
+   "length": {
+    "share_A": 0.04,
+    "n_passes": 200
+   }
+  },
+  "Qwen3-0.6B": {
+   "better": {
+    "share_A": 0.943,
+    "n_passes": 600
+   },
+   "W1": {
+    "share_A": 0.945,
+    "n_passes": 600
+   },
+   "W2": {
+    "share_A": 0.98,
+    "n_passes": 200
+   },
+   "length": {
+    "share_A": 0.99,
+    "n_passes": 200
+   }
+  },
+  "Qwen3-1.7B": {
+   "better": {
+    "share_A": 0.338,
+    "n_passes": 600
+   },
+   "W1": {
+    "share_A": 0.115,
+    "n_passes": 600
+   },
+   "W2": {
+    "share_A": 0.03,
+    "n_passes": 200
+   },
+   "length": {
+    "share_A": 0.785,
+    "n_passes": 200
+   }
+  }
+ },
+ "forward_seconds_sum": {
+  "Qwen2.5-0.5B-Instruct": 879,
+  "Qwen2.5-1.5B-Instruct": 3281,
+  "Qwen3-0.6B": 1153,
+  "Qwen3-1.7B": 3222
+ },
+ "forward_hours_total": 2.37
+}

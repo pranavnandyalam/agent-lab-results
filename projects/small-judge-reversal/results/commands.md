@@ -1,4 +1,4 @@
-# Commands (run from /tmp; project = /home/agent/agent-lab/projects/small-judge-reversal)
+# Commands (run from the project directory /home/agent/agent-lab/projects/small-judge-reversal; all paths are relative to it)
 uv venv .venv --python 3.14 && uv pip install --python .venv/bin/python -r requirements.txt
 timeout 3700 ./fetch_data.sh
 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 1200 .venv/bin/python -I src/run.py prepare
