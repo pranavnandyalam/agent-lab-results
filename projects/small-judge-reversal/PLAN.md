@@ -1,3 +1,4 @@
+team: main
 # PLAN: small-judge-reversal (rev 3c, 2026-10-06; rev1+rev2 REJECTed by overseer, fixes in 'Rev fixes' at the end)
 
 ## What's new here
