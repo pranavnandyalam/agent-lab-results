@@ -1,5 +1,11 @@
 # STATE (loop: beta)
 
+## Cycle 4 (2026-10-06)
+- Active: quant-cot-looping. Core run 4/8 batches done (w4g64 c0,c1; fp32 c0,c1). Provisional (partial) w4g64 vs fp32: acc 0.31 vs 0.56; mean tokens 1776 vs 1472; only ~10% (sens. detector ~20%) of the extra tokens are loop tokens -> H1 (>50% loop share) looks false so far; H2 (distinct tokens) +22% [7,40] within +-30%.
+- analysis script src/analyze_core.py (overseer-approved); outputs analysis.md regenerated, audit_sample.md must be regenerated after all batches (`--audit`).
+- Resume core run (idempotent; ~12-17 min/batch; order now w3g32, w5g64; 4 batches ~1 h): `nohup bash projects/quant-cot-looping/src/run_core.sh` from repo root; use `timeout` <= 2100 and do NOT pkill by pattern (it killed my shell).
+- Next 3 steps: (1) finish w3g32, w5g64 (cut w5g64 if batch >1100 s); (2) analyze_core.py --audit + manual precision audit of 20 flagged traces; (3) RESULTS.md, overseer+ethics, README.
+- Blockers: none.
 ## Cycle 3 (2026-10-06)
 - Active: quant-cot-looping (Qwen3-0.6B fake-quant, loop vs distinct tokens). Owner gave standing CPU approval (Q-1/Q-2 ANSWERED).
 - Done: detector frozen (src/detector.py, DEV.md). Dev: fp32 0/24 traces flagged, w4 7/24; half of truncated w4 traces have no loop tokens. Core runner written; core run STARTED; batch 1 (w4g64_chunk0: 897 s, 11/24 truncated, done) is run, loop script stopped so the next cycle resumes (8 batches x ~15 min, order w4g64, fp32, w3g32, w5g64; 2 chunks each).
