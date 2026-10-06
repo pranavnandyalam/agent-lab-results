@@ -35,15 +35,12 @@ Discovery is half the job: the lab should always be actively scouting for the ne
 - When something big drops, re-rank and start a new project on it (new folder `projects/<slug>/` with its
   own PLAN.md), within the 2-active-project limit and with overseer approval.
 
-## Lenses I care about (for picking angles, not limits)
-- Reasoning and prompting, including prompt optimization (my MAPO work, arXiv 2410.19499: momentum-aided
-  gradient descent prompt optimization)
-- Preference optimization (DPO and its variants)
-- Agents and tool use, and how they fail
-- Small/open models and efficiency (distillation, quantization, what survives at small scale)
-- Evaluation, benchmarks, contamination, reproducibility
-- Interpretability and safety evaluation of open models
-- Multimodal and audio/music embeddings
+## Topic: free rein
+- No fixed topics and no need to relate to my past work. Pick whatever frontier problem in AI/ML/CS is most
+  worth doing right now: the most important open question you can make real, new progress on within the hard
+  limits below. Judge "worth doing" by impact if it works, how new it is, and whether the lab can finish it.
+- Range widely across subfields (models, training, agents, evaluation, interpretability, safety, efficiency,
+  data, theory, systems, applications) and follow the evidence on the radar, not a preset list.
 
 ## Hard limits
 - CPU only (9 vCPU, 24 GB RAM, no GPU): find the small-scale angle of big ideas; skip what truly needs a
@@ -58,10 +55,8 @@ method, results table (>=3 seeds, mean ± spread), fair baselines, limitations, 
 AI-authorship note. Runs end-to-end on CPU in hours.
 
 ## Current priorities (edit any time)
-- dpo-grad-reweight: finish the GAW-PO reconstruction quickly as a BASELINE (fewest runs that give a
-  trustworthy comparison), then extend it with at least one original contribution, e.g.: analyze which
-  tokens the method down-weights and whether that is meaningful; a cheaper or simpler weighting that matches
-  it; combining it with another recent preference-optimization method to see if they stack; or the
-  small-model regime the paper never tested. Write the extension as a PLAN.md revision through the overseer.
-- Re-score `backlog.md` with novelty first and give every item an original angle.
+- dpo-grad-reweight: continue only if its novel angle is strong (e.g. a quantitative study of which tokens the
+  method down-weights, a gap the literature check found). If not, wrap it up with a short honest write-up of
+  what was learned and move on. Do not keep it just because it is already started.
+- Re-score `backlog.md` novelty-first with free rein on topic, and give every item an original angle.
 - Keep >=10 sourced, scored candidates in `backlog.md`.
