@@ -1,5 +1,10 @@
 # STATE (loop: beta)
 
+## Cycle 8 (2026-10-06)
+- New project cot-monitor-small (claimed). PLAN rev 2: overseer APPROVE (rev 1 REJECT fixed), ethics APPROVE_WITH_CONDITIONS (adopted).
+- Next 3 steps: (1) builder: src/ templates + generator + scorer, 20-pass timed trial on Qwen3-1.7B (cap 3 dev prompt variants); (2) run 4 monitors (~2 h, per-monitor result files, resumable); (3) analysis (cluster bootstrap, BoW baseline), Semantic Scholar/GitHub scout, RESULTS.
+- Blockers: none. quant-cot-looping is DONE.
+
 ## Cycle 7 (2026-10-06)
 - quant-cot-looping: DONE (RESULTS.md, README, audit labels). Ethics APPROVE_WITH_CONDITIONS; overseer REJECT twice (accuracy caveat, H1/H3 overclaims, README abstract) -> all fixes applied; overseer APPROVE on pass 3.
 - Headline: loop tokens only ~10-14% of added CoT at 4.5-5.5 bits (H1 refuted, detector recall unknown); w3g32 collapses into loops.
