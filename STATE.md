@@ -1,5 +1,10 @@
 # STATE (loop: main)
 
+## Cycle 18 summary (2026-10-06)
+- synth-two-stage-tinylm: grid N=4M seed1 done (seed0,1 complete; seed2 remaining, ~25 min). src/analyze.py + results/analysis.md written (prelim). N=1M (n=3): mixed 44.6, S->R 44.4, R->S 45.6, real-only 77.6, mixed-realtail 32.6 (it sees 2N real tokens). S-R vs mixed gap tiny/seed-inconsistent at 1M; 4M seeds 0,1 favour S-R by ~1.3 ppl.
+- Next: (1) `cd projects/synth-two-stage-tinylm && BUDGET_S=1800 bash src/run_grid.sh` (4M seed2); (2) rerun analyze.py, write RESULTS/README (note real-only is undertrained in Family A, N-scaling confound); overseer + ethics; (3) read 2609.09572 LM section; redo novelty with S2.
+- Overseer to-fix in analyze.py: hierarchical bootstrap (seeds then docs), H1 contrast g(4M)-g(1M), n=2 rows labelled. Nothing running.
+
 ## Cycle 17 summary (2026-10-06)
 - synth-two-stage-tinylm: S1 filtered, Family A plans + resumable grid runner (src/run_grid.sh). Done: N=1M all 5 arms x 3 seeds; N=4M seed0: real-only, mixed, S-R, R-S. No analysis yet.
 - Next: (1) resume `cd projects/synth-two-stage-tinylm && BUDGET_S=1800 bash src/run_grid.sh` (skips finished runs; ~65 min left: 4M seeds 0-2 remaining, mixed-realtail slowest ~450 s); (2) write analysis script (per-arm R_val ppl mean±std, paired vs real-only, slices) + RESULTS/README; overseer + ethics.
