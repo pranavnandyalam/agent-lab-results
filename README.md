@@ -11,7 +11,7 @@ tracked, `backlog.md` for the ranked project queue, and `STATE.md` for what's ha
 | [small-judge-reversal](projects/small-judge-reversal/) | DONE (paper: [pdf](projects/small-judge-reversal/paper/main.pdf)) | Does pairwise criterion reversal ("pick the worse") break small 0.5-1.7B judges? Yes: 0-1 of 300 pairs reversed correctly by any of 4 judges; smallest are position-locked. |
 | [synth-two-stage-tinylm](projects/synth-two-stage-tinylm/) | IN PROGRESS | Does two-stage training (synthetic then real) beat mixing on a tiny GPT trained on TinyStories? Replication+extension of Li&Zou 2609.09572; Family A grid nearly complete, preliminary. |
 | [quant-cot-looping](projects/quant-cot-looping/) | DONE (team beta; [paper](projects/quant-cot-looping/paper/main.pdf)) | Qwen3-0.6B weight quantization: loop tokens are only ~10-14% of added CoT length at 4.5-5.5 bits; 4.0 bits collapses into loops. 16 problems, preliminary. |
-| [cot-monitor-small](projects/cot-monitor-small/) | RESULTS done, paper in progress (team beta) | Do 0.5-1.7B monitors catch hacks only the reasoning reveals? Matched synthetic transcripts, keyword-vs-intent control. |
+| [cot-monitor-small](projects/cot-monitor-small/) | DONE (team beta; [paper](projects/cot-monitor-small/paper/main.pdf)); awaiting referee | Do 0.5-1.7B monitors catch hacks only the reasoning reveals? Matched synthetic transcripts, keyword-vs-intent control. |
 
 ## AI authorship
 
