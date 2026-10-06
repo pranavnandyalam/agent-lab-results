@@ -1,0 +1,1 @@
+{"phases": [{"mode": "interleave", "sources": [{"bin": "data/R_train.bin", "offset": 4182671, "tokens": 4194304}, {"bin": "data/S1f.bin", "offset": 0, "tokens": 4194304}]}, {"mode": "concat", "sources": [{"bin": "data/R_train.bin", "offset": 0, "tokens": 4194304}]}]}

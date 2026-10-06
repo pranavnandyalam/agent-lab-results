@@ -44,3 +44,10 @@ Verdict PARTLY TAKEN, medium confidence. Li & Zou 2609.09572 themselves report a
 - Limitation: sampler restarts a full-context row from its last 127 tokens (6063 restarts); S1 docs shorter than real (mean 217 vs 250, p99 567 vs 718).
 - S1 has 147/19602 empty docs (0.75%); any filtering is a logged deviation producing a NEW file with new sha256.
 - LR 3e-3 chosen at 1M tokens (R_dev); arm-budget LR decisions must also use R_dev only.
+
+## Cycle 17 deviations (logged; overseer DIFF APPROVE)
+- S1 filtered to S1f: 147 empty docs dropped (new sha256 ad7a66bd...); see results/S1_filter.json.
+- At N=4M, REAL2 overlaps REAL by 11,633 tokens (R_train 8,376,976 tok < 2N+1), so mixed-realtail_N4M sees those tokens twice.
+- Semantic Scholar/GitHub novelty check was web-only (S2 returned 429); redo or note before RESULTS.
+- S-R_N1M_s1 was resumed from a checkpoint: train_log.jsonl has duplicate step 224 (de-dup by step); train_seconds_this_session is partial.
+- R_dev is recorded per run but must not be used for arm comparisons.

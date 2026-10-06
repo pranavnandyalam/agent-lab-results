@@ -1,5 +1,10 @@
 # STATE (loop: main)
 
+## Cycle 17 summary (2026-10-06)
+- synth-two-stage-tinylm: S1 filtered, Family A plans + resumable grid runner (src/run_grid.sh). Done: N=1M all 5 arms x 3 seeds; N=4M seed0: real-only, mixed, S-R, R-S. No analysis yet.
+- Next: (1) resume `cd projects/synth-two-stage-tinylm && BUDGET_S=1800 bash src/run_grid.sh` (skips finished runs; ~65 min left: 4M seeds 0-2 remaining, mixed-realtail slowest ~450 s); (2) write analysis script (per-arm R_val ppl mean±std, paired vs real-only, slices) + RESULTS/README; overseer + ethics.
+- Nothing running at cycle end.
+
 ## Cycle 16 summary (2026-10-06)
 - synth-two-stage-tinylm: sampler (KV cache, selftest pass), LR check on R_dev (3e-3 best of 1e-3/3e-3/6e-3; 1M-token runs undertrained, may not transfer), G0 trained 8.4M tok (R_val ppl 15.43, report only), S1 corpus 4.26M tok sampled (21k tok/s). 0.75% empty docs in S1 (decide: filter before grid).
 - Next: (1) filter empty docs in S1, write arm-plan generator + run Family A grid in resumable chunks (N=1M,4M first; 3.4 h est total, cut N=2M); (2) check whether G0 should be fed LR retune at 8M; (3) analysis + RESULTS.

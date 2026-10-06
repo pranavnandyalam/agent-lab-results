@@ -1,0 +1,55 @@
+{
+ "ctx": 256,
+ "R_train_tokens": 8376976,
+ "S1f_tokens": 4260740,
+ "N": {
+  "1M": {
+   "N": 1048576,
+   "windows": 4096,
+   "REAL": [
+    0,
+    1048576
+   ],
+   "SYN": [
+    0,
+    1048576
+   ],
+   "REAL2": [
+    1048576,
+    2097152
+   ],
+   "REAL2_overlap_with_REAL_tokens": 0,
+   "total_tokens": {
+    "real-only": 1048576,
+    "mixed": 2097152,
+    "S-R": 2097152,
+    "R-S": 2097152,
+    "mixed-realtail": 3145728
+   }
+  },
+  "4M": {
+   "N": 4194304,
+   "windows": 16384,
+   "REAL": [
+    0,
+    4194304
+   ],
+   "SYN": [
+    0,
+    4194304
+   ],
+   "REAL2": [
+    4182671,
+    8376975
+   ],
+   "REAL2_overlap_with_REAL_tokens": 11633,
+   "total_tokens": {
+    "real-only": 4194304,
+    "mixed": 8388608,
+    "S-R": 8388608,
+    "R-S": 8388608,
+    "mixed-realtail": 12582912
+   }
+  }
+ }
+}

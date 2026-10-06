@@ -1,0 +1,16 @@
+{
+ "inp": "data/S1.bin",
+ "inp_sha256": "65e5fba80a082ab14503c7dde258a8a6d69885a0cf5f70fa0f9ca9439fd89f80",
+ "inp_tokens": 4260887,
+ "inp_docs": 19602,
+ "empty_docs_dropped": 147,
+ "eod_tokens_dropped": 147,
+ "out": "data/S1f.bin",
+ "out_sha256": "ad7a66bda5752b236bf58d890d446af9b447c6386be496644af5cf53500df561",
+ "out_tokens": 4260740,
+ "out_docs": 19455,
+ "out_doc_len_mean": 218.00488306347984,
+ "out_doc_len_min": 1,
+ "out_ge_4M_plus1": true,
+ "rule": "drop every <|eod|> whose previous token is <|eod|> (or that is at index 0); nonempty docs unchanged"
+}

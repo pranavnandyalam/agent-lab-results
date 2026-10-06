@@ -1,0 +1,40 @@
+{
+ "steps": 256,
+ "train_tokens": 2097152,
+ "train_seconds_this_session": 63.7,
+ "tok_per_s_this_session": 32904.9,
+ "seed": 0,
+ "run_hash": "8037496605b59defbc6c4b7c926c670ecb9f0dade09fa8f2a3a6e7cad5b3ab16",
+ "args": {
+  "plan": "plans/A_mixed_N1M.json",
+  "ckpt": "ckpt/grid/mixed_N1M_s0",
+  "seed": 0,
+  "lr": 0.003,
+  "bs": 32,
+  "wd": 0.1,
+  "d": 128,
+  "layers": 4,
+  "heads": 4,
+  "ctx": 256,
+  "vocab": 2048,
+  "ckpt_every": 200,
+  "log_every": 32,
+  "eval": [
+   "R_val=data/R_val.bin",
+   "R_dev=data/R_dev.bin"
+  ],
+  "eval_max_tokens": null
+ },
+ "eval": {
+  "R_val": {
+   "ppl": 44.14294181571308,
+   "nll": 3.787433045995905,
+   "seconds": 3.3
+  },
+  "R_dev": {
+   "ppl": 44.46792655582439,
+   "nll": 3.7947681777514113,
+   "seconds": 3.3
+  }
+ }
+}

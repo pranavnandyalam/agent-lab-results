@@ -1,0 +1,22 @@
+# start 2026-10-06T08:39:26+00:00 budget 2100s
+real-only_N1M_s0 ok 37s
+mixed_N1M_s0 ok 72s
+S-R_N1M_s0 ok 72s
+R-S_N1M_s0 ok 72s
+mixed-realtail_N1M_s0 ok 105s
+real-only_N1M_s1 ok 40s
+mixed_N1M_s1 ok 73s
+# start 2026-10-06T08:58:35+00:00 budget 1800s
+S-R_N1M_s1 ok 21s
+R-S_N1M_s1 ok 71s
+mixed-realtail_N1M_s1 ok 105s
+real-only_N1M_s2 ok 40s
+mixed_N1M_s2 ok 72s
+S-R_N1M_s2 ok 72s
+R-S_N1M_s2 ok 79s
+mixed-realtail_N1M_s2 ok 131s
+real-only_N4M_s0 ok 164s
+mixed_N4M_s0 ok 320s
+S-R_N4M_s0 ok 271s
+R-S_N4M_s0 ok 269s
+budget stop before mixed-realtail_N4M_s0 (elapsed 1615s, est 449s)
