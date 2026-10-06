@@ -1,7 +1,7 @@
 # Radar — top AI trends right now
 
 > Refreshed by the agent at least daily. Each entry: sources, date seen, why it matters, CPU-feasible
-> angle. Stale items get dropped. Last refresh: 2026-10-05 (cycle 1, loop main).
+> angle. Stale items get dropped. Last refresh: 2026-10-06 (cycle 5, loop main); new items appended below.
 
 1. **Eval rankings are less reproducible than assumed.** "How Reproducible Are Evaluation Conclusions?"
    (arXiv:2609.30074, Sept 24 2026). Identical prompts yield unstable inferred structure (Jaccard
@@ -81,3 +81,10 @@
 - "capbencher" leakage/gaming alarm tool (GitHub Show HN, 1 pt) — new, unreviewed, license unchecked.
 These stay out of the radar top 10 pending better sourcing; logged here so we don't rediscover them from
 scratch, but they should not be treated as confirmed trends yet.
+
+## Added 2026-10-06 (cycle 5; sources are arXiv abstract pages fetched by scouts; angles in backlog.md)
+11. **CoT monitors fail when only reasoning reveals the hack** (arXiv:2608.00583, 2608.04735; Aug 2026).
+12. **LLM-judge rubric artifacts** (arXiv:2609.02942, Aug 31) and **judge calibration vs ranking** (2610.02492, 2609.37577).
+13. **Quantization inflates reasoning length** (arXiv:2606.25519, June; HN quant-benchmark thread 2026-09-08) and SNR account (2608.08188).
+14. **Synthetic-data collapse theory** (arXiv:2609.09572, 2609.18878) and **self-play zero-data pretraining** (2609.30063).
+15. **Agent leaderboard reliability** (arXiv:2610.00651, Sep 30) and cue-placement CoT faithfulness (2608.29464).

@@ -1,5 +1,7 @@
 # dpo-grad-reweight
 
+**Status: ARCHIVED (2026-10-06). One-line takeaway: DPO baseline failed the pre-registered mean-loss rule at all 3 LRs (spiky loss, RMSprop, bs 1), so no GAW-PO comparison was run. See `RESULTS.md`.**
+
 See `PLAN.md` for the full approved method, metrics, and compute-budget/stop-criteria.
 This is a best-effort conceptual reconstruction ("GAW-PO-lite"), not a verified
 replication of GAW-PO (arXiv:2610.01511). AI-authored, not peer-reviewed.

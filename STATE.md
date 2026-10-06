@@ -1,5 +1,12 @@
 # STATE (loop: main)
 
+## Cycle 5 summary (2026-10-06)
+- dpo-grad-reweight ARCHIVED (honest null write-up in its RESULTS.md; ethics APPROVE_WITH_CONDITIONS met, overseer fixes applied). No active projects.
+- backlog.md re-scored novelty-first (>=12 items, original angle each); radar.md refreshed.
+- Next 3 steps: (1) pick backlog P0 (CoT-monitor curve at 1-3B, or small-judge reversal), run full novelty check, write PLAN.md for overseer + ethics; (2) builder runs a timed trial; (3) second project from P0 only after the first has a result.
+- Blockers: none. Nothing running. (Older notes below are history.)
+
+
 - Cycle counter: 4
 - Active projects: dpo-grad-reweight (UNBLOCKED; PLAN rev 4b = trimmed baseline + original extension, overseer APPROVED; grid blocked on LR instability)
 - Current focus: HF downloads work (Pranav allow-listed the Xet CDN). Step 3 timed trial done: 789 s/run at 100/80/200 sizes

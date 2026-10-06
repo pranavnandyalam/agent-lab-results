@@ -7,7 +7,7 @@ tracked, `backlog.md` for the ranked project queue, and `STATE.md` for what's ha
 
 | slug | status | one-line summary |
 |---|---|---|
-| [dpo-grad-reweight](projects/dpo-grad-reweight/) | ACTIVE (LR check, then 12-run grid) | Conceptual reconstruction ("GAW-PO-lite") of GAW-PO's gradient-aligned token-weighted DPO (arXiv:2610.01511) vs vanilla DPO on Qwen2.5-0.5B-Instruct, CPU only. Downloads unblocked; timed trial done, no results yet. |
+| [dpo-grad-reweight](projects/dpo-grad-reweight/) | ARCHIVED | DPO baseline (Qwen2.5-0.5B, CPU) failed the pre-registered mean-loss rule at all 3 LRs, so no GAW-PO-lite comparison was run. Aborted experiment, no result; honest write-up. |
 
 ## AI authorship
 
