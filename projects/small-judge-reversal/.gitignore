@@ -3,3 +3,7 @@ __pycache__/
 *.pt
 *.safetensors
 data/
+.pytest_cache/
+*.bin
+*.gguf
+*.jsonl

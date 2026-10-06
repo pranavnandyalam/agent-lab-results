@@ -1,0 +1,50 @@
+{
+ "trial_model": "Qwen2.5-0.5B-Instruct",
+ "trial_sec_per_pass_wall": 0.48621711168750037,
+ "trial_mean_prompt_tokens": 233.15,
+ "eval300_mean_prompt_tokens_core_qwen25_template": 254.69333333333333,
+ "params_total_nonemb": {
+  "Qwen2.5-0.5B-Instruct": [
+   494032768,
+   357898112
+  ],
+  "Qwen2.5-1.5B-Instruct": [
+   1543714304,
+   1310340608
+  ],
+  "Qwen3-0.6B": [
+   751632384,
+   440467456
+  ],
+  "Qwen3-1.7B": [
+   2031739904,
+   1409410048
+  ]
+ },
+ "projected_sec_per_pass": {
+  "Qwen2.5-0.5B-Instruct": 0.5311441428239121,
+  "Qwen2.5-1.5B-Instruct": 1.9446309318433166,
+  "Qwen3-0.6B": 0.653682435069535,
+  "Qwen3-1.7B": 2.091656442804506
+ },
+ "projections": [
+  {
+   "config": "full plan: 300 pairs x4 + W2 100x2 + length 100x2",
+   "passes_per_model": 1600,
+   "projected_hours": 2.320495090018342
+  },
+  {
+   "config": "cut 1: resamples 0,1 only (200 pairs, flagged)",
+   "passes_per_model": 1200,
+   "projected_hours": 1.7403713175137565
+  },
+  {
+   "config": "cut 2: + drop W2 and length control",
+   "passes_per_model": 800,
+   "projected_hours": 1.160247545009171
+  }
+ ],
+ "cut_rule_decision": "full plan: 300 pairs x4 + W2 100x2 + length 100x2",
+ "extensions_allowed(core<=1.5h)": false,
+ "note": "Scaling by non-embedding params is an approximation; small models carry fixed overhead, so larger-model times may deviate. Qwen3 template adds an empty think block (+~4 tokens). Threads=4."
+}

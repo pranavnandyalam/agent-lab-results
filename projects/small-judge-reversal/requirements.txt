@@ -1,0 +1,10 @@
+# Pinned top-level deps for small-judge-reversal (Python 3.14.4, CPU-only, aarch64).
+# Install: uv venv .venv --python 3.14 && uv pip install --python .venv/bin/python -r requirements.txt
+# Full transitive freeze in results/pip_freeze.txt.
+torch==2.14.1
+transformers==4.57.6
+datasets==4.8.5
+numpy==2.3.5
+safetensors==0.8.0
+huggingface_hub==0.36.0
+pytest==8.4.2

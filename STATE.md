@@ -1,5 +1,12 @@
 # STATE (loop: main)
 
+## Cycle 7 summary (2026-10-06)
+- small-judge-reversal: PLAN rev 3c overseer APPROVED; harness (src/, tests 7 pass) + 20-pair trial built, overseer DIFF APPROVE. Trial: 0.5B answers 'A' every time (position-locked, plausible). Projected core sweep 2.3 h (full plan, no cuts, no extensions).
+- Q-20261006-1 still OPEN (default proceed after 48h, i.e. from 2026-10-08 ~21:30 EDT).
+- Next 3 steps: (1) run sweep in resumable chunks, each <=40 min per cycle: `cd projects/small-judge-reversal; for M in Qwen2.5-0.5B-Instruct Qwen2.5-1.5B-Instruct Qwen3-0.6B Qwen3-1.7B; for s in 0 1 2: OMP_NUM_THREADS=4 timeout 2400 .venv/bin/python -I src/run.py run --model $M --resample $s` (skip finished JSONs; if the venv is gone, see results/commands.md); (2) write analysis (H1 alpha=0.025, dev mass<0.5 exclusion, length control truth from actual lengths; expect H1 possibly 'inconclusive' n<30); (3) RESULTS + README, overseer/ethics.
+- Fixes noted: fetch.py downloads latest not pinned rev; add pyarrow to requirements; chat subset tiny (limitation).
+- Blockers: none. Nothing running.
+
 ## Cycle 6 summary (2026-10-06)
 - New project small-judge-reversal (backlog P0). Scouts: judge-reversal PARTLY novel (closest: 2609.02942, GRP 2503.06139); CoT-monitor idea PARTLY taken by 2608.00583 (kept in backlog, demoted).
 - PLAN rev 3b: overseer REJECTed rev 1,2,3 (rev 3 for missing PRIN 2504.01282, compute arithmetic, conflicting cut rules); all fixed in 3b, NOT yet re-reviewed. Ethics APPROVE_WITH_CONDITIONS.
