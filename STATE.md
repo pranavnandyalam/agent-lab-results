@@ -1,5 +1,12 @@
 # STATE (loop: main)
 
+## Cycle 8 summary (2026-10-06)
+- Owner request done: `team: main` added to small-judge-reversal PLAN.md; CLAIMS.md created and pushed.
+- Sweep progress: Qwen2.5-0.5B-Instruct resamples 0,1,2 DONE (results/raw_*.json, ~9 min each). Remaining: Qwen2.5-1.5B, Qwen3-0.6B, Qwen3-1.7B x 3 resamples (same command as cycle 7 step 1; skip finished JSONs).
+- Q-20261006-1 still OPEN (default proceed 2026-10-08 evening).
+- Then: analysis, RESULTS, README, overseer/ethics.
+
+
 ## Cycle 7 summary (2026-10-06)
 - small-judge-reversal: PLAN rev 3c overseer APPROVED; harness (src/, tests 7 pass) + 20-pair trial built, overseer DIFF APPROVE. Trial: 0.5B answers 'A' every time (position-locked, plausible). Projected core sweep 2.3 h (full plan, no cuts, no extensions).
 - Q-20261006-1 still OPEN (default proceed after 48h, i.e. from 2026-10-08 ~21:30 EDT).
