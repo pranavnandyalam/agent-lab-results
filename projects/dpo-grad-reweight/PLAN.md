@@ -143,6 +143,29 @@ revision hash, dataset revision hash, git commit.
 - An already-instruction/preference-tuned base checkpoint may compress method differences — note which
   checkpoint was actually used and flag this if it looks like it's suppressing all effects.
 
+## Status update (cycle 2, 2026-10-05)
+- Step 0 resolved by a parallel scout: real GAW-PO Eq. 8 found via full-text fetch of
+  arxiv.org/html/2610.01511 — dot-product (not cosine) + sigmoid link (not clipped-linear), with a
+  max over a paired-chosen-gradient term AND a "global" chosen-direction term (exact scope of "global"
+  not yet pinned down — needs a closer read of the paper's notation before any implementation change).
+  A PLAN.md rev 3 adopting the real formula (if we decide to) will go back through overseer +
+  ethics-reviewer before any grid run uses it. This cycle's work still uses the unchanged, approved
+  rev-2 GAW-PO-lite fallback.
+- Novelty check (same scout): no prior work found that reweights DPO's rejected tokens by
+  gradient-direction alignment with the chosen response — closest precursor is "Gradient Entanglement"
+  (arXiv:2410.13828), which measures the same cosine quantity diagnostically but doesn't use it as a
+  continuous per-token reweight. TDPO (arXiv:2404.11999), SePO (arXiv:2408.13518), and TIS-DPO
+  (arXiv:2410.04350) all use different token-weighting mechanisms (forward-KL, oracle-reward-selection,
+  contrastive-probability-gap respectively). Our novelty framing stands.
+- **BLOCKED**: Steps 3 (mandatory timed trial) and 4 (13-model projection) could not run. Every HF
+  LFS file (model .safetensors, dataset .parquet) 302-redirects to `us.aws.cdn.hf.co` /
+  `cas-server.xethub.hf.co` (HF's Xet CDN), not on the sandbox's network allow-list (403 Forbidden).
+  Platform-wide, not repo-specific (confirmed across Qwen2.5-0.5B-Instruct, gpt2, bert-base-uncased,
+  ultrafeedback_binarized). Licenses/revisions WERE confirmed via the metadata-only API (doesn't need
+  the blocked CDN) — see results/fetch_notes.md. Raised as Q-20261005-1 in questions.md. Project is
+  otherwise ready to resume immediately once unblocked: baseline DPO + GAW-PO-lite code is implemented
+  and pipeline-validated via an offline smoke test (synthetic data, random weights — not a real result).
+
 ## Review routing — status: APPROVED
 - ethics-reviewer: APPROVE_WITH_CONDITIONS (rev 1) — conditions baked into this plan (AI-authorship +
   non-peer-reviewed disclosure, "GAW-PO-lite... not a verified replication" language, license/revision

@@ -1,0 +1,92 @@
+`torch_dtype` is deprecated! Use `dtype` instead!
+Traceback (most recent call last):
+  File "/home/agent/agent-lab/projects/dpo-grad-reweight/src/train_dpo.py", line 401, in <module>
+    main()
+    ~~~~^^
+  File "/home/agent/agent-lab/projects/dpo-grad-reweight/src/train_dpo.py", line 348, in main
+    policy_model, tokenizer = common.load_model_and_tokenizer(
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        args.model_id, args.model_revision, args.hf_home
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/agent/agent-lab/projects/dpo-grad-reweight/src/common.py", line 41, in load_model_and_tokenizer
+    model = AutoModelForCausalLM.from_pretrained(
+        model_id,
+    ...<3 lines>...
+        use_safetensors=True,
+    )
+  File "/home/agent/agent-lab/projects/dpo-grad-reweight/.venv/lib/python3.14/site-packages/transformers/models/auto/auto_factory.py", line 604, in from_pretrained
+    return model_class.from_pretrained(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        pretrained_model_name_or_path, *model_args, config=config, **hub_kwargs, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/agent/agent-lab/projects/dpo-grad-reweight/.venv/lib/python3.14/site-packages/transformers/modeling_utils.py", line 277, in _wrapper
+    return func(*args, **kwargs)
+  File "/home/agent/agent-lab/projects/dpo-grad-reweight/.venv/lib/python3.14/site-packages/transformers/modeling_utils.py", line 4900, in from_pretrained
+    checkpoint_files, sharded_metadata = _get_resolved_checkpoint_files(
+                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        pretrained_model_name_or_path=pretrained_model_name_or_path,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<15 lines>...
+        transformers_explicit_filename=transformers_explicit_filename,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/agent/agent-lab/projects/dpo-grad-reweight/.venv/lib/python3.14/site-packages/transformers/modeling_utils.py", line 1037, in _get_resolved_checkpoint_files
+    resolved_archive_file = cached_file(pretrained_model_name_or_path, filename, **cached_file_kwargs)
+  File "/home/agent/agent-lab/projects/dpo-grad-reweight/.venv/lib/python3.14/site-packages/transformers/utils/hub.py", line 322, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+  File "/home/agent/agent-lab/projects/dpo-grad-reweight/.venv/lib/python3.14/site-packages/transformers/utils/hub.py", line 567, in cached_files
+    raise e
+  File "/home/agent/agent-lab/projects/dpo-grad-reweight/.venv/lib/python3.14/site-packages/transformers/utils/hub.py", line 479, in cached_files
+    hf_hub_download(
+    ~~~~~~~~~~~~~~~^
+        path_or_repo_id,
+        ^^^^^^^^^^^^^^^^
+    ...<10 lines>...
+        local_files_only=local_files_only,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/agent/agent-lab/projects/dpo-grad-reweight/.venv/lib/python3.14/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/home/agent/agent-lab/projects/dpo-grad-reweight/.venv/lib/python3.14/site-packages/huggingface_hub/file_download.py", line 1007, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+        # Destination
+    ...<14 lines>...
+        force_download=force_download,
+    )
+  File "/home/agent/agent-lab/projects/dpo-grad-reweight/.venv/lib/python3.14/site-packages/huggingface_hub/file_download.py", line 1168, in _hf_hub_download_to_cache_dir
+    _download_to_tmp_and_move(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        incomplete_path=Path(blob_path + ".incomplete"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<8 lines>...
+        xet_file_data=xet_file_data,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/agent/agent-lab/projects/dpo-grad-reweight/.venv/lib/python3.14/site-packages/huggingface_hub/file_download.py", line 1720, in _download_to_tmp_and_move
+    xet_get(
+    ~~~~~~~^
+        incomplete_path=incomplete_path,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        displayed_filename=filename,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/agent/agent-lab/projects/dpo-grad-reweight/.venv/lib/python3.14/site-packages/huggingface_hub/file_download.py", line 626, in xet_get
+    download_files(
+    ~~~~~~~~~~~~~~^
+        xet_download_info,
+        ^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        progress_updater=[progress_updater],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+ConnectionError: Network error: Request error: HTTP status client error (403 Forbidden), domain: https://cas-server.xethub.hf.co/v2/reconstructions/bb5ff7e71536bbce6378f6d4bb523a77f1e9455965702d18bec33f599d5851f7

@@ -1,0 +1,10 @@
+# Pinned top-level dependencies for dpo-grad-reweight.
+# Installed into projects/dpo-grad-reweight/.venv (Python 3.14.4, CPU-only).
+# Full transitive freeze recorded in results/pip_freeze.txt for exact reproducibility.
+torch==2.14.1
+transformers==4.57.6
+datasets==4.8.5
+numpy==2.3.5
+accelerate==1.15.0
+safetensors==0.8.0
+huggingface_hub==0.36.0
