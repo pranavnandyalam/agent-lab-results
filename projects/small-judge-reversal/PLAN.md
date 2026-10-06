@@ -1,4 +1,4 @@
-# PLAN: small-judge-reversal (rev 3, 2026-10-06; rev1+rev2 REJECTed by overseer, fixes in 'Rev fixes' at the end)
+# PLAN: small-judge-reversal (rev 3c, 2026-10-06; rev1+rev2 REJECTed by overseer, fixes in 'Rev fixes' at the end)
 
 ## What's new here
 Pairwise goal-reversal ("pick the WORSE response") is known for closed judges (GRP, 2503.06139) and criterion
@@ -10,7 +10,7 @@ search by builder); 2609.02942 full text checked by overseer: single judge, no s
 ## Literature check (arXiv/web only; scout 2026-10-06, Semantic Scholar not used)
 - 2609.02942 (Bagaria et al.): pointwise, one judge Qwen2.5-7B, HealthBench/ResearchRubrics; response and criterion reversal, 37.7% desired flips on response reversal. No sub-7B or size scaling reported (overseer read the HTML: no size ablation).
 - Order-swap bias in small judges is covered: 2505.08498 (incl. Llama-3.2-3B), 2604.16790 (Qwen3-4B), 2606.19544 (small models most position-biased), 2505.10320 (J1). None does criterion reversal.
-- 2504.01282 (PRIN, Ahn & Yin, COLM 2025): asks 'which are correct' vs 'which are incorrect', finds conflicting answers across LLMs; framed as a judge problem. Model list/sizes NOT yet checked: builder/Lead must read it before the first run; if it already sweeps small models, narrow 'What's new' to the position-vs-criterion taxonomy at 0.5-1.7B.
+- 2504.01282 (PRIN, Ahn & Yin, COLM 2025): 'which are correct' vs 'which are incorrect' multiple-choice (MATH, MathQA, EquationInference); checked by overseer: models GPT-4/4o, Llama-3-8B, Llama-3.3-70B, Falcon-40B, Qwen2.5-72B, Mixtral-8x22B (smallest 8B); its size question is about number of options. Delta: no sub-8B judges, no model-size sweep, no pairwise order-swap, no split of position-locking vs criterion-blindness.
 - 2503.06139 (GRP): pairwise 'worse' prompt under both orders, closed judges, JudgeBench. Delta: small open judges, size sweep, position-vs-content split.
 - Difference: we do pairwise judging with criterion negation across sizes; and we separate position bias from criterion-insensitivity, which a plain swap test cannot.
 
@@ -30,10 +30,10 @@ Pair-level taxonomy over the 4 W1/better judgments (computed on W1 only; exact r
  5. other/inconsistent.
 Metrics: share of each category; pos-consistent accuracy under "better"; conditional flip rate = fraction of pairs correct under "better" in both orders for which the W1 choice is the rejected response in both orders; chance-normalised flip rate with analytic reference rows (random judge, always-A judge) in the table; length-criterion sensitivity control ("which is longer?", ground truth = length) labelled as such.
 Models (safetensors, bf16/fp32, no trust_remote_code, revisions pinned in RESULTS): CORE: Qwen2.5-0.5B-Instruct, Qwen2.5-1.5B-Instruct, Qwen3-0.6B, Qwen3-1.7B. EXTENSIONS only if the timed trial projects the core finishing in <=1.5 h: Qwen2.5-3B-Instruct (Qwen Research License, non-commercial research use: fine here), then Llama-3.2-1B (gated; drop if access fails, no workaround). No 7B. Revision SHA and license for each model recorded by fetch_data.sh in results/models.md BEFORE the first run; deps (torch, transformers, datasets) pinned in requirements.txt.
-## Compute (re-derived, rev 3b)
-Per model: 300 pairs x 4 passes + 100 x 2 (W2) + 100 x 2 (length control) = 1600 passes. Core params ~4.3B total (embeddings included). Prompt length: MEASURE mean tokens on the filtered set (prompts uncapped; also drop pairs whose full prompt >400 tokens). With ~350 tokens: 2*4.3e9*350*1600 = 4.8e15 FLOPs; at 250-500 GFLOPS (fp32, 8 threads, measured peak 700) = 2.7-5.4 h. The 20-pair timed trial decides. One ordered cut rule (replaces all others): projected >4 h -> use resamples 0,1 only (200 pairs, flagged); still >4 h -> drop W2 and length control; never drop a model family (H1 needs both). >2 h compute so Pranav is asked (Q-20261006-1, default proceed). Resumable per (model, resample) JSON; checkpoints in ~/scratch (allowed scratch dir).
+## Compute (re-derived, rev 3c)
+Per model: 300 pairs x 4 passes + 100 x 2 (W2) + 100 x 2 (length control) = 1600 passes. Core params ~4.3B total (embeddings included). Prompt length: MEASURE mean tokens on the filtered set (prompts uncapped; also drop pairs whose full prompt >400 tokens). With ~350 tokens: 2*4.3e9*350*1600 = 4.8e15 FLOPs; at 250-500 GFLOPS (fp32, 8 threads, measured peak 700) = 2.7-5.4 h. The 20-pair timed trial decides. One ordered cut rule (replaces all others): projected >4 h -> use resamples 0,1 only (200 pairs, flagged); still >4 h -> drop W2 and length control; still >4 h after that -> stop and ask Pranav (questions.md); never drop a model family (H1 needs both). >2 h compute so Pranav is asked (Q-20261006-1, default proceed). Resumable per (model, resample) JSON; checkpoints in ~/scratch (allowed scratch dir).
 ## Stop criteria
-Finish after one full sweep; if the trial projects >3 h, cut models to Qwen2.5 family. If a judge shows chance accuracy everywhere, report it, do not hide it. Null result is reported as is.
+Finish after one full sweep; cuts follow only the ordered cut rule in Compute (no model family is dropped). Extensions are expected NOT to run (core projects 2.7-5.4 h). H1 is reported 'inconclusive' if the conditional-flip subset for any model has n<30. If a judge shows chance accuracy everywhere, report it, do not hide it. Null result is reported as is.
 ## Ethics
 Public benchmark of open local models, no jailbreaking, no personal data. RewardBench includes some safety prompts: exclude the safety subsets.
 
@@ -42,3 +42,5 @@ Ethics conditions: AI-authorship note; license recorded; limitations list (small
 ## Rev fixes
 Rev1 (overseer): cited GRP 2503.06139; degenerate position share replaced by 4-judgment taxonomy; chance/competence-corrected conditional flip; falsifiable H1; logit readout spec (templates, enable_thinking=False, token ids, A/B mass); 2 negation wordings; length control relabelled; per-subset reporting; RewardBench pinned; compute redone.
 Rev2 (overseer): pass count corrected (4 per pair core); compute budget and cuts stated; H2 exact statistic + named judges; H1 Qwen3 comparison, bootstrap unit, primary prompt, multiplicity, subset n; literature contradiction fixed (2609.02942 HTML read by overseer: Qwen2.5-7B-Instruct only judge, no size ablation); model licenses/revisions table + pinned deps required before first run. Taxonomy computed on W1 only. Safety-style keyword list (fixed now): kill, weapon, bomb, hack, suicide, drug, explosive, illegal, abuse, porn (whole-word, case-insens.); items matching are dropped, count reported. GitHub search + Semantic Scholar retry: the builder does one before the first run; novelty wording stays "not found in a limited scan".
+
+- rev 3c: removed conflicting Qwen2.5-only cut rule; recorded PRIN model list/tasks; overseer APPROVED (2026-10-06).
