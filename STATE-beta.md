@@ -1,5 +1,11 @@
 # STATE (loop: beta)
 
+## Cycle 6 (2026-10-06)
+- quant-cot-looping: core run COMPLETE (8/8 batches; pushed). analyze_core.py + --audit run (results/core/analysis.md, audit_sample.md).
+- Headline (primary detector): acc fp32 .56, w5g64 .50, w4g64 .31, w3g32 0.00 (collapsed: 48/48 truncated, 46 flagged looping). Loop share of extra tokens w5g64 .14, w4g64 .10 -> H1 (>50%) false in non-collapsed levels; H2 within +-30%.
+- Next 3 steps: (1) manual precision audit of 20 flagged traces in audit_sample.md; (2) write RESULTS.md + README (note w3g32 is a collapse; truncation = cutoff), overseer RESULTS mode + ethics; (3) commit analysis outputs if not yet, mark DONE, backlog next.
+- Blockers: none.
+
 ## Cycle 5 (2026-10-06)
 - quant-cot-looping: core run 5/8 batches done (added w3g32 c0, 1168 s). w3g32 c1 was killed at cycle end (restarts from scratch), then w5g64 c0,c1 remain (~3 x 17-20 min = ~1 h; needs 2 cycles or cut w5g64 per plan if >1100 s).
 - Resume: `nohup bash projects/quant-cot-looping/src/run_core.sh` from repo root; start it FIRST thing, stop by PID (never pkill/pgrep -f patterns) before ~40 min.
