@@ -63,6 +63,7 @@ def bootstrap(flags, stat, n_boot=2000, seed=0, alpha=0.05):
         vals.append(summarize([flags[i] for i in idx])[stat])
     vals = np.array(vals, dtype=float)
     vals = vals[~np.isnan(vals)]
+    if not len(vals): return float('nan'), float('nan'), 0
     return float(np.quantile(vals, alpha / 2)), float(np.quantile(vals, 1 - alpha / 2)), int(len(vals))
 
 def paired_bootstrap_diff(flags_small, flags_big, stat, n_boot=2000, seed=0, alpha=0.05):
@@ -76,4 +77,5 @@ def paired_bootstrap_diff(flags_small, flags_big, stat, n_boot=2000, seed=0, alp
         vals.append(summarize([flags_big[i] for i in idx])[stat] - summarize([flags_small[i] for i in idx])[stat])
     vals = np.array(vals, dtype=float)
     vals = vals[~np.isnan(vals)]
+    if not len(vals): return float('nan'), float('nan'), 0
     return float(np.quantile(vals, alpha / 2)), float(np.quantile(vals, 1 - alpha / 2)), int(len(vals))

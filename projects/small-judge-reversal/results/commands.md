@@ -5,5 +5,7 @@ OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 1200 .venv/bin/python -I src/run.py 
 .venv/bin/python -m pytest -q -p no:cacheprovider tests
 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 1200 .venv/bin/python -I src/run.py trial --model Qwen2.5-0.5B-Instruct --n 20
 OMP_NUM_THREADS=4 timeout 600 .venv/bin/python -I src/project.py
-# Full sweep (NOT run yet): for M in 4 core models, s in 0 1 2:
-#   OMP_NUM_THREADS=4 timeout 7200 .venv/bin/python -I src/run.py run --model $M --resample $s
+# Full sweep, run in resumable chunks over cycles 8-12 (finished JSONs skipped; timeouts 1500-2400 s per run;
+# Qwen2.5-1.5B r2 passed the shell timeout notice but its output file completed):
+#   for M in 4 core models, s in 0 1 2: OMP_NUM_THREADS=4 timeout 2400 .venv/bin/python -I src/run.py run --model $M --resample $s
+OMP_NUM_THREADS=2 .venv/bin/python -I src/analyze.py   # -> results/analysis.{json,md}

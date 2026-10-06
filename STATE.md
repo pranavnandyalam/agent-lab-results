@@ -1,5 +1,9 @@
 # STATE (loop: main)
 
+## Cycle 13 summary (2026-10-06)
+- small-judge-reversal analysis DONE: 0/0/0/1 of 300 pairs correctly reversed (4 judges); H2 supported, H1 inconclusive (n_cond<30). RESULTS.md + README written, src/analyze.py, results/analysis.md. Overseer APPROVE, ethics APPROVE_WITH_CONDITIONS (met). Project DONE.
+- Next: apply review fixes, mark DONE; then pick next P0 from backlog (novelty check first). No active project after this. Nothing running.
+
 ## Cycle 12 summary (2026-10-06)
 - SWEEP COMPLETE: all 4 models x 3 resamples raw JSONs exist (Qwen2.5-1.5B r2 finished after the shell timeout notice; overseer APPROVE).
 - Then: analysis script (H1/H2, see PLAN.md and overseer notes below), RESULTS, README, overseer/ethics.
