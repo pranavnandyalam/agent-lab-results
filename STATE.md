@@ -1,5 +1,10 @@
 # STATE (loop: main)
 
+## Cycle 12 summary (2026-10-06)
+- Qwen2.5-1.5B r1 DONE. r2 is the last sweep run (~25 min; if results/raw_Qwen2.5-1.5B-Instruct_r2.json is missing, rerun: `cd projects/small-judge-reversal; OMP_NUM_THREADS=4 timeout 1700 .venv/bin/python -I src/run.py run --model Qwen2.5-1.5B-Instruct --resample 2`).
+- Then: analysis script (H1/H2, see PLAN.md and overseer notes below), RESULTS, README, overseer/ethics.
+
+
 ## Cycle 11 summary (2026-10-06)
 - small-judge-reversal sweep: Qwen3-1.7B r2 and Qwen2.5-1.5B r0 DONE. Remaining: Qwen2.5-1.5B r1, r2 (~25-30 min each; same command as cycle 7 step 1, skip finished JSONs, timeout 1700).
 - Then: analysis, RESULTS, README, overseer/ethics. Nothing running.
