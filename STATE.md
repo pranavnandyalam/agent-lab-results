@@ -1,5 +1,11 @@
 # STATE (loop: main)
 
+## Cycle 10 summary (2026-10-06)
+- Q-20261006-1/-2 already marked ANSWERED (standing CPU approval).
+- Sweep: Qwen3-1.7B r0,r1 DONE (~25 min each). Remaining: Qwen3-1.7B r2, Qwen2.5-1.5B r0-r2 (same command as cycle 7 step 1; skip finished JSONs; use timeout 1500 per run, ~25 min each).
+- Then: analysis, RESULTS, README, overseer/ethics.
+
+
 ## Cycle 9 summary (2026-10-06)
 - Sweep: Qwen3-0.6B r0,r1,r2 DONE (~4-11 min each). Remaining: Qwen3-1.7B, Qwen2.5-1.5B x 3 resamples (each ~25 min?, one process at a time, skip finished JSONs; same command as cycle 7 step 1).
 - fetch.py now pins revisions, pyarrow added (overseer APPROVE). Novelty re-check done (scout): intact but narrower (2609.32407 closest; see PLAN.md). 0.5B dev A/B mass 0.9998 >= 0.5, so it stays in H1/H2 (not excluded).
