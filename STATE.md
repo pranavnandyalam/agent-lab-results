@@ -1,5 +1,10 @@
 # STATE (loop: main)
 
+## Cycle 14 summary (2026-10-06)
+- Active: synth-two-stage-tinylm (PLAN rev 3 approved w/ conditions; claimed). Idea: test Li&Zou 2609.09572 (two-stage synthetic->real avoids error floor) on a tiny GPT. Scout: NOVEL (medium conf). Overseer REJECT x2 (design fixes applied in rev 3), ethics APPROVE_WITH_CONDITIONS.
+- Next: (1) Semantic Scholar/GitHub novelty check; (2) [done: overseer APPROVE w/ conditions, applied]; (3) if approved, builder: fetch_data.sh + timed 1M-token trial. No code written yet. Nothing running.
+- Backlog alternative: CoT-verbalization sub-4B (scout: NOVEL but ~days of CPU).
+
 ## Cycle 13 summary (2026-10-06)
 - small-judge-reversal analysis DONE: 0/0/0/1 of 300 pairs correctly reversed (4 judges); H2 supported, H1 inconclusive (n_cond<30). RESULTS.md + README written, src/analyze.py, results/analysis.md. Overseer APPROVE, ethics APPROVE_WITH_CONDITIONS (met). Project DONE.
 - Next: apply review fixes, mark DONE; then pick next P0 from backlog (novelty check first). No active project after this. Nothing running.

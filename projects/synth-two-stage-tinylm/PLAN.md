@@ -1,23 +1,38 @@
 team: main
-# PLAN: synth-two-stage-tinylm (rev 1, 2026-10-06)
+# PLAN: synth-two-stage-tinylm (rev 3, 2026-10-06; rev1+rev2 overseer REJECT, rev 3 overseer APPROVE with conditions (applied), ethics APPROVE_WITH_CONDITIONS)
 
 ## What's new here
-Li & Zou (arXiv 2609.09572) prove, for SGD in high-dimensional linear regression, that mixing synthetic and real data gives an error floor while two-stage training (synthetic first, then real) avoids it. Nobody appears to have tested this on a language model. Closest empirical work: Strong Model Collapse (2410.04840, mixed only), Gerstgrasser et al. (2404.01413, replace vs accumulate), TinyStories recursive collapse (2412.14872, pure synthetic), Silent Collapse (2605.14588, mixing-fraction schedules, not two-stage). Difference: we run an ordering experiment (synthetic->real vs real->synthetic vs mixed vs real-only) with matched real tokens on a tiny GPT. Novelty check: scout, 2026-10-06, web-only (medium confidence).
+Li & Zou (arXiv 2609.09572) prove for SGD in high-dimensional linear regression that mixing synthetic+real data leaves an error floor as data grows, while two-stage training (synthetic then real, identical real-stage updates) avoids it. Marchi et al. (2609.18878) give a Fisher-Rao minimum-human-data-fraction theory (not about ordering). Empirical neighbours: Strong Model Collapse 2410.04840 (mixed only), Gerstgrasser 2404.01413 (replace vs accumulate), TinyStories recursive collapse 2412.14872 (pure synthetic), Silent Collapse 2605.14588 (fraction schedules), procedural pre-pretraining 2601.21725 / 2505.22308 (different goal). New here: a test of the floor-vs-no-floor prediction (perplexity vs real-token budget N) on a small GPT with recency controls. Novelty: "not found in a web-only scout, medium confidence"; a Semantic Scholar/GitHub check is required before any grid run (timed trial and fetch_data.sh may proceed first). All arXiv IDs get re-verified before RESULTS.
 
-## Hypotheses
-- H1: At equal total tokens, two-stage (S->R) reaches lower held-out real perplexity than mixed (same synthetic fraction), and the gap grows with synthetic generation depth.
-- H2: Two-stage S->R is not better than real-only at equal real tokens when synthetic data comes from a model trained on the same real data (null-expected; the informative control).
-- Reverse order (R->S) is a control: expected worse than S->R.
+## Setup (one family, settles H2 source)
+- Data: `roneneldan/TinyStories` (CDLA-Sharing-1.0; pin commit hash in fetch_data.sh; cite Eldan & Li 2023). Disjoint splits: R_gen (trains generator G0), R_train (real pool for arms), R_dev (LR/design choices only), R_val (final eval, never tuned on).
+- Synthetic S: sampled at T=1.0 from G0 (trained on R_gen, same architecture/tokenizer). Depth 1 only for the main grid; depth 2 (G1 trained on S1, samples S2) only if compute allows.
+- Model: GPT d=128, 4 layers, vocab 2048 BPE (tokenizers, trained on R_gen) ≈ 0.8M non-embedding params. Final size set by a timed 1M-token trial; budget FLOPs ≈ 6·P·tokens, expect ~minutes/run at 2-5M tokens.
+- Real-token budgets N ∈ {1M, 2M, 4M} real tokens (R_train). Synthetic tokens S = N (constant synthetic fraction 0.5 in `mixed` at every N, matching the theorem's 'fixed fraction' regime); S->R uses the same S=N.
+- ONE continuous LR schedule (warmup + cosine over the whole run) for all arms; a per-stage-restart ablation is reported separately only.
 
-## Method
-- Data: TinyStories (HF roajon/TinyStories-style official `roneneldan/TinyStories`, license CDLA-Sharing-1.0, pin revision), ~20M-token real subset split into disjoint R_train (train), R_gen (to train generation-0 generator), R_val (held-out).
-- Model: GPT ~8M params (4 layers, d=256), BPE vocab 4096 trained on R_train (tokenizers lib). 4 threads.
-- Generator G0 trained on R_gen; synthetic corpus S1 sampled from G0 (T=1.0). Generation 2: G1 trained on S1, samples S2 (depth 2). Depth in {1,2}; optional 3.
-- Arms (same total token budget N, same real tokens for all arms except where stated): real-only; mixed (synthetic fraction 0.5 interleaved); two-stage S->R; reverse R->S. Same LR schedule per stage, tuned on a dev split only.
-- Metric: perplexity on R_val (never tuned on). Also distinct-n of samples.
-- Seeds: 3 per arm. Report mean±std, n.
-- Compute budget: est. 8M model ~ 10 min per 20M-token run on 4 threads; ~30 runs total ~5 h over several cycles, resumable chunks, checkpoint to ~/scratch. Timed trial first; cut depth/token budget if projection >6 h.
-- Stop criteria: 3 cycles without new result -> write up and archive.
+## Arm table (real tokens N; synthetic tokens S=N)
+| arm | order | real tok | synth tok | notes |
+|---|---|---|---|---|
+| real-only | R | N | 0 | baseline (fewer total steps) |
+| mixed | R+S interleaved | N | N | matched real tokens |
+| two-stage S->R | S then R | N | N | real stage identical in tokens to real-only |
+| reverse R->S | R then S | N | N | recency control |
+| mixed->real-tail | (R+S mixed) then R | N | N | real tail of N real tokens preceded by a mixed phase of N synth + N real tokens (so uses 2N real total; breaks real-token match, labelled as such). Tail length matches S->R's real stage |
+Family A (main): matched real tokens as above. Family B: matched total tokens (real-only gets repeated epochs to equal 2N total tokens). Each hypothesis states its family.
 
-## Limitations to report
-Single dataset, tiny model, no real-token matching confound beyond the arms above; linear-regression theory differs in setup.
+## Hypotheses and pre-registered decision rules (metric: R_val perplexity; 3 seeds, paired by seed; with 3 seeds 'CI excludes 0' is operationalised as: all 3 paired seed differences agree in sign AND a bootstrap over R_val documents (nested in seeds) 95% CI excludes 0)
+- H1 (floor): in Family A, gap g(N)=PPL(mixed)-PPL(S->R). SUPPORTED if g>0 by the rule below at the largest N and g grows with N (g(4M)>g(1M), CI of difference excluding 0). With n=3 seeds, otherwise report "inconclusive/underpowered".
+- H1b (ordering vs tail-length): S->R vs mixed->real-tail (equal-length real tail, but the latter saw 2N real tokens). Reported descriptively; a null is 'inconclusive', never 'recency explains it'.
+- H2 (Family A): S->R vs real-only at same real tokens. The continuous cosine schedule does NOT give 'identical real-stage updates' (theorem condition), so H2 here is descriptive; the per-stage-restart variant (real stage = real-only run schedule exactly) is run for N=1M,4M as the H2-primary test. Reported either way (theory says two-stage can beat real-only only under a condition; no prediction forced).
+- Arms/hypotheses are not changed after seeing results; deviations logged.
+
+## Compute
+Runs: Family A 5 arms x 3 N x 3 seeds = 45; Family B real-only (descriptive) 9; restart variant ~12; R_dev LR tuning ~6; est. ~200M training tokens, 5-25 h: the 6 h gate will likely trigger. Ordered cuts: (1) drop N=2M (H1 stays testable with N in {1M,4M}); (2) drop Family B; (3) restart variant only N=1M; (4) mixed->real-tail only N=1M,4M; (5) shrink d/tokens. Warmup = 5% of total steps in every arm. G0: trained on R_gen to a fixed budget; report its R_val perplexity.
+Common: 4 threads, one job at a time, resumable (gitignored ckpt dir under the project), `timeout`-wrapped; deps torch (CPU, uv, pinned), tokenizers, datasets, pyarrow, numpy pinned in requirements.txt. Stop criterion: 3 cycles without a new result -> write up and archive. Non-embedding params ≈ 0.8M (12·d²·L); timed trial sets final size.
+
+## Risks / limitations (to be in RESULTS)
+One dataset, one tiny model, 3 seeds; no generalization to large models; linear-regression theory differs; real tokens are matched in Family A but total tokens differ (Family B covers the other); single synthetic fraction (no 0.25/0.75); no bias evaluation (children's-story text, low risk). Synthetic corpora stay local and uncommitted (CDLA-Sharing); only small, skimmed sample excerpts are committed. README/RESULTS carry the AI-authorship note and license/revision.
+
+## Novelty to-do (before any grid run)
+Record Semantic Scholar + GitHub queries, date, top hits, how each differs (S2 was 429-rate-limited 2026-10-06; retry, else arXiv-listing fallback). TinyStories hash + dep versions recorded in fetch_data.sh/requirements.txt and RESULTS.
