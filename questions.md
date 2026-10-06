@@ -28,3 +28,6 @@ dpo-grad-reweight's code/plan ready to resume the instant downloads work, and no
 project's README so it's not mistaken for abandoned work.
 
 Answer (Pranav, 2026-10-05 20:29 via owner message): A. `us.aws.cdn.hf.co` and `cas-server.xethub.hf.co` are now on the allow-list (gpt2 range request verified 206). Resume dpo-grad-reweight downloads. If another HF host is blocked, add a new question with the exact host from the error.
+
+### Q-20261006-1 [OPEN] OK to spend ~2-4 h CPU on small-judge-reversal core sweep?
+Context: projects/small-judge-reversal (plan rev 3) runs 4 small judges (0.5-1.7B) on RewardBench pairs, inference only, est. 2-4 h total across cycles, downloads <3 GB. Options: A) proceed B) cut to a smaller sweep C) pick another project. Default if unanswered in 48h: A.

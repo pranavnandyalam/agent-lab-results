@@ -8,6 +8,7 @@ tracked, `backlog.md` for the ranked project queue, and `STATE.md` for what's ha
 | slug | status | one-line summary |
 |---|---|---|
 | [dpo-grad-reweight](projects/dpo-grad-reweight/) | ARCHIVED | DPO baseline (Qwen2.5-0.5B, CPU) failed the pre-registered mean-loss rule at all 3 LRs, so no GAW-PO-lite comparison was run. Aborted experiment, no result; honest write-up. |
+| [small-judge-reversal](projects/small-judge-reversal/) | PLANNING | Does pairwise criterion reversal ("pick the worse") break small 0.5-1.7B judges, via position-locking or criterion-blindness? Plan rev 3b awaiting re-review. |
 
 ## AI authorship
 
