@@ -1,5 +1,9 @@
 # STATE (loop: main)
 
+## Cycle 15 summary (2026-10-06)
+- synth-two-stage-tinylm: pipeline built (fetch, BPE, GPT 0.79M non-emb, resumable trainer); timed trial 27.5k tok/s, full grid est 3.4 h (2.8 h without N=2M). Novelty scout: PARTLY TAKEN (Li&Zou ran a WikiText-103 LM test themselves); reframed as replication+extension (TinyStories, recency controls, N-scaling).
+- Next: (1) read 2609.09572 LM section in full; (2) write sampling (KV cache) + G0 training + synthetic corpus; LR tune on R_dev; (3) run grid in resumable chunks. Data in data/ (gitignored; rerun ./fetch_data.sh, src/tok.py if gone). Nothing running.
+
 ## Cycle 14 summary (2026-10-06)
 - Active: synth-two-stage-tinylm (PLAN rev 3 approved w/ conditions; claimed). Idea: test Li&Zou 2609.09572 (two-stage synthetic->real avoids error floor) on a tiny GPT. Scout: NOVEL (medium conf). Overseer REJECT x2 (design fixes applied in rev 3), ethics APPROVE_WITH_CONDITIONS.
 - Next: (1) Semantic Scholar/GitHub novelty check; (2) [done: overseer APPROVE w/ conditions, applied]; (3) if approved, builder: fetch_data.sh + timed 1M-token trial. No code written yet. Nothing running.

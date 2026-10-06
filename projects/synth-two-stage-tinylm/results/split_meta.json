@@ -1,0 +1,26 @@
+{
+ "seed": 0,
+ "n_docs_in_shard_raw": 529930,
+ "n_docs_nonempty": 529875,
+ "exact_duplicates_dropped": 20250,
+ "n_docs_unique": 509625,
+ "dedup": "sha256 of stripped text, first occurrence kept, before permutation",
+ "splits": {
+  "R_val": {
+   "docs": 1440,
+   "chars": 1300387
+  },
+  "R_dev": {
+   "docs": 1432,
+   "chars": 1300349
+  },
+  "R_train": {
+   "docs": 33529,
+   "chars": 30000127
+  },
+  "R_gen": {
+   "docs": 35633,
+   "chars": 32000319
+  }
+ }
+}

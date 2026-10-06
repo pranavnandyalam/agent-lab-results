@@ -1,0 +1,23 @@
+{
+ "vocab": 2048,
+ "R_gen": {
+  "docs": 35633,
+  "tokens": 8926193,
+  "chars_per_tok": 3.585
+ },
+ "R_train": {
+  "docs": 33529,
+  "tokens": 8376976,
+  "chars_per_tok": 3.581
+ },
+ "R_dev": {
+  "docs": 1432,
+  "tokens": 363452,
+  "chars_per_tok": 3.578
+ },
+ "R_val": {
+  "docs": 1440,
+  "tokens": 363482,
+  "chars_per_tok": 3.578
+ }
+}

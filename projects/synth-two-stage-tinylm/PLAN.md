@@ -36,3 +36,6 @@ One dataset, one tiny model, 3 seeds; no generalization to large models; linear-
 
 ## Novelty to-do (before any grid run)
 Record Semantic Scholar + GitHub queries, date, top hits, how each differs (S2 was 429-rate-limited 2026-10-06; retry, else arXiv-listing fallback). TinyStories hash + dep versions recorded in fetch_data.sh/requirements.txt and RESULTS.
+
+## Novelty check result (2026-10-06, scout, web-search only; S2 API 429, arXiv export timed out)
+Verdict PARTLY TAKEN, medium confidence. Li & Zou 2609.09572 themselves report a small-LM experiment (per search snippets, not fully read): ~16M 4-layer transformer on WikiText-103, DistilGPT-2 teacher, synthetic fractions 0.3/0.6/0.9; two-stage closer to real-only than mixed. Not found on TinyStories, nor with a real-token-budget axis, recency controls (reverse, mixed->real-tail) or Family A/B accounting. Other neighbours: 2609.38764 (abstract-data first phase), 2606.22942 (distillation), 2410.04840, 2404.01413, 2401.16380, 2510.08245. No GitHub repo found. Reframing: this is an independent replication + extension (recency controls, N-scaling), NOT a first test. To do: read the full text of 2609.09572's LM section before RESULTS.

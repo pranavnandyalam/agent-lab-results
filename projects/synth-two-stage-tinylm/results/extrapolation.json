@@ -1,0 +1,30 @@
+{
+ "famA_45runs": {
+  "Mtok": 210.0,
+  "hours": 2.12
+ },
+ "famB_9runs": {
+  "Mtok": 42.0,
+  "hours": 0.42
+ },
+ "restart_12runs": {
+  "Mtok": 60.0,
+  "hours": 0.61
+ },
+ "lr_tune_6runs": {
+  "Mtok": 12.0,
+  "hours": 0.12
+ },
+ "G0": {
+  "Mtok": 8.93,
+  "hours": 0.09
+ },
+ "TOTAL": {
+  "Mtok": 332.93,
+  "hours": 3.37
+ },
+ "TOTAL_without_N2M_famA": {
+  "hours": 2.76
+ },
+ "tok_per_s": 27474.3
+}

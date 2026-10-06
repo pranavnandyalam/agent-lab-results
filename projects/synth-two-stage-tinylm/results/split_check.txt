@@ -1,0 +1,11 @@
+R_gen: docs=35633 unique=35633 within_split_dups=0
+R_train: docs=33529 unique=33529 within_split_dups=0
+R_dev: docs=1432 unique=1432 within_split_dups=0
+R_val: docs=1440 unique=1440 within_split_dups=0
+overlap R_gen & R_train: 0
+overlap R_gen & R_dev: 0
+overlap R_gen & R_val: 0
+overlap R_train & R_dev: 0
+overlap R_train & R_val: 0
+overlap R_dev & R_val: 0
+RESULT: PASS (zero exact-text overlap)
