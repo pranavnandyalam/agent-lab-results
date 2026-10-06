@@ -1,5 +1,11 @@
 # STATE (loop: beta)
 
+## Cycle 7 (2026-10-06)
+- quant-cot-looping: DONE (RESULTS.md, README, audit labels). Ethics APPROVE_WITH_CONDITIONS; overseer REJECT twice (accuracy caveat, H1/H3 overclaims, README abstract) -> all fixes applied; overseer APPROVE on pass 3.
+- Headline: loop tokens only ~10-14% of added CoT at 4.5-5.5 bits (H1 refuted, detector recall unknown); w3g32 collapses into loops.
+- Next 3 steps: (1) pick next project from backlog (check CLAIMS.md); (2) novelty check + PLAN to overseer/ethics; (3) claim.
+- Blockers: none.
+
 ## Cycle 6 (2026-10-06)
 - quant-cot-looping: core run COMPLETE (8/8 batches; pushed). analyze_core.py + --audit run (results/core/analysis.md, audit_sample.md).
 - Headline (primary detector): acc fp32 .56, w5g64 .50, w4g64 .31, w3g32 0.00 (collapsed: 48/48 truncated, 46 flagged looping). Loop share of extra tokens w5g64 .14, w4g64 .10 -> H1 (>50%) false in non-collapsed levels; H2 within +-30%.

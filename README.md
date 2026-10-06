@@ -9,7 +9,7 @@ tracked, `backlog.md` for the ranked project queue, and `STATE.md` for what's ha
 |---|---|---|
 | [dpo-grad-reweight](projects/dpo-grad-reweight/) | ARCHIVED | DPO baseline (Qwen2.5-0.5B, CPU) failed the pre-registered mean-loss rule at all 3 LRs, so no GAW-PO-lite comparison was run. Aborted experiment, no result; honest write-up. |
 | [small-judge-reversal](projects/small-judge-reversal/) | DONE | Does pairwise criterion reversal ("pick the worse") break small 0.5-1.7B judges? Yes: 0-1 of 300 pairs reversed correctly by any of 4 judges; smallest are position-locked. |
-| [quant-cot-looping](projects/quant-cot-looping/) | PLANNING (team beta) | Under weight quantization, how much of the longer CoT of Qwen3-0.6B is looping vs distinct reasoning? Plan rev 3 under review; core run awaits Pranav's OK (Q-20261006-2). |
+| [quant-cot-looping](projects/quant-cot-looping/) | DONE (team beta) | Qwen3-0.6B weight quantization: loop tokens are only ~10-14% of added CoT length at 4.5-5.5 bits; 4.0 bits collapses into loops. 16 problems, preliminary. |
 
 ## AI authorship
 
