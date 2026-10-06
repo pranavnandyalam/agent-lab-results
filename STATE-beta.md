@@ -53,3 +53,7 @@
 - cot-monitor-small: qwen2.5-1.5b test scoring DONE (1440 rows, 1894 s resumed). Only qwen3-1.7b remains (~35-45 min; one cycle).
 - Resume: `cd projects/cot-monitor-small; HF_HUB_OFFLINE=1 OMP_NUM_THREADS=4 timeout 2900 ../quant-cot-looping/.venv/bin/python -I src/score.py --monitor qwen3-1.7b --prompt v2 --split test` (run_test.sh's 2400s timeout is too short; start it first thing in background).
 - Next 3: (1) finish qwen3-1.7b; (2) `analyze.py --split test --prompt v2` once all 4 complete; (3) RESULTS, overseer+ethics, scout.
+
+## Cycle 11 end (2026-10-06, team beta)
+- cot-monitor-small: ALL 4 monitors test-scored; analyze.py --split test --prompt v2 run (results/analysis_test.md/json). Headline: B-vs-A sanity passes all 4 (ceiling-limited; BoW skeleton AUROC .76); H3 not supported in all 4; H4 "supported" only via qwen2.5-0.5b (O=+.046), larger monitors O<=0.
+- Next 3: (1) write RESULTS.md + README from analysis_test.md (honest: ceiling, small n=12 skeletons, H2 untestable); (2) overseer RESULTS + ethics; (3) S2/GitHub novelty scout, mark DONE.
