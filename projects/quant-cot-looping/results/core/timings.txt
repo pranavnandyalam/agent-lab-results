@@ -1,0 +1,1 @@
+2026-10-06 w4g64_chunk0 wall_s=897 (t_total_s 896.96) n_truncated=11/24 mean_gen_tokens=1570.75; <1100 s so w5g64 stays; contended by other team's job (loop script was stopped, so no auto-log)
