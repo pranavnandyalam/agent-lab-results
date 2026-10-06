@@ -1,5 +1,5 @@
 team: beta
-# PLAN: quant-cot-looping (rev 3, 2026-10-06)
+# PLAN: quant-cot-looping (rev 3b, 2026-10-06)
 ## What's new here
 We split the token inflation that quantization causes in a sub-1B reasoning model into degenerate loop tokens and distinct new-reasoning tokens, per bit width, and test whether loop-token share predicts failure better than raw length. Prior work reports loop/exhaustion rates per generation or semantic step repetition, never a token-level split in a bit sweep on a sub-1B model.
 
@@ -26,7 +26,15 @@ Definitions. For quantized level q, problem set P, seeds S: T_q = mean generated
 
 ## Compute (measured, results/timed_trial_w4.json)
 Trial, w4g64, 24 generations (8 train problems x 3 seeds), one batch of 24 with compaction, 2048 cap, other team's job running: 902 s wall, 40,233 useful tokens, mean 1676 tokens, 14/24 truncated, 44.6 tok/s aggregate. Per-step time grows with context (0.35 s/step early to 0.52 s late) and does not fall with fewer active rows, so a batch costs about 850-900 s whenever any row reaches 2048, regardless of its mean length. Earlier 61-78 tok/s numbers were for 256-token runs and do not apply.
-Costing by batch wall time (not tokens/s): batch = 24 generations = 8 problems x 3 seeds. Core: 16 test problems x 4 levels (fp32, w5g64, w4g64, w3g32) x 3 seeds = 192 generations = 8 batches x ~900 s = ~2.0 h (floor by token rate ~1.7 h; ceiling if contended ~2.4 h). Dev: reuse the w4 trial (24 traces) and the fp32 seed-0 trial (results/timed_trial_fp32.json: 8 gens, 388 s, 0/8 truncated, mean 1260 tokens), add one fp32 batch of 16 (seeds 1-2) = ~0.15 h. Total ~2.15 h (range 1.9-2.6 h). Needs Pranav's OK (>2 h; Q-20261006-2); no run before an [ANSWERED] entry. Cut rule is by wall time: if the first core batch (run order: w4 first, then fp32, w3g32, w5g64) takes >1100 s, drop w5g64 (3 levels, ~1.5 h). Resumable per batch JSON (one batch = one chunk, <40 min). Never concurrent with another team's heavy job.
+Costing by batch wall time (not tokens/s): batch = 24 generations = 8 problems x 3 seeds. Core: 16 test problems x 4 levels (fp32, w5g64, w4g64, w3g32) x 3 seeds = 192 generations = 8 batches x ~900 s = ~2.0 h (floor by token rate ~1.7 h; ceiling if contended ~2.4 h). Dev: reuse the w4 trial (24 traces) and the fp32 seed-0 trial (results/timed_trial_fp32.json: 8 gens, 388 s, 0/8 truncated, mean 1260 tokens), add one fp32 batch of 16 (seeds 1-2) = ~0.15 h. Total ~2.15 h (range 1.9-2.6 h). Approved by Pranav (Q-20261006-2 ANSWERED 2026-10-06, standing CPU approval; scope recorded there). Cut rule is by wall time: if the first core batch (run order: w4 first, then fp32, w3g32, w5g64) takes >1100 s, drop w5g64 (3 levels, ~1.5 h). Resumable per batch JSON (one batch = one chunk, <40 min). Never concurrent with another team's heavy job.
+
+## Deviations from rev 3b (cycle 3, recorded before any test trace was analysed)
+- Detector rule (A) additionally ignores 20-grams copied from the problem text (dev finding, DEV.md); all occurrences after the first are marked.
+- Sensitivity variants: 16-gram x4 and 12-gram x4 (rule A only) replace the "25%-coverage" and "8-gram-tail" variants (the 25%-coverage variant was never defined; 8-gram variants flag too much, DEV.md).
+- Dev hand-labelling was smaller than planned (7 flagged + 7 unflagged truncated traces, one rater, no recall figure). The post-run precision audit of 20 flagged test traces still stands.
+- The core run runs concurrently with the other team's 4-thread job (owner's scope allows sharing at 4 threads each), so batch times are contended. The cut rule (first batch >1100 s -> drop w5g64) is applied by hand. A batch killed by the 2400 s timeout leaves no output and restarts on resume.
+- Disclosure: the 16 test problems were also used for the earlier throughput/KL sanity trial (results/trial.json) that picked the quantization levels. The `boxed` field in raw JSONs is not the scoring rule; scoring follows the Method section and is done in analysis.
+- Core JSON `argv` contains absolute paths; scrubbed before commit.
 
 ## Dependencies
 requirements.txt (torch 2.14.1 CPU, transformers 4.57.6, pinned; results/pip_freeze.txt). Python 3.14.

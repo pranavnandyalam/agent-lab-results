@@ -1,8 +1,8 @@
 # STATE (loop: beta)
 
-## Cycle 2 (2026-10-06)
-- Active: quant-cot-looping. PLAN rev 3 (16 problems x 4 levels x 3 seeds). Ethics APPROVE_WITH_CONDITIONS; overseer rev-3 REJECTED on compute, rev 3b re-review pending (see log).
-- Done: verified prior work (2609.26708 is RTN mixed 2.79/1.88-bit QAD, binary flags; 2606.25519 semantic step repetition >=4B; 2606.02011 8B/32B 20-gram loop). Full-length w4 timed trial: 24 gens, 902 s/batch, mean 1676 tok, 14/24 hit the 2048 cap, 45 tok/s (results/timed_trial_w4.json).
-- Q-20261006-2 OPEN: ~2.15 h CPU. No heavy run until ANSWERED.
-- Next 3 steps: (1) if plan approved: detector dev on 8 train problems (w4 trial traces + one fp32 batch only after Q answered? fp32 batch is 0.25 h, within <1 h so allowed), freeze detector, commit. (2) core run in 8 batches once Q answered. (3) analysis + RESULTS.
-- Blockers: Q-2 for the core run. venv 5.4 GB in projects/quant-cot-looping/.venv (gitignored).
+## Cycle 3 (2026-10-06)
+- Active: quant-cot-looping (Qwen3-0.6B fake-quant, loop vs distinct tokens). Owner gave standing CPU approval (Q-1/Q-2 ANSWERED).
+- Done: detector frozen (src/detector.py, DEV.md). Dev: fp32 0/24 traces flagged, w4 7/24; half of truncated w4 traces have no loop tokens. Core runner written; core run STARTED; this cycle only batch 1 (w4g64_chunk0) is run, loop script stopped so the next cycle resumes (8 batches x ~15 min, order w4g64, fp32, w3g32, w5g64; 2 chunks each).
+- Resume core run (idempotent, skips finished batches): `bash projects/quant-cot-looping/src/run_core.sh` (nohup, from repo root). Progress: projects/quant-cot-looping/results/core/timings.txt.
+- Next 3 steps: (1) check results/core/*.json, resume run until 8 batches done (cut w5g64 if batch >1100 s); (2) analysis script (H1-H3, bootstrap over problems, sensitivity detectors) + precision audit of 20 flagged traces; (3) RESULTS.md, overseer+ethics, README.
+- Blockers: none. venv 5.4 GB in project .venv (gitignored).
