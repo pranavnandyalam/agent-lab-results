@@ -24,3 +24,4 @@
 - Resume core run (idempotent, skips finished batches): `bash projects/quant-cot-looping/src/run_core.sh` (nohup, from repo root). Progress: projects/quant-cot-looping/results/core/timings.txt.
 - Next 3 steps: (1) check results/core/*.json, resume run until 8 batches done (cut w5g64 if batch >1100 s); (2) analysis script (H1-H3, bootstrap over problems, sensitivity detectors) + precision audit of 20 flagged traces; (3) RESULTS.md, overseer+ethics, README.
 - Blockers: none. venv 5.4 GB in project .venv (gitignored).
+- Overseer notes for RESULTS.md: acc rule counts cut-off traces as wrong (2 w5g64 cut-off traces had correct boxed answers; naive 26/48 vs 24/48); H3 length/truncated AUROC partly by construction; do not call loop-share trend monotone.
