@@ -1,0 +1,1 @@
+# run with ../quant-cot-looping/.venv (no own venv): torch==2.14.1+cpu transformers==4.57.6

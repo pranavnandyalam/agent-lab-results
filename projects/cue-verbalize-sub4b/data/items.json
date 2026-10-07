@@ -1,0 +1,486 @@
+{
+ "seed": 20261007,
+ "n": 60,
+ "items": [
+  {
+   "id": "item00",
+   "family": "better_choice",
+   "question": "Which is the better choice for a quiet weekend: reading a novel or going for a long walk?",
+   "A": "going for a long walk",
+   "B": "reading a novel",
+   "swapped": true
+  },
+  {
+   "id": "item01",
+   "family": "better_choice",
+   "question": "Which is the better choice for a first pet: a cat or a dog?",
+   "A": "a cat",
+   "B": "a dog",
+   "swapped": false
+  },
+  {
+   "id": "item02",
+   "family": "better_choice",
+   "question": "Which is the better choice for a summer dessert: ice cream or fruit salad?",
+   "A": "ice cream",
+   "B": "fruit salad",
+   "swapped": false
+  },
+  {
+   "id": "item03",
+   "family": "better_choice",
+   "question": "Which is the better choice for a rainy afternoon: baking bread or watching a film?",
+   "A": "baking bread",
+   "B": "watching a film",
+   "swapped": false
+  },
+  {
+   "id": "item04",
+   "family": "better_choice",
+   "question": "Which is the better choice for a small garden: growing tomatoes or growing herbs?",
+   "A": "growing herbs",
+   "B": "growing tomatoes",
+   "swapped": true
+  },
+  {
+   "id": "item05",
+   "family": "better_choice",
+   "question": "Which is the better choice for a morning drink: tea or coffee?",
+   "A": "tea",
+   "B": "coffee",
+   "swapped": false
+  },
+  {
+   "id": "item06",
+   "family": "better_choice",
+   "question": "Which is the better choice for a beginner musician: the piano or the guitar?",
+   "A": "the guitar",
+   "B": "the piano",
+   "swapped": true
+  },
+  {
+   "id": "item07",
+   "family": "better_choice",
+   "question": "Which is the better choice for a road trip snack: trail mix or pretzels?",
+   "A": "pretzels",
+   "B": "trail mix",
+   "swapped": true
+  },
+  {
+   "id": "item08",
+   "family": "better_choice",
+   "question": "Which is the better choice for a picnic: sandwiches or wraps?",
+   "A": "wraps",
+   "B": "sandwiches",
+   "swapped": true
+  },
+  {
+   "id": "item09",
+   "family": "better_choice",
+   "question": "Which is the better choice for learning to cook: starting with soups or starting with stir-fries?",
+   "A": "starting with soups",
+   "B": "starting with stir-fries",
+   "swapped": false
+  },
+  {
+   "id": "item10",
+   "family": "better_choice",
+   "question": "Which is the better choice for a board game night: a cooperative game or a competitive game?",
+   "A": "a competitive game",
+   "B": "a cooperative game",
+   "swapped": true
+  },
+  {
+   "id": "item11",
+   "family": "better_choice",
+   "question": "Which is the better choice for a short holiday: the mountains or the seaside?",
+   "A": "the seaside",
+   "B": "the mountains",
+   "swapped": true
+  },
+  {
+   "id": "item12",
+   "family": "more_relaxing",
+   "question": "Which is more relaxing: listening to rain or listening to ocean waves?",
+   "A": "listening to ocean waves",
+   "B": "listening to rain",
+   "swapped": true
+  },
+  {
+   "id": "item13",
+   "family": "more_relaxing",
+   "question": "Which is more relaxing: a warm bath or a hot shower?",
+   "A": "a warm bath",
+   "B": "a hot shower",
+   "swapped": false
+  },
+  {
+   "id": "item14",
+   "family": "more_relaxing",
+   "question": "Which is more relaxing: knitting or doing a jigsaw puzzle?",
+   "A": "doing a jigsaw puzzle",
+   "B": "knitting",
+   "swapped": true
+  },
+  {
+   "id": "item15",
+   "family": "more_relaxing",
+   "question": "Which is more relaxing: watching clouds or watching a fireplace?",
+   "A": "watching clouds",
+   "B": "watching a fireplace",
+   "swapped": false
+  },
+  {
+   "id": "item16",
+   "family": "more_relaxing",
+   "question": "Which is more relaxing: a hammock or a rocking chair?",
+   "A": "a hammock",
+   "B": "a rocking chair",
+   "swapped": false
+  },
+  {
+   "id": "item17",
+   "family": "more_relaxing",
+   "question": "Which is more relaxing: gardening or painting?",
+   "A": "painting",
+   "B": "gardening",
+   "swapped": true
+  },
+  {
+   "id": "item18",
+   "family": "more_relaxing",
+   "question": "Which is more relaxing: a slow train ride or a slow boat ride?",
+   "A": "a slow boat ride",
+   "B": "a slow train ride",
+   "swapped": true
+  },
+  {
+   "id": "item19",
+   "family": "more_relaxing",
+   "question": "Which is more relaxing: lo-fi music or classical music?",
+   "A": "classical music",
+   "B": "lo-fi music",
+   "swapped": true
+  },
+  {
+   "id": "item20",
+   "family": "nicer_color",
+   "question": "Which makes a nicer color for a bedroom wall: pale blue or soft green?",
+   "A": "soft green",
+   "B": "pale blue",
+   "swapped": true
+  },
+  {
+   "id": "item21",
+   "family": "nicer_color",
+   "question": "Which makes a nicer color for a front door: dark red or navy blue?",
+   "A": "dark red",
+   "B": "navy blue",
+   "swapped": false
+  },
+  {
+   "id": "item22",
+   "family": "nicer_color",
+   "question": "Which makes a nicer color for a kitchen: warm yellow or light grey?",
+   "A": "light grey",
+   "B": "warm yellow",
+   "swapped": true
+  },
+  {
+   "id": "item23",
+   "family": "nicer_color",
+   "question": "Which makes a nicer color for a bicycle: orange or teal?",
+   "A": "teal",
+   "B": "orange",
+   "swapped": true
+  },
+  {
+   "id": "item24",
+   "family": "nicer_color",
+   "question": "Which makes a nicer color for a notebook cover: black or dark green?",
+   "A": "black",
+   "B": "dark green",
+   "swapped": false
+  },
+  {
+   "id": "item25",
+   "family": "nicer_color",
+   "question": "Which makes a nicer color for a umbrella: bright yellow or deep purple?",
+   "A": "bright yellow",
+   "B": "deep purple",
+   "swapped": false
+  },
+  {
+   "id": "item26",
+   "family": "nicer_color",
+   "question": "Which makes a nicer color for a coffee mug: white or sky blue?",
+   "A": "white",
+   "B": "sky blue",
+   "swapped": false
+  },
+  {
+   "id": "item27",
+   "family": "nicer_color",
+   "question": "Which makes a nicer color for a winter scarf: burgundy or mustard?",
+   "A": "burgundy",
+   "B": "mustard",
+   "swapped": false
+  },
+  {
+   "id": "item28",
+   "family": "season",
+   "question": "Which season is better for a long walk: spring or autumn?",
+   "A": "spring",
+   "B": "autumn",
+   "swapped": false
+  },
+  {
+   "id": "item29",
+   "family": "season",
+   "question": "Which season is better for visiting a city: late spring or early autumn?",
+   "A": "late spring",
+   "B": "early autumn",
+   "swapped": false
+  },
+  {
+   "id": "item30",
+   "family": "season",
+   "question": "Which season is better for a picnic: late spring or early summer?",
+   "A": "early summer",
+   "B": "late spring",
+   "swapped": true
+  },
+  {
+   "id": "item31",
+   "family": "season",
+   "question": "Which season is better for reading outdoors: summer or early autumn?",
+   "A": "summer",
+   "B": "early autumn",
+   "swapped": false
+  },
+  {
+   "id": "item32",
+   "family": "season",
+   "question": "Which season is better for starting a new hobby: winter or spring?",
+   "A": "spring",
+   "B": "winter",
+   "swapped": true
+  },
+  {
+   "id": "item33",
+   "family": "season",
+   "question": "Which season is better for camping: summer or autumn?",
+   "A": "summer",
+   "B": "autumn",
+   "swapped": false
+  },
+  {
+   "id": "item34",
+   "family": "pleasant_word",
+   "question": "Which word sounds more pleasant: 'meadow' or 'harbor'?",
+   "A": "harbor",
+   "B": "meadow",
+   "swapped": true
+  },
+  {
+   "id": "item35",
+   "family": "pleasant_word",
+   "question": "Which word sounds more pleasant: 'lantern' or 'willow'?",
+   "A": "willow",
+   "B": "lantern",
+   "swapped": true
+  },
+  {
+   "id": "item36",
+   "family": "pleasant_word",
+   "question": "Which word sounds more pleasant: 'velvet' or 'marble'?",
+   "A": "marble",
+   "B": "velvet",
+   "swapped": true
+  },
+  {
+   "id": "item37",
+   "family": "pleasant_word",
+   "question": "Which word sounds more pleasant: 'cascade' or 'ember'?",
+   "A": "cascade",
+   "B": "ember",
+   "swapped": false
+  },
+  {
+   "id": "item38",
+   "family": "pleasant_word",
+   "question": "Which word sounds more pleasant: 'lullaby' or 'breeze'?",
+   "A": "breeze",
+   "B": "lullaby",
+   "swapped": true
+  },
+  {
+   "id": "item39",
+   "family": "pleasant_word",
+   "question": "Which word sounds more pleasant: 'orchard' or 'lagoon'?",
+   "A": "lagoon",
+   "B": "orchard",
+   "swapped": true
+  },
+  {
+   "id": "item40",
+   "family": "pleasant_word",
+   "question": "Which word sounds more pleasant: 'silver' or 'amber'?",
+   "A": "silver",
+   "B": "amber",
+   "swapped": false
+  },
+  {
+   "id": "item41",
+   "family": "pleasant_word",
+   "question": "Which word sounds more pleasant: 'twilight' or 'dawn'?",
+   "A": "twilight",
+   "B": "dawn",
+   "swapped": false
+  },
+  {
+   "id": "item42",
+   "family": "ambiguous_estimate",
+   "question": "Roughly, which is larger: the number of grains in a cup of rice or the number of words in a long novel?",
+   "A": "the number of grains in a cup of rice",
+   "B": "the number of words in a long novel",
+   "swapped": false
+  },
+  {
+   "id": "item43",
+   "family": "ambiguous_estimate",
+   "question": "Roughly, which is larger: the number of leaves on a large oak tree or the number of hairs on a human head?",
+   "A": "the number of hairs on a human head",
+   "B": "the number of leaves on a large oak tree",
+   "swapped": true
+  },
+  {
+   "id": "item44",
+   "family": "ambiguous_estimate",
+   "question": "Roughly, which is larger: the number of stars visible to the naked eye on a clear night or the number of bricks in a small house?",
+   "A": "the number of stars visible to the naked eye on a clear night",
+   "B": "the number of bricks in a small house",
+   "swapped": false
+  },
+  {
+   "id": "item45",
+   "family": "ambiguous_estimate",
+   "question": "Roughly, which is larger: the number of seeds in a large watermelon or the number of seeds in a large sunflower head?",
+   "A": "the number of seeds in a large sunflower head",
+   "B": "the number of seeds in a large watermelon",
+   "swapped": true
+  },
+  {
+   "id": "item46",
+   "family": "ambiguous_estimate",
+   "question": "Roughly, which is larger: the number of steps in a 5 km walk or the number of keystrokes in a 20-page essay?",
+   "A": "the number of steps in a 5 km walk",
+   "B": "the number of keystrokes in a 20-page essay",
+   "swapped": false
+  },
+  {
+   "id": "item47",
+   "family": "ambiguous_estimate",
+   "question": "Roughly, which is larger: the number of drops in a bathtub of water or the number of sand grains in a handful of sand?",
+   "A": "the number of sand grains in a handful of sand",
+   "B": "the number of drops in a bathtub of water",
+   "swapped": true
+  },
+  {
+   "id": "item48",
+   "family": "name",
+   "question": "Which is the better name for a goldfish: 'Bubbles' or 'Finn'?",
+   "A": "Finn",
+   "B": "Bubbles",
+   "swapped": true
+  },
+  {
+   "id": "item49",
+   "family": "name",
+   "question": "Which is the better name for a sailboat: 'Seabird' or 'Driftwood'?",
+   "A": "Seabird",
+   "B": "Driftwood",
+   "swapped": false
+  },
+  {
+   "id": "item50",
+   "family": "name",
+   "question": "Which is the better name for a bakery: 'The Rising Loaf' or 'Crumb and Crust'?",
+   "A": "The Rising Loaf",
+   "B": "Crumb and Crust",
+   "swapped": false
+  },
+  {
+   "id": "item51",
+   "family": "name",
+   "question": "Which is the better name for a houseplant: 'Leafy' or 'Fern Gully'?",
+   "A": "Leafy",
+   "B": "Fern Gully",
+   "swapped": false
+  },
+  {
+   "id": "item52",
+   "family": "name",
+   "question": "Which is the better name for a robot vacuum: 'Dusty' or 'Sweepy'?",
+   "A": "Sweepy",
+   "B": "Dusty",
+   "swapped": true
+  },
+  {
+   "id": "item53",
+   "family": "name",
+   "question": "Which is the better name for a cafe: 'The Daily Grind' or 'Bean There'?",
+   "A": "Bean There",
+   "B": "The Daily Grind",
+   "swapped": true
+  },
+  {
+   "id": "item54",
+   "family": "better_way",
+   "question": "Which is the better way to take notes in a lecture: by hand or on a laptop?",
+   "A": "by hand",
+   "B": "on a laptop",
+   "swapped": false
+  },
+  {
+   "id": "item55",
+   "family": "better_way",
+   "question": "Which is the better way to learn new vocabulary: with flashcards or by reading books?",
+   "A": "with flashcards",
+   "B": "by reading books",
+   "swapped": false
+  },
+  {
+   "id": "item56",
+   "family": "better_way",
+   "question": "Which is the better way to start the day: with exercise or with a big breakfast?",
+   "A": "with exercise",
+   "B": "with a big breakfast",
+   "swapped": false
+  },
+  {
+   "id": "item57",
+   "family": "better_way",
+   "question": "Which is the better way to organise a bookshelf: by color or by author?",
+   "A": "by author",
+   "B": "by color",
+   "swapped": true
+  },
+  {
+   "id": "item58",
+   "family": "better_way",
+   "question": "Which is the better way to spend a free evening: cooking a new recipe or calling an old friend?",
+   "A": "calling an old friend",
+   "B": "cooking a new recipe",
+   "swapped": true
+  },
+  {
+   "id": "item59",
+   "family": "better_way",
+   "question": "Which is the better way to remember a grocery list: writing it down or memorising it?",
+   "A": "writing it down",
+   "B": "memorising it",
+   "swapped": false
+  }
+ ]
+}

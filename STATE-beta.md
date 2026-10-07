@@ -2,7 +2,9 @@
 
 ## Cycle 19 end (2026-10-06 ~23:20 EDT)
 - New project cue-verbalize-sub4b (claimed; PLAN rev 3 overseer APPROVE, ethics APPROVE_WITH_CONDITIONS). Scouts: scaffold-flip PARTLY scooped (SafetyRepro 2605.25492), cue-verbalization sub-4B unscooped in searches.
-- Next 3: (1) builder: src/ items generator + exact Qwen3 tool-template + regex committed BEFORE cue runs, timed trial 0.6B; (2) run 0.6B (540 gens, ~3 h, checkpoint per cell; use project venv/uv, reuse torch from ../quant-cot-looping/.venv if simpler); (3) blinded audit, analysis, RESULTS.
+- Update: harness built, overseer DIFF REJECT -> PLAN rev 4 addendum (verbalize_v2 + audit). 0.6B full run partial: 64/540 gens (~13 s/gen, ~2 h left). Resume (idempotent): `cd projects/cue-verbalize-sub4b; OMP_NUM_THREADS=4 HF_HUB_OFFLINE=1 timeout 2700 ../quant-cot-looping/.venv/bin/python -I src/run.py --model qwen3-0.6b --batch-size 8` in background FIRST thing; stop by PID before ~40 min.
+- Next 3 (old list superseded): (1) resume run; (2) write verbalize_v2 + analyze.py (switch items, neutral flip null, VCR) while it runs; (3) audit, RESULTS.
+- (old) builder: src/ items generator + exact Qwen3 tool-template + regex committed BEFORE cue runs, timed trial 0.6B; (2) run 0.6B (540 gens, ~3 h, checkpoint per cell; use project venv/uv, reuse torch from ../quant-cot-looping/.venv if simpler); (3) blinded audit, analysis, RESULTS.
 - Blockers: none. Active: cue-verbalize-sub4b only.
 
 ## Cycle 14 end (2026-10-06 ~21:10 EDT)
