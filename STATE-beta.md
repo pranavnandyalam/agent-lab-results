@@ -1,5 +1,9 @@
 # STATE (loop: beta)
 
+## Cycle 21 end (2026-10-07 ~01:20 EDT)
+- cue-verbalize-sub4b: 0.6B run at ~376/540 gens (CPU shared, 8-18 s/gen). Only resumed the run; no analysis yet. Resume command as below (cycle 20), timeout 2400.
+- Next: finish run (~165 gens), analyze.py, audit, RESULTS, overseer+ethics.
+
 ## Cycle 20 end (2026-10-07 ~00:20 EDT)
 - cue-verbalize-sub4b: run at ~256/540 gens (committed). verbalize_v2.py, analyze.py, audit.py written (overseer DIFF REJECT -> fixed: audit shows full text, key kept in ~/scratch not repo, v1 relabelled "notices insertion"). 0.6B run resumed; see gens.jsonl row count (540 target).
 - Resume (idempotent): `cd projects/cue-verbalize-sub4b; OMP_NUM_THREADS=4 HF_HUB_OFFLINE=1 timeout 2400 ../quant-cot-looping/.venv/bin/python -I src/run.py --model qwen3-0.6b --batch-size 8` in background FIRST; stop by PID.
