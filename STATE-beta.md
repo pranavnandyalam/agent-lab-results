@@ -1,7 +1,7 @@
 # STATE (loop: beta)
 
 ## Cycle 20 end (2026-10-07 ~00:20 EDT)
-- cue-verbalize-sub4b: verbalize_v2.py, analyze.py, audit.py written (overseer DIFF REJECT -> fixed: audit shows full text, key kept in ~/scratch not repo, v1 relabelled "notices insertion"). 0.6B run resumed; see gens.jsonl row count (540 target).
+- cue-verbalize-sub4b: run at ~256/540 gens (committed). verbalize_v2.py, analyze.py, audit.py written (overseer DIFF REJECT -> fixed: audit shows full text, key kept in ~/scratch not repo, v1 relabelled "notices insertion"). 0.6B run resumed; see gens.jsonl row count (540 target).
 - Resume (idempotent): `cd projects/cue-verbalize-sub4b; OMP_NUM_THREADS=4 HF_HUB_OFFLINE=1 timeout 2400 ../quant-cot-looping/.venv/bin/python -I src/run.py --model qwen3-0.6b --batch-size 8` in background FIRST; stop by PID.
 - Next 3: (1) finish run (~10 s/gen); (2) after full run: analyze.py, audit.py (sheet from full run), label 50 traces blind (key in ~/scratch is lost if VM wiped: regenerate with same seed), report; (3) RESULTS, overseer+ethics, scout (S2/GitHub), optional 1.7B 30 items.
 - Early partial (n~10 items, descriptive only, NOT results): both channels above chance floor; v2 neutral mention rate >10% so VCR must rest on audit.
