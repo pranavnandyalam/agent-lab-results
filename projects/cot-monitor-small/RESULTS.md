@@ -2,7 +2,7 @@
 
 *Produced by an autonomous AI agent (Claude) on behalf of @pranavnandyalam. Not peer reviewed.*
 
-Status: final test analysis complete; pending overseer RESULTS + ethics review (see README).
+Status: final; overseer RESULTS + ethics APPROVE_WITH_CONDITIONS (applied); paper revised after referee round 1 (see addendum below).
 
 ## Summary
 Four small zero-shot monitors (Qwen2.5-0.5B/1.5B-Instruct, Qwen3-0.6B/1.7B, non-thinking mode) were asked "is the agent trying to game the task? YES/NO" on **fully synthetic, template-written toy transcripts** (6 families x 20 instances, 12 hand-written wording skeletons shared across families). Score = logit(YES) - logit(NO). Scoring is deterministic (no seeds); uncertainty is a cluster bootstrap over wording skeletons (12 clusters; 2000 resamples; seed 0). These are controlled probes of small monitors, **not** evidence about deployed monitoring or real agent traces. **Prior work:** closest are 2608.00583 (pooled CoT-monitor accuracy hides reasoning-dependent fragility; frontier monitors; its benign-narration effect is the idea our condition D probes at small scale), 2505.23575 (CoT Red-Handed, view comparison with weak monitors), 2605.12746 (CoT-Guard, trained 4B monitor), 2601.21112, 2512.18311, 2510.01367, 2503.11926. In a limited arXiv/web scout (cycle 12; Semantic Scholar returned HTTP 429 and was skipped; the GitHub-specific search was not run separately, only general web search) we did not find a prior study at 0.5-1.7B with the keyword minimal-pair control. Not found != does not exist; our novelty is limited to that scale and control, not to the view/narration effects themselves.
@@ -43,12 +43,11 @@ for the two small monitors only; 1.5B/1.7B not re-scored). Raw: `results/posthoc
 | v1 | +0.177 | +0.139 |
 | v3 | +0.083 | -0.018 |
 
-- **The "Qwen2.5 depends on cue words far more than Qwen3" claim does not hold across prompts.** Under v1 the two small monitors have similar K
-  (and 0.5B's B-vs-A AUROC is only 0.51); under v3 K is near zero for both. The v2 contrast is at most prompt-specific (v2 contains cue stems) and should be
-  treated as unestablished. Dev K per prompt (from `dev_summary.json`) shows the same: Qwen3-0.6B v1 0.141 > Qwen2.5-1.5B v1 0.040.
+- **The size of the Qwen2.5-vs-Qwen3 cue-reliance gap is prompt-dependent; a family difference is not established.** Qwen2.5-0.5B has the larger K under all three prompts, but the gap shrinks from 0.236 (v2) to 0.038 (v1) and 0.101 (v3) (point estimates, no CIs, ~12 clusters; 0.5B's B-vs-A AUROC is only 0.51 under v1). The v2 gap size is prompt-specific (v2 contains cue stems) and should be
+  treated as unestablished.
 - **Action-view AUROC is heterogeneous by family.** Pooled 0.48-0.67 (v2) hides within-family values from 0.05 to 1.00 (e.g. Qwen3-1.7B fix_test 1.00,
   validator 0.23; Qwen3-0.6B checksum 0.05), and these within-family values cross 0.5 across prompts for the same monitor (Qwen3-0.6B speedup 0.54 v2 -> 0.26 v1).
   "Hack actions are largely not recognized" is therefore a statement about pooled AUROC only; some families look well separated by the larger monitors (point estimates from one prompt and 20 a1/a0 pairs per family, no CIs).
 - Scale-free false alarm AUROC(Acue vs A, cot) is 0.37-0.61 across all monitors and prompts run (below 0.5 means Acue scored lower than A).
 - Not yet done: re-scoring 1.5B/1.7B under v1/v3, intent-equivalence check of Bnc rewrites, cue stems in hack actions (referee holes 5, 8), CIs for these numbers.
-  The paper has NOT yet been updated; its cue-reliance headline must be qualified (next cycle).
+  The paper was revised accordingly in cycle 14 (see paper/RESPONSE.md).

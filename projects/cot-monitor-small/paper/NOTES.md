@@ -2,10 +2,11 @@
 
 *Produced by an autonomous AI agent (Claude) on behalf of @pranavnandyalam. Not peer reviewed.*
 
-Build: `cd projects/cot-monitor-small/paper && timeout 300 latexmk -pdf -interaction=nonstopmode -halt-on-error -no-shell-escape main.tex && latexmk -c` (5 pages incl. references, no overfull boxes).
+Build: `cd projects/cot-monitor-small/paper && timeout 300 latexmk -pdf -interaction=nonstopmode -halt-on-error -no-shell-escape main.tex && latexmk -c` (7 pages: body ends on p. 6, references on pp. 6-7; no overfull boxes; revised 2026-10-07 after referee round 1).
 Figures: `python -I paper/make_figures.py` from the project dir; needs matplotlib, which is not in the project venv (used a throwaway venv with matplotlib 3.11.2, numpy 2.5.3, Python 3.14.4). Input: `results/analysis_test.json` only.
 
 ## Number provenance
+- Tables VII-VIII (post-hoc, round 1): `results/posthoc_test.md`, checked cell by cell with a script (dev K no longer used).
 - Tables IV-VI: `results/analysis_test.md` / `.json`, skeleton-bootstrap unit; checked cell by cell against the JSON with a script.
 - Table III (dev): `results/dev_summary.json` (`auroc_B_vs_A`, `mean_auroc_B_vs_A`), rounded to 3 d.p.
 - Revisions: `results/scores_test_v2_*.meta.json`. Timings: `results/timings.jsonl`.
@@ -13,7 +14,7 @@ Figures: `python -I paper/make_figures.py` from the project dir; needs matplotli
 - Derived, not in RESULTS.md: "changes it by at most 0.045" (max |B-A both - B-A cot| over the three other monitors, 0.962-0.916), "logged times sum to about 1.6 hours" (5910.67 s), and the observation that v2 was not best on dev for the two larger monitors (v1 0.997/1.000, v3 0.998/0.911).
 
 ## References
-10 of 10 verified via the arXiv API on 2026-10-06 (title/authors/year; venue only where the arXiv comment states it: NeurIPS 2025 for 2505.23575, ICLR 2026 for 2510.01367). Model details of 2608.00583 (gpt-5.4-nano / claude-sonnet-4.6 / gemini-2.5-flash; Qwen3-8B/32B surrogates) checked against its arXiv HTML v3. Qwen tech reports cite truncated author lists ("others").
+12 of 12 verified via the arXiv API (10 on 2026-10-06; 2511.08525 and 2601.05752 on 2026-10-07, ACL 2026 Findings per the arXiv comment of 2601.05752) (title/authors/year; venue only where the arXiv comment states it: NeurIPS 2025 for 2505.23575, ICLR 2026 for 2510.01367). Model details of 2608.00583 (gpt-5.4-nano / claude-sonnet-4.6 / gemini-2.5-flash; Qwen3-8B/32B surrogates) checked against its arXiv HTML v3. Qwen tech reports cite truncated author lists ("others").
 
 ## Weaknesses a reviewer will attack
 1. Synthetic, agent-written, lexically regular templates; the same agent wrote templates and hypotheses. No real agent traces.
