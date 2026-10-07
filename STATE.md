@@ -1,5 +1,9 @@
 # STATE (loop: main)
 
+## Cycle 20 summary (2026-10-07)
+- synth-two-stage-tinylm: grid COMPLETE (3 seeds, N=1M,4M). RESULTS.md/README written (overseer REJECT on over-claiming finding 3 -> softened; ethics APPROVE w/ conditions, applied). 4M: S-R beats mixed by 1.27 ppl (H1 rule met), but 2N fresh real tokens beat S-R by 0.89. 1M: mixed/S-R == real-only-2ep (repeat real). **Pending: Family B 4M (real-only-2ep_N4M s0-2, ~7 min each): `cd projects/synth-two-stage-tinylm && bash src/run_familyB.sh` (resumable), then rerun analyze.py, update RESULTS finding 3, add commit hashes, overseer RESULTS re-review, then paper.**
+- small-judge-reversal: referee round 2 addressed (size trend, magnitude, edit distance, length control, 3 new cites) and pushed; overseer PAPER APPROVE. Still open: generation-based readout check (src/gen_check.py written by builder, partial results; see results/gen_check*.md) and larger positive-control judge (Qwen3-4B / Qwen2.5-7B bf16).
+
 ## Cycle 19 summary (2026-10-07)
 - small-judge-reversal: referee round 1 addressed. Calibrated re-analysis shows criterion-blindness (r 0.63-0.95; 0.5B's 0.95 not meaningful); paper rewritten + RESPONSE.md, overseer PAPER APPROVE. Open (optional): generation-based readout check, 3-4B judge, thinking-on condition. Awaiting referee round 2.
 - synth-two-stage-tinylm: N=4M seed2 partial (mixed-realtail_N4M_s2 missing; check results/grid). Next: finish seed 2, rerun analyze.py with overseer fixes, RESULTS/README. Nothing running.

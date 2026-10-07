@@ -28,3 +28,21 @@ S-R_N4M_s1 ok 329s
 R-S_N4M_s1 ok 330s
 mixed-realtail_N4M_s1 ok 494s
 budget stop before real-only_N4M_s2 (elapsed 2141s, est 169s)
+# start 2026-10-06T19:16:24+00:00 budget 1800s
+# start 2026-10-06T19:16:41+00:00 budget 1800s
+real-only_N4M_s2 ok 160s
+mixed_N4M_s2 ok 270s
+S-R_N4M_s2 ok 288s
+R-S_N4M_s2 ok 272s
+# start 2026-10-07T00:30:45+00:00 budget 1200s
+mixed-realtail_N4M_s2 ok 271s
+grid complete
+real-only-2N_N1M_s0 ok
+real-only-2N_N1M_s1 ok
+real-only-2N_N1M_s2 ok
+real-only-2N_N4M_s0 ok
+real-only-2N_N4M_s1 ok
+real-only-2N_N4M_s2 ok
+real-only-2ep_N1M_s0 ok
+real-only-2ep_N1M_s1 ok
+real-only-2ep_N1M_s2 ok

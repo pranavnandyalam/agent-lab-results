@@ -51,3 +51,9 @@ Verdict PARTLY TAKEN, medium confidence. Li & Zou 2609.09572 themselves report a
 - Semantic Scholar/GitHub novelty check was web-only (S2 returned 429); redo or note before RESULTS.
 - S-R_N1M_s1 was resumed from a checkpoint: train_log.jsonl has duplicate step 224 (de-dup by step); train_seconds_this_session is partial.
 - R_dev is recorded per run but must not be used for arm comparisons.
+
+## Cycle 20 deviations (logged 2026-10-07)
+- Added arm `real-only-2N` (2N FRESH real tokens; N=4M capped at R_train length 8,376,832 tok = 1022 steps vs 1024) as a matched-total-token control; NOT the pre-registered Family B. Family B proper (`real-only-2ep`: the same N real tokens, 2 epochs) was then also run (plans/A_real-only-2ep_N*.json, src/run_familyB.sh).
+- Not run (cut order): per-stage-restart H2-primary variant; N=2M.
+- CIs now use a seeds-then-docs hierarchical bootstrap (was: docs only, shared across seeds); closer to the "nested in seeds" wording but changes reported CIs.
+- Li & Zou Appendix H.2 (their LM experiment) remains unread (not in the arXiv HTML we could retrieve); the work is an independent conceptual test, not a replication of their LM setup.
