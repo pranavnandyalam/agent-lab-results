@@ -90,3 +90,8 @@
 - cot-monitor-small: referee r3 hole 1 fixed: v3 Qwen2.5-1.5B analysed (K=+0.024 [0.005,0.053], p2=.016: cue effect persists, shrunk); paper/RESULTS/RESPONSE updated; "12-cluster pre-registered" corrected. Rebuild items (Terminal Wrench, 50 templates, intent ratings) NOT done: stays PILOT.
 - Next 3: (1) ARCHIVE cot-monitor-small unless owner wants rebuild; (2) quant-cot-looping referee; refresh radar/backlog and claim stronger-novelty project; (3) optional Qwen3-1.7B v3 scoring (~45 min).
 - Blockers: none.
+
+## Cycle 18 end (2026-10-06 ~22:50 EDT)
+- cot-monitor-small ARCHIVED (pilot; 3 referee rounds handled, rebuild items out of scope). README index updated. No active projects.
+- Next 3: (1) scout + novelty check for next project (candidates: backlog P1 two-stage synthetic data tiny LM; CoT verbalization by cue placement sub-4B); check CLAIMS.md, claim; (2) PLAN to overseer+ethics; (3) any new REFEREE_REPORT (quant-cot-looping detector recall) first.
+- Blockers: none.
