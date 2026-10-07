@@ -33,6 +33,190 @@
    "mean_offset_better": -3.31
   }
  },
+ "positive_control_r1": {
+  "n_pairs": 100,
+  "resample": 1,
+  "per_judge_r1": {
+   "Qwen2.5-0.5B-Instruct": {
+    "corr": 0.937,
+    "same_sign": 0.93,
+    "acc_cal": 0.65,
+    "reverse_cal": 0.05,
+    "slope": 0.754,
+    "median_ratio": 0.854,
+    "corr_ci": [
+     0.812,
+     0.978
+    ],
+    "same_sign_ci": [
+     0.88,
+     0.98
+    ],
+    "reverse_cal_ci": [
+     0.01,
+     0.1
+    ],
+    "slope_ci": [
+     0.641,
+     0.836
+    ],
+    "n_hep": 68,
+    "median_abs_d_better": 0.049,
+    "mean_offset_better": 2.73
+   },
+   "Qwen2.5-1.5B-Instruct": {
+    "corr": 0.661,
+    "same_sign": 0.72,
+    "acc_cal": 0.53,
+    "reverse_cal": 0.21,
+    "slope": 0.415,
+    "median_ratio": 0.858,
+    "corr_ci": [
+     0.525,
+     0.784
+    ],
+    "same_sign_ci": [
+     0.63,
+     0.81
+    ],
+    "reverse_cal_ci": [
+     0.13,
+     0.29
+    ],
+    "slope_ci": [
+     0.299,
+     0.54
+    ],
+    "n_hep": 68,
+    "median_abs_d_better": 0.483,
+    "mean_offset_better": -1.27
+   },
+   "Qwen3-0.6B": {
+    "corr": 0.893,
+    "same_sign": 0.87,
+    "acc_cal": 0.63,
+    "reverse_cal": 0.08,
+    "slope": 0.65,
+    "median_ratio": 0.82,
+    "corr_ci": [
+     0.848,
+     0.933
+    ],
+    "same_sign_ci": [
+     0.8,
+     0.93
+    ],
+    "reverse_cal_ci": [
+     0.03,
+     0.14
+    ],
+    "slope_ci": [
+     0.549,
+     0.785
+    ],
+    "n_hep": 68,
+    "median_abs_d_better": 0.271,
+    "mean_offset_better": 1.99
+   },
+   "Qwen3-1.7B": {
+    "corr": 0.579,
+    "same_sign": 0.79,
+    "acc_cal": 0.79,
+    "reverse_cal": 0.13,
+    "slope": 0.229,
+    "median_ratio": 0.346,
+    "corr_ci": [
+     0.395,
+     0.732
+    ],
+    "same_sign_ci": [
+     0.71,
+     0.87
+    ],
+    "reverse_cal_ci": [
+     0.07,
+     0.2
+    ],
+    "slope_ci": [
+     0.139,
+     0.32
+    ],
+    "n_hep": 68,
+    "median_abs_d_better": 5.415,
+    "mean_offset_better": -2.98
+   },
+   "Qwen3-4B": {
+    "corr": 0.104,
+    "same_sign": 0.59,
+    "acc_cal": 0.86,
+    "reverse_cal": 0.31,
+    "slope": 0.071,
+    "median_ratio": 0.387,
+    "corr_ci": [
+     -0.092,
+     0.291
+    ],
+    "same_sign_ci": [
+     0.49,
+     0.69
+    ],
+    "reverse_cal_ci": [
+     0.22,
+     0.4
+    ],
+    "slope_ci": [
+     -0.062,
+     0.198
+    ],
+    "n_hep": 68,
+    "median_abs_d_better": 14.007,
+    "mean_offset_better": -1.08
+   }
+  },
+  "diff_4B_minus_1.7B_r1": {
+   "corr": {
+    "diff": -0.475,
+    "ci": [
+     -0.72,
+     -0.229
+    ]
+   },
+   "same_sign": {
+    "diff": -0.2,
+    "ci": [
+     -0.32,
+     -0.08
+    ]
+   },
+   "acc_cal": {
+    "diff": 0.07,
+    "ci": [
+     -0.0,
+     0.15
+    ]
+   },
+   "reverse_cal": {
+    "diff": 0.18,
+    "ci": [
+     0.07,
+     0.29
+    ]
+   },
+   "slope": {
+    "diff": -0.158,
+    "ci": [
+     -0.329,
+     -0.009
+    ]
+   }
+  },
+  "Qwen3-4B_mass": {
+   "mean_mass_AB": 0.989,
+   "share_mass_lt_0.5": 0.01,
+   "n_passes": 400
+  },
+  "Qwen3-4B_forward_seconds_sum": 1848
+ },
  "letter_share_A": {
   "Qwen2.5-0.5B-Instruct": {
    "better": {

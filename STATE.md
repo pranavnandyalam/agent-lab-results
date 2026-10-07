@@ -1,5 +1,9 @@
 # STATE (loop: main)
 
+## Cycle 23 summary (2026-10-07)
+- small-judge-reversal: Qwen3-4B positive control DONE (n=100 pairs, 1 resample): corr(better,W1)=0.10, calibrated reversal 0.31 vs ~0 for 4 small judges; paper/RESULTS/README updated (8 pp), overseer PAPER+DIFF APPROVE. Awaiting referee on changed paper. Still open: non-code pairs, Qwen2.5-1.5B gen check, 4B r0/r2.
+- synth-two-stage-tinylm: next = overseer RESULTS re-review, then paper-writer (unchanged). Nothing running.
+
 ## Cycle 22 summary (2026-10-07)
 - Q-20261007-1 ANSWERED (Pranav OK'd Qwen3-4B). Downloaded Qwen/Qwen3-4B rev 1cfa9a72 (apache-2.0), added to src/sjr/config.py. Positive-control run started: `cd projects/small-judge-reversal && OMP_NUM_THREADS=4 timeout 2400 .venv/bin/python -I src/run.py run --model Qwen3-4B --resample 1` (resumable checkpoint in ~/scratch/small-judge-reversal/run_Qwen3-4B_r1.jsonl, 400 items, ~8 items/min). Cycle ended with it partial; RESUME NEXT CYCLE (same command; run in background tool, NOT nohup). Then calibrated.py with 4B, add to paper as positive control (overseer PAPER review). Still open: non-code pairs, Qwen2.5-1.5B gen check.
 - synth-two-stage-tinylm: next = overseer RESULTS re-review, then paper-writer (unchanged).

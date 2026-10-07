@@ -23,29 +23,34 @@ A Letter-Calibrated Negation Test on a Code-Heavy RewardBench Subsample}
 % Revision 2: rewritten after REFEREE round 1 (see RESPONSE.md).
 % Revision 3: external referee round 2; new numbers from ../results/referee2.md == ../results/referee2.json
 % (src/referee2.py, no new model runs).
+% Revision 4 (cycle 22): Qwen3-4B larger judge / intended positive control, resample 1 only (100 pairs).
+% 4B numbers: ../results/calibrated.md == ../results/calibrated.json ("Qwen3-4B"); same-pair comparison and
+% paired differences: figures/paper_stats.json "positive_control_r1" (make_figures.py from ../results/raw_*_r1.json).
 
 \begin{abstract}
 Small open language models are attractive as cheap pairwise judges, but does their verdict depend on the
 criterion asked? We test this by negation: each pair is judged under ``Which
-response is better?'' and ``Which response is worse?'', in both presentation orders. We evaluate four Qwen
-judges (Qwen2.5-0.5B/1.5B-Instruct, Qwen3-0.6B/1.7B; thinking off; next-token A-vs-B logit readout; CPU) on 300
-RewardBench pairs, 217 of which are HumanEvalPack code pairs whose two responses differ by a median of one word.
-Under the argmax readout, a correct reversal occurs in 0, 0, 0 and 1 of 300 pairs, and the pre-registered
+response is better?'' and ``Which response is worse?'', in both orders. We evaluate four Qwen
+judges (Qwen2.5-0.5B/1.5B-Instruct, Qwen3-0.6B/1.7B; thinking off; A-vs-B logit readout) on 300
+RewardBench pairs, 217 of which are code pairs whose responses differ by a median of one word.
+Under argmax, a correct reversal occurs in 0, 0, 0 and 1 of 300 pairs, and the pre-registered
 ``position-locking'' finding is largely implied by letter rates.
-A post-hoc readout that averages the A-minus-B logit over both orders, following existing swap calibration,
+A post-hoc order-averaged logit readout (existing swap calibration)
 shows that the pair-dependent shift under ``worse'' is positively correlated with the shift under ``better''
-(Pearson $r$ = 0.95, 0.63, 0.90, 0.63; OLS slope 0.82, 0.39, 0.67, 0.26). For the three smaller judges, whose
-calibrated ``better'' accuracy is 0.50--0.61, the shift keeps most of its size (median magnitude ratio
-0.82--0.90). Qwen3-1.7B has content signal (accuracy 0.81) and shows an attenuated shift: its shift shrinks to
-about a third (median ratio 0.35) but keeps its sign in 0.76 of pairs, which fits either a weak partial reversal or
-simply lower confidence under the negated prompt. On this sample, for these small judges, the logit readout is dominated by a
-pair-dependent shift that the negated question does not invert. A greedy-generation check for Qwen3-1.7B (100 pairs, 400 judgments) agrees with the logit argmax on 90\% of
-judgments (0.83 under ``better'', 0.97 under ``worse'') and shows 4/100 correct reversals versus 1/100 by logit;
-we did not run a larger positive-control judge or the generation check for the other judges.
+(Pearson $r$ = 0.95, 0.63, 0.90, 0.63). For the three smaller judges
+(calibrated accuracy 0.50--0.61) the shift keeps most of its size; Qwen3-1.7B (accuracy 0.81) keeps its sign in
+0.76 of pairs but the shift shrinks to about a third. A larger Qwen3-4B judge, run on one 100-pair resample as
+a positive control, behaves differently: $r$ = 0.10 [$-$0.09, 0.30], same sign 0.59, calibrated accuracy 0.86,
+calibrated reversal 0.31 [0.23, 0.40]; on the same 100 pairs its $r$ is 0.475 lower than Qwen3-1.7B's (paired
+bootstrap 95\% CI [0.229, 0.720]). It shows no negative correlation, so it is only a partial positive control, and with one
+family, one resample and $n=100$ the size trend is suggestive, not established. A greedy-generation check for
+Qwen3-1.7B agrees with the logit argmax on 90\% of 400 judgments.
 % Source: ../results/gen_check_summary.json (pair-category agreement 0.77; position-locked 0.22 vs 0.43).
+% 4B: ../results/calibrated.json "Qwen3-4B"."all"; paired difference: figures/paper_stats.json
+% positive_control_r1."diff_4B_minus_1.7B_r1".corr = -0.475, ci [-0.72, -0.229] (4B minus 1.7B).
 \end{abstract}
 % Sources: argmax counts ../results/analysis.json; r, same-sign, cal. acc. ../results/calibrated.json;
-% slopes, ratios, edit distance ../results/referee2.md (sections c, d).
+% ratios, edit distance ../results/referee2.md (sections c, d).
 
 \begin{IEEEkeywords}
 LLM-as-a-judge, pairwise evaluation, criterion negation, position bias, calibration, small language models,
@@ -83,6 +88,9 @@ high-mass pairs (a self-selected subset for Qwen3-1.7B) (Section~\ref{sec:result
 \item A correction of our own pre-registered framing: under a letter-biased null the position-locking
 hypothesis is nearly implied by letter marginals, so argmax taxonomies can misattribute a criterion-insensitive
 pair-dependent shift to position bias (Sections~\ref{sec:results} and~\ref{sec:disc}).
+\item A larger-judge check (Qwen3-4B, 100 pairs, one resample) showing that the calibrated readout registers a
+much weaker positive coupling for this judge than for Qwen3-1.7B on the same pairs, so the test is not blind to
+between-judge differences; the 4B judge is not a clean criterion follower (Section~\ref{sec:pc}).
 \end{enumerate}
 
 \section{Related Work}
@@ -195,7 +203,9 @@ mass 0.9998), a protocol deviation; on the evaluation set all judges have mean m
 
 \section{Experimental Setup}\label{sec:setup}
 \textbf{Models.} Four judges loaded from safetensors with \texttt{trust\_remote\_code=False} in float32
-(Table~\ref{tab:models}); all Apache-2.0 per their model cards.
+(Table~\ref{tab:models}); all Apache-2.0 per their model cards. A fifth judge, Qwen3-4B, was added later as an
+intended positive control and run on resample 1 only (100 pairs $\times$ 4 judgments, same prompt, readout and
+\texttt{enable\_thinking=False}).
 
 \begin{table}[t]
 \centering
@@ -211,6 +221,7 @@ Qwen/Qwen2.5-0.5B-Instruct~\cite{qwen2024qwen25} & 7ae557604adf & 494{,}032{,}76
 Qwen/Qwen2.5-1.5B-Instruct~\cite{qwen2024qwen25} & 989aa7980e4c & 1{,}543{,}714{,}304 & apache-2.0 \\
 Qwen/Qwen3-0.6B~\cite{qwen2025qwen3} & c1899de289a0 & 751{,}632{,}384 & apache-2.0 \\
 Qwen/Qwen3-1.7B~\cite{qwen2025qwen3} & 70d244cc86cc & 2{,}031{,}739{,}904 & apache-2.0 \\
+Qwen/Qwen3-4B~\cite{qwen2025qwen3} (r1 only) & 1cfa9a720891 & not recorded & apache-2.0 \\
 allenai/reward-bench (data)~\cite{lambert2024rewardbench} & 168d848cdbbe & -- & odc-by \\
 \bottomrule
 \end{tabular}}
@@ -238,8 +249,10 @@ bootstrap over pairs. The calibrated analysis reuses the same raw outputs; no ne
 \textbf{Hardware and budget.} CPU only: one shared aarch64 machine, 4 threads, float32; Python 3.14.4, torch
 2.14.1, transformers 4.57.6 (\texttt{results/pip\_freeze.txt}). Summed per-pass forward time is 2.37 h (879~s,
 3281~s, 1153~s, 3222~s). Extension judges (Qwen2.5-3B, Llama-3.2-1B) were allowed only if the core sweep was
-projected at $\le$1.5 h; the projection was 2.32 h, so none was run.
-% Source: figures/paper_stats.json (forward_seconds_sum, forward_hours_total); ../results/projection.json.
+projected at $\le$1.5 h; the projection was 2.32 h, so none was run. The later Qwen3-4B run (400 passes) took
+1848~s of summed forward time on the same machine.
+% Source: figures/paper_stats.json (forward_seconds_sum, forward_hours_total; positive_control_r1.
+% Qwen3-4B_forward_seconds_sum = 1848); ../results/projection.json.
 
 \section{Results}\label{sec:results}
 \textbf{Argmax readout (pre-registered).} Table~\ref{tab:main} gives the pooled taxonomy. Correct reversal is
@@ -435,13 +448,82 @@ RewardBench sections are unbalanced (chat 12, chat-hard 65, reasoning 223 pairs)
 % Source: argmax: ../results/analysis.md sections "Secondary" and "Per section" == ../results/analysis.json;
 % calibrated length: ../results/referee2.md section (a) == ../results/referee2.json a_length.
 
+\subsection{Larger Judge as Intended Positive Control (Qwen3-4B, Post Hoc)}\label{sec:pc}
+To check whether the negation test can register criterion following at all, we ran Qwen3-4B on resample~1
+(100 pairs: 68 HEP, 32 non-HEP) with the identical prompt, readout and thinking setting. Its readout is clean
+(mean A/B mass 0.989; 1.0\% of passes below 0.5) and its letter rates are moderate (P(``A'') 0.45 under
+\emph{better}, 0.30 under W1). On all 100 pairs, $r(d_\mathrm{better}, d_\mathrm{W1})$ = 0.10 [$-$0.09, 0.30],
+the same-sign share is 0.59 [0.49, 0.68], calibrated ``better'' accuracy is 0.86 and calibrated reversal is
+0.31 [0.23, 0.40]. Restricting to pairs with A/B mass $>0.9$ on all four passes ($n=97$) gives $r$ = 0.09
+[$-$0.11, 0.29]. By subset, $r$ = 0.30 [0.10, 0.49] on HEP ($n=68$, calibrated accuracy 0.96) and $-$0.19
+[$-$0.57, 0.20] on non-HEP pairs ($n=32$, accuracy 0.66); the non-HEP CI is wide and includes 0. Unlike the
+smaller judges, its observed all-same-letter share (0.06) is below the letter-null expectation (0.17).
+% Source: ../results/calibrated.md rows "Qwen3-4B" == ../results/calibrated.json "Qwen3-4B" (all, hep, non-hep,
+% "mass>0.9 all 4 passes", letter_null); mass: figures/paper_stats.json positive_control_r1."Qwen3-4B_mass".
+
+Because the four smaller judges were pooled over 300 pairs, Table~\ref{tab:pc} re-scores every judge on the
+same 100 resample-1 pairs. The smaller judges' values on this subset are close to their 300-pair values. On these
+pairs, Qwen3-4B's $r$ is lower than Qwen3-1.7B's by 0.475 (paired bootstrap, 4B minus 1.7B: $-$0.475
+[$-$0.720, $-$0.229]); the same-sign share is lower by 0.20 [0.08, 0.32], calibrated reversal is higher by 0.18
+[0.07, 0.29], and the OLS slope is lower by 0.158 [0.009, 0.329]; the accuracy difference, 0.07 [$-$0.00, 0.15],
+is not distinguishable from zero at this $n$. Fig.~\ref{fig:pc} shows both judges on the same pairs.
+
+The 4B judge is therefore a \emph{partial} positive control. The coupling between the two questions is much
+weaker, and in 0.31 of pairs the judge prefers $C$ under \emph{better} and $R$ under W1 (about 36\% of the 86
+pairs where it prefers $C$). But a criterion-following judge would show a clearly negative $r$ and slope; the
+4B judge shows neither (slope 0.07 [$-$0.06, 0.20]), and its median $|d_\mathrm{W1}|/|d_\mathrm{better}|$ is
+0.39, so the shift mostly shrinks under ``worse'' rather than inverting. What the comparison does show is that
+the readout is not insensitive by construction: on identical pairs, prompt and readout it separates Qwen3-4B
+from Qwen3-1.7B. Read together with the falling $r$ within both smaller families, the data are consistent with
+criterion coupling weakening with size, but this rests on one family at 4B, one resample, $n=100$, and a
+post-hoc analysis, so the trend is suggestive, not established. We did not compute the argmax taxonomy or
+the magnitude analyses of Table~\ref{tab:mag} for Qwen3-4B beyond those in Table~\ref{tab:pc}.
+% Source: figures/paper_stats.json positive_control_r1 (per_judge_r1, diff_4B_minus_1.7B_r1: corr -0.475
+% [-0.72,-0.229], same_sign -0.2 [-0.32,-0.08], reverse_cal 0.18 [0.07,0.29], slope -0.158 [-0.329,-0.009],
+% acc_cal 0.07 [-0.0,0.15]); 36% = 0.31/0.86 from ../results/calibrated.json.
+
+\begin{table}[t]
+\centering
+% Source: figures/paper_stats.json "positive_control_r1"."per_judge_r1" (make_figures.py, from
+% ../results/raw_<model>_r1.json; rows generated mechanically from the JSON). Bootstrap seed 0, 2000 resamples.
+\caption{All five judges re-scored on the same 100 resample-1 pairs (post hoc). Columns as in
+Tables~\ref{tab:cal} and~\ref{tab:mag}; 95\% bootstrap CIs. The Qwen3-4B point estimates equal
+\texttt{results/calibrated.json}; its CIs here come from a separate bootstrap draw, so they can differ in the last
+digit from those quoted in the text (e.g.\ $r$ upper bound 0.29 vs.\ 0.30).}
+\label{tab:pc}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+Judge ($n=100$) & $r$ & Same sign & Cal.\ acc. & Cal.\ rev. & Slope & Ratio \\
+\midrule
+Qwen2.5-0.5B & 0.94 [0.81, 0.98] & 0.93 & 0.65 & 0.05 & 0.75 [0.64, 0.84] & 0.85 \\
+Qwen2.5-1.5B & 0.66 [0.53, 0.78] & 0.72 & 0.53 & 0.21 & 0.41 [0.30, 0.54] & 0.86 \\
+Qwen3-0.6B & 0.89 [0.85, 0.93] & 0.87 & 0.63 & 0.08 & 0.65 [0.55, 0.79] & 0.82 \\
+Qwen3-1.7B & 0.58 [0.40, 0.73] & 0.79 & 0.79 & 0.13 & 0.23 [0.14, 0.32] & 0.35 \\
+\midrule
+Qwen3-4B & 0.10 [$-$0.09, 0.29] & 0.59 & 0.86 & 0.31 & 0.07 [$-$0.06, 0.20] & 0.39 \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_positive_control.pdf}
+% Generated by make_figures.py from ../results/raw_Qwen3-1.7B_r1.json and ../results/raw_Qwen3-4B_r1.json.
+\caption{Calibrated shift under ``better'' ($x$) vs.\ ``worse'' ($y$) for Qwen3-1.7B and Qwen3-4B on the same
+100 resample-1 pairs (purple: HumanEvalPack, orange: other). A criterion-following judge would put points in the
+lower-right and upper-left quadrants.}
+\label{fig:pc}
+\end{figure}
+
 \section{Discussion and Limitations}\label{sec:disc}
 \textbf{Interpretation.} On this sample, for these small judges, the logit readout is dominated by a
 pair-dependent shift that the negated question does not invert; the question wording mostly moves the letter
 prior. For the three smaller judges the shift keeps its sign (0.71--0.92 of pairs) and most of its size (median
 ratio 0.82--0.90), and it is close to chance with respect to the RewardBench label. Qwen3-1.7B is different: it
 has content signal under ``better'' and its shift shrinks to about a third under ``worse'', a weak partial
-reversal rather than none. We call the pattern criterion-blind only in this operational sense. Because most
+reversal rather than none. Qwen3-4B (100 pairs) goes further: its shift is nearly uncoupled across the two
+questions ($r$ = 0.10) but still not inverted (slope near 0). We call the small-judge pattern criterion-blind only in this operational sense. Because most
 pairs are one-word bug edits, it may say more about how these judges handle near-identical code than about
 negation in general.
 Our earlier, pre-registered interpretation that the smallest judges are ``position-locked'' and that the
@@ -452,14 +534,15 @@ For practitioners, the lesson is methodological as much as substantive: argmax v
 judges can hide graded preferences, and an order-averaged logit difference is a cheap check that changes the
 diagnosis.
 
-\textbf{Scope.} The claim is limited to four Qwen judges up to 1.7B, a next-token argmax A/B readout (and its
+\textbf{Scope.} The main claim is limited to four Qwen judges up to 1.7B, a next-token argmax A/B readout (and its
 order-averaged logit difference), thinking disabled, one prompt template, and a 300-pair RewardBench
-subsample in which 217 pairs are HumanEvalPack code pairs and responses are at most 150 tokens. We make no claim
-about larger judges, reasoning-enabled judges~\cite{jayarao2025explicit}, or generated verdicts.
+subsample in which 217 pairs are HumanEvalPack code pairs and responses are at most 150 tokens. The Qwen3-4B
+result is one judge from the same family on 100 of these pairs; we make no general claim about larger judges,
+reasoning-enabled judges~\cite{jayarao2025explicit}, or generated verdicts.
 
 \textbf{Threats to validity.}
 (i)~\emph{Post-hoc analysis}: the calibrated readout, the letter-biased null, the subset, magnitude,
-size-difference, length and edit-distance analyses were added after review; they were not pre-registered.
+size-difference, length, edit-distance and Qwen3-4B analyses were added after review; they were not pre-registered.
 Their CIs are descriptive, with no multiplicity control. The W2 control and the length-control shares in both
 orders are argmax-based.
 (i$'$)~\emph{Letter offsets vary by pair}: observed same-letter shares exceed the letter-null expectation (0.71
@@ -482,9 +565,11 @@ pre-registered but, given the letter rates, nearly tautological.
 (vii)~\emph{Protocol deviation}: the development-set mass check was run for one judge only.
 (viii)~\emph{Novelty}: the related-work scan used arXiv and web search only.
 
-\textbf{What was not done (planned for a next cycle).} (a)~\emph{Readout validation}: done for Qwen3-1.7B only (100 pairs $\times$ 4 judgments, greedy, 16 tokens; 90\% agreement with logit argmax, generated reversal 4/100 vs.\ 1/100; results/gen\_check.md); pair-level argmax categories are sensitive to the readout (category agreement 0.77; position-locked 0.22 generated vs.\ 0.43 logit; P(A) under ``better'' 0.49 vs.\ 0.33), so the argmax taxonomy, and in particular the position-locking share, should not be over-read; the other three judges are not validated. (b)~\emph{Positive control}: no larger judge (e.g.\ Qwen3-4B or Qwen2.5-7B) was run. Without a judge that is
-known to reverse under this exact prompt and readout, we cannot separate ``these judges are criterion-blind''
-from ``this test cannot detect criterion following''; the length analysis is only a partial substitute.
+\textbf{What was not done (planned for a next cycle).} (a)~\emph{Readout validation}: done for Qwen3-1.7B only (100 pairs $\times$ 4 judgments, greedy, 16 tokens; 90\% agreement with logit argmax, generated reversal 4/100 vs.\ 1/100; results/gen\_check.md); pair-level argmax categories are sensitive to the readout (category agreement 0.77; position-locked 0.22 generated vs.\ 0.43 logit; P(A) under ``better'' 0.49 vs.\ 0.33), so the argmax taxonomy, and in particular the position-locking share, should not be over-read; the other three judges are not validated. (b)~\emph{Positive control}: only partly done. Qwen3-4B was run on one resample (100 pairs, one family);
+it shows that the readout separates judges on identical pairs, but it is not a judge known to reverse (its $r$
+and slope are near 0, not negative), so the test's sensitivity to full criterion following is still unshown.
+Not run: Qwen3-4B on resamples 0 and 2, another family (e.g.\ Qwen2.5-7B), and the argmax taxonomy and
+generation check for the 4B judge.
 (c)~A non-code sample with substantively different responses was not added. (d)~No thinking-enabled condition (budget rule; Section~\ref{sec:setup}), no calibrated re-analysis of W2, and
 no prompt-wording search beyond W1/W2.
 
@@ -499,8 +584,10 @@ high-mass pairs. On this sample, which is dominated by one-word code edits, and 
 readout is dominated by a shift that the negated question does not invert; for the three smaller judges it keeps
 most of its size, while Qwen3-1.7B, the only judge with clear content signal (calibrated accuracy 0.81), shows an
 attenuated shift (weak partial reversal or lower confidence under ``worse''). The correlation falls with size within both families, a post-hoc observation on two sizes
-each. We ran a generation check for Qwen3-1.7B only (90\% agreement with the logit argmax, 100 pairs) and no larger positive-control judge; the latter is needed before this can be called
-criterion-blindness rather than a limit of the test.
+each. A Qwen3-4B judge on 100 of the pairs shows a much weaker coupling ($r$ = 0.10, 0.475 below Qwen3-1.7B on
+the same pairs) and calibrated reversal in 0.31 of pairs, but no negative correlation; with one family, one
+resample and $n=100$, a scale trend is suggestive, not established. We ran a generation check for Qwen3-1.7B only
+(90\% agreement with the logit argmax, 100 pairs).
 
 \section*{Reproducibility Statement}
 Repository path: \url{projects/small-judge-reversal/}. Raw per-pass outputs: \url{results/raw_<model>_r<k>.json};
@@ -517,8 +604,11 @@ OMP_NUM_THREADS=4 .venv/bin/python -I \
 # for M in the 4 models, s in 0 1 2:
 OMP_NUM_THREADS=4 .venv/bin/python -I \
   src/run.py run --model $M --resample $s
+# Qwen3-4B positive control (resample 1 only):
+OMP_NUM_THREADS=4 .venv/bin/python -I \
+  src/run.py run --model Qwen3-4B --resample 1
 .venv/bin/python -I src/analyze.py
-# generation check (seed 0, revision in results/gen_check_*.json):
+# generation check (seed 0; see results/gen_check*):
 OMP_NUM_THREADS=4 .venv/bin/python -I \
   src/gen_check.py gen --model Qwen3-1.7B --n 100
 .venv/bin/python -I src/gen_check.py report
@@ -528,7 +618,9 @@ OMP_NUM_THREADS=4 .venv/bin/python -I \
 python -I paper/make_figures.py
 \end{verbatim}}
 Only \texttt{src/analyze.py}, \texttt{src/calibrated.py}, \texttt{src/referee2.py} and \texttt{paper/make\_figures.py} are needed to
-re-derive all tables and figures from the committed raw outputs.
+re-derive all tables and figures from the committed raw outputs. Caveats for the Qwen3-4B run:
+\texttt{fetch\_data.sh} does not download Qwen3-4B (fetch the pinned revision separately), and because the model
+config now lists Qwen3-4B, for which only resample~1 exists, \texttt{src/analyze.py} must skip that model to run.
 
 \section*{AI-Authorship Disclosure}
 Produced by an autonomous AI agent (Claude) on behalf of @pranavnandyalam. Not peer reviewed. The study design,

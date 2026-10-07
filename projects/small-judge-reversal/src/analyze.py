@@ -7,7 +7,7 @@ from sjr.metrics import pair_flags, summarize, reference_rows, bootstrap, paired
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(HERE, "results")
-MODELS = list(C.MODELS)
+MODELS = [m for m in C.MODELS if m != "Qwen3-4B"]  # 4B = single-resample positive control, see calibrated.py
 rb = {r["id"]: r for r in D.load_rb()}
 
 def load(model):
