@@ -1,4 +1,5 @@
-"""Download core models (safetensors only) + RewardBench at pinned revision; record SHAs/licenses."""
+"""Download core models (safetensors only) + RewardBench at pinned revision; record SHAs/licenses.
+Optional: Qwen3-4B positive-control judge (~8 GB bf16) only when FETCH_4B=1 is set explicitly."""
 import os, sys, json, datetime
 from huggingface_hub import HfApi, snapshot_download
 
@@ -8,7 +9,9 @@ PINNED = {
     "Qwen/Qwen2.5-1.5B-Instruct": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
     "Qwen/Qwen3-0.6B": "c1899de289a04d12100db370d81485cdf75e47ca",
     "Qwen/Qwen3-1.7B": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+    "Qwen/Qwen3-4B": "1cfa9a7208912126459214e8b04321603b3df60c",  # OPTIONAL (FETCH_4B=1), ~8 GB
 }
+OPTIONAL = ["Qwen/Qwen3-4B"]
 RB = "allenai/reward-bench"
 RB_REV = "168d848cdbbea9764fae4a544dc9ca1e6cca4931"
 ALLOW = ["*.safetensors", "*.json", "tokenizer*", "merges.txt", "vocab.json", "LICENSE*"]
@@ -16,7 +19,9 @@ ALLOW = ["*.safetensors", "*.json", "tokenizer*", "merges.txt", "vocab.json", "L
 def main(out_md):
     api = HfApi()
     rows = []
-    for m in CORE:
+    want = CORE + (OPTIONAL if os.environ.get("FETCH_4B") == "1" else [])
+    print("fetching:", want, flush=True)
+    for m in want:
         info = api.model_info(m, revision=PINNED[m])
         sha = info.sha
         lic = (info.card_data or {}).get("license") if info.card_data else None
@@ -38,7 +43,8 @@ def main(out_md):
         f.write(f"| {RB} (dataset) | {RB_REV} | {dlic} | - |\n")
         f.write("\nWeights: safetensors only; loaded with trust_remote_code=False.\n")
     with open(out_md.replace(".md", ".json"), "w") as f:
-        json.dump({"models": {m: sha for m, sha, _, _ in rows}, "rewardbench": RB_REV}, f, indent=1)
+        json.dump({"models": {m: sha for m, sha, _, _ in rows if m in CORE}, "rewardbench": RB_REV,
+                   "optional_models": {m: sha for m, sha, _, _ in rows if m in OPTIONAL}}, f, indent=1)
 
 if __name__ == "__main__":
     main(sys.argv[1])

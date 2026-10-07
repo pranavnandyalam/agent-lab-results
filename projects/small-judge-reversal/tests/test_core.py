@@ -69,3 +69,21 @@ def test_split_pool():
     assert D.split_pool(pool) == (dev, res)  # deterministic
     with pytest.raises(AssertionError):
         D.split_pool(pool[:349])
+
+
+def test_noncode_select():
+    mk = lambda i, sub, p="q", c="c", r="r": {"id": i, "subset": sub, "prompt": p, "chosen": c, "rejected": r}
+    rows = [mk(i, "alpacaeval-easy", c=f"alpha {i}", r=f"zzzz different {i*7}") for i in range(30)]
+    rows += [mk(100 + i, "math-prm", c=f"x={i}", r=f"the answer is {i+1}") for i in range(10)]
+    rows += [mk(200, "hep-go"), mk(201, "donotanswer"), mk(202, "llmbar-natural", p="kill it"),
+             mk(203, "llmbar-natural", c="same  text", r="same text"), mk(204, "mt-bench-hard", p="long " * 900),
+             mk(205, "chat-unknown"), mk(0 + 1000, "mt-bench-easy")]
+    full = lambda r: len(r["prompt"].split()) + 50
+    ids, c, meta = D.noncode_select(rows, full, exclude_ids={0, 1}, n=20)
+    assert c["code_subset"] == 1 and c["safety_subset"] == 1 and c["safety_keyword"] == 1 and c["already_used"] == 2
+    assert c["not_substantively_different"] == 1 and c["full_prompt_too_long"] == 1 and c["unknown_subset"] == 1
+    assert len(ids) == 20 == len(set(ids)) and not ({0, 1, 200, 203, 204} & set(ids))
+    assert meta["quota_by_section"] == {"chat": 15, "reasoning": 5}  # 29 chat (28 alpaca + mt-bench-easy) : 10 math -> 14.87/5.13
+    assert D.noncode_select(rows, full, {0, 1}, n=20)[0] == ids  # deterministic
+    with pytest.raises(AssertionError):
+        D.noncode_select(rows, full, {0, 1}, n=100)

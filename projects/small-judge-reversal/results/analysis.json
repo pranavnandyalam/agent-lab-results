@@ -512,5 +512,104 @@
     0.05333333333333337
    ]
   }
+ },
+ "optional_models": {
+  "Qwen3-4B": {
+   "status": "present",
+   "resamples": [
+    1
+   ],
+   "n_pairs": 100,
+   "mean_mass_AB": 0.9894744081266665,
+   "pooled": {
+    "n": 100,
+    "share_correct_reversal": 0.1,
+    "share_position_locked": 0.06,
+    "share_criterion_blind": 0.2,
+    "share_reversed_consistent": 0.02,
+    "share_other": 0.62,
+    "acc_better_poscons": 0.71,
+    "n_cond": 71,
+    "cond_flip_rate": 0.14084507042253522,
+    "uncond_flip_rate": 0.14,
+    "uncond_flip_chance_norm": -0.14666666666666664,
+    "n_noncr": 90,
+    "pos_locked_share_of_noncr": 0.06666666666666667
+   },
+   "cond_flip_ci95": [
+    0.06756756756756757,
+    0.22535211267605634
+   ],
+   "same_pairs_core": {
+    "Qwen2.5-0.5B-Instruct": {
+     "n": 100,
+     "share_correct_reversal": 0.0,
+     "share_position_locked": 1.0,
+     "share_criterion_blind": 0.0,
+     "share_reversed_consistent": 0.0,
+     "share_other": 0.0,
+     "acc_better_poscons": 0.0,
+     "n_cond": 0,
+     "cond_flip_rate": NaN,
+     "uncond_flip_rate": 0.0,
+     "uncond_flip_chance_norm": -0.3333333333333333,
+     "n_noncr": 100,
+     "pos_locked_share_of_noncr": 1.0
+    },
+    "Qwen2.5-1.5B-Instruct": {
+     "n": 100,
+     "share_correct_reversal": 0.0,
+     "share_position_locked": 0.69,
+     "share_criterion_blind": 0.0,
+     "share_reversed_consistent": 0.0,
+     "share_other": 0.31,
+     "acc_better_poscons": 0.13,
+     "n_cond": 13,
+     "cond_flip_rate": 0.0,
+     "uncond_flip_rate": 0.01,
+     "uncond_flip_chance_norm": -0.32,
+     "n_noncr": 100,
+     "pos_locked_share_of_noncr": 0.69
+    },
+    "Qwen3-0.6B": {
+     "n": 100,
+     "share_correct_reversal": 0.0,
+     "share_position_locked": 0.85,
+     "share_criterion_blind": 0.03,
+     "share_reversed_consistent": 0.0,
+     "share_other": 0.12,
+     "acc_better_poscons": 0.08,
+     "n_cond": 8,
+     "cond_flip_rate": 0.0,
+     "uncond_flip_rate": 0.05,
+     "uncond_flip_chance_norm": -0.26666666666666666,
+     "n_noncr": 100,
+     "pos_locked_share_of_noncr": 0.85
+    },
+    "Qwen3-1.7B": {
+     "n": 100,
+     "share_correct_reversal": 0.0,
+     "share_position_locked": 0.44,
+     "share_criterion_blind": 0.12,
+     "share_reversed_consistent": 0.0,
+     "share_other": 0.44,
+     "acc_better_poscons": 0.43,
+     "n_cond": 43,
+     "cond_flip_rate": 0.0,
+     "uncond_flip_rate": 0.05,
+     "uncond_flip_chance_norm": -0.26666666666666666,
+     "n_noncr": 100,
+     "pos_locked_share_of_noncr": 0.44
+    }
+   },
+   "diff_vs_Qwen3-1.7B_cond_flip_ci95": [
+    0.06756756756756757,
+    0.22535211267605634
+   ],
+   "diff_vs_Qwen3-1.7B_uncond_norm_ci95": [
+    0.013333333333333336,
+    0.22666666666666668
+   ]
+  }
  }
 }

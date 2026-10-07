@@ -12,3 +12,13 @@ OMP_NUM_THREADS=2 .venv/bin/python -I src/analyze.py   # -> results/analysis.{js
 
 ## Calibrated re-analysis (cycle 19)
 `.venv/bin/python -I src/calibrated.py` -> results/calibrated.{json,md} (no model runs; reads raw_*.json).
+
+## Cycle 23: independence null, param counts, non-code pair set
+.venv/bin/python -I src/param_count.py --write          # param counts from cached safetensors headers -> results/models.{md,json}
+OMP_NUM_THREADS=4 timeout 900 .venv/bin/python -I src/analyze.py      # now also writes optional_models (Qwen3-4B) if raw present
+OMP_NUM_THREADS=4 timeout 900 .venv/bin/python -I src/calibrated.py   # + independence null; -> calibrated.{json,md}, calibrated_null.json
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 1200 .venv/bin/python -I src/run.py prepare_noncode          # -> results/splits_noncode.json
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 1200 .venv/bin/python -I src/run.py trial --pairs noncode --model Qwen3-0.6B --n 10   # -> results/trial_nc_Qwen3-0.6B.json
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 1500 .venv/bin/python -I src/run.py run --pairs noncode --model Qwen3-0.6B --resample 1   # -> results/raw_nc_Qwen3-0.6B_r1.json
+# remaining non-code passes (resumable; rerun same command after a timeout): M in Qwen2.5-0.5B-Instruct Qwen2.5-1.5B-Instruct Qwen3-1.7B [Qwen3-4B]
+#   OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 2400 .venv/bin/python -I src/run.py run --pairs noncode --model $M --resample 1

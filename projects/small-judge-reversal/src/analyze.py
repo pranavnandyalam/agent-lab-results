@@ -1,4 +1,7 @@
-"""Analysis of raw sweep JSONs -> results/analysis.json + results/analysis.md. Run: python -I src/analyze.py"""
+"""Analysis of raw sweep JSONs -> results/analysis.json + results/analysis.md. Run: python -I src/analyze.py
+Core judges (H1/H2) need all three resamples. Optional judges (Qwen3-4B positive control) are analysed automatically
+if any raw_<model>_r<k>.json exists, on the pairs they have, next to the core judges on the SAME pairs
+(key "optional_models"); if absent they are skipped with a note. No manual edits needed either way."""
 import json, os, sys, glob
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
@@ -7,14 +10,17 @@ from sjr.metrics import pair_flags, summarize, reference_rows, bootstrap, paired
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(HERE, "results")
-MODELS = [m for m in C.MODELS if m != "Qwen3-4B"]  # 4B = single-resample positive control, see calibrated.py
+OPTIONAL = ["Qwen3-4B"]  # single-resample positive control (also in calibrated.py)
+MODELS = [m for m in C.MODELS if m not in OPTIONAL]
 rb = {r["id"]: r for r in D.load_rb()}
 
 def load(model):
     """-> {pair_id: {(criterion, order): letter}}, mass list, resample-of-id"""
     J, mass, rs = {}, [], {}
     for s in (0, 1, 2):
-        d = json.load(open(os.path.join(RES, f"raw_{model}_r{s}.json")))
+        fp = os.path.join(RES, f"raw_{model}_r{s}.json")
+        if model in OPTIONAL and not os.path.exists(fp): continue  # core judges must have all resamples
+        d = json.load(open(fp))
         for r in d["records"]:
             J.setdefault(r["id"], {})[(r["criterion"], r["order"])] = r["letter"]
             rs[r["id"]] = s
@@ -69,6 +75,22 @@ for fam, (s, b) in {"Qwen2.5": ("Qwen2.5-0.5B-Instruct", "Qwen2.5-1.5B-Instruct"
                "n_cond_small": out["models"][s]["pooled"]["n_cond"], "n_cond_big": out["models"][b]["pooled"]["n_cond"],
                "diff_ci975": [lo, hi], "n_valid_boot": nb, "uncond_norm_diff_ci975": [lo2, hi2]}
 out["h1"] = h1
+# optional judges (positive control): same pairs as they have, core judges re-scored on those pairs
+opt = {}
+for m in OPTIONAL:
+    if not any(os.path.exists(os.path.join(RES, f"raw_{m}_r{s}.json")) for s in (0, 1, 2)):
+        opt[m] = {"status": "absent (no raw files)"}; continue
+    J, mass, rs = load(m)
+    oids = sorted(i for i in J if all(k in J[i] for k in [("better","cf"),("better","rf"),("W1","cf"),("W1","rf")]))
+    fl = [pair_flags(J[i]) for i in oids]
+    o = {"status": "present", "resamples": sorted(set(rs[i] for i in oids)), "n_pairs": len(oids),
+         "mean_mass_AB": float(np.mean(mass)), "pooled": summarize(fl),
+         "cond_flip_ci95": list(bootstrap(fl, "cond_flip_rate")[:2]),
+         "same_pairs_core": {c: summarize([F[c][i] for i in oids if i in F[c]]) for c in MODELS},
+         "diff_vs_Qwen3-1.7B_cond_flip_ci95": list(paired_bootstrap_diff([F["Qwen3-1.7B"][i] for i in oids], fl, "cond_flip_rate")[:2]),
+         "diff_vs_Qwen3-1.7B_uncond_norm_ci95": list(paired_bootstrap_diff([F["Qwen3-1.7B"][i] for i in oids], fl, "uncond_flip_chance_norm")[:2])}
+    opt[m] = o
+out["optional_models"] = opt
 json.dump(out, open(os.path.join(RES, "analysis.json"), "w"), indent=1)
 
 f = lambda x: "nan" if x != x else f"{x:.3f}"
@@ -97,5 +119,12 @@ L += ["", "## Secondary: W2 wording vs W1 on resample 0 (100 pairs); length cont
 for m in MODELS:
     o = out["models"][m]
     L.append(f"- {m}: W1 cond_flip {f(o['w2_r0_w1_same_pairs']['cond_flip_rate'])}, W2 cond_flip {f(o['w2_r0']['cond_flip_rate'])} (n_cond {o['w2_r0']['n_cond']}); W1 cr share {f(o['w2_r0_w1_same_pairs']['share_correct_reversal'])}, W2 cr share {f(o['w2_r0']['share_correct_reversal'])}; length acc {f(o['length_ctrl']['acc_longer_both_orders'])} (n {o['length_ctrl']['n']})")
+L += ["", "## Optional judges (positive control; not part of H1/H2; core judges re-scored on the same pairs)"]
+for m, o in opt.items():
+    if o["status"] != "present": L.append(f"- {m}: {o['status']}"); continue
+    p = o["pooled"]
+    L.append(f"- {m} (resamples {o['resamples']}, n={o['n_pairs']}, A/B mass {o['mean_mass_AB']:.3f}): acc={f(p['acc_better_poscons'])}, cond_flip={f(p['cond_flip_rate'])} (n_cond {p['n_cond']}) CI {[round(x,3) for x in o['cond_flip_ci95']]}, cr={f(p['share_correct_reversal'])}, pl={f(p['share_position_locked'])}, cb={f(p['share_criterion_blind'])}; minus Qwen3-1.7B same pairs: cond_flip diff CI {[round(x,3) for x in o['diff_vs_Qwen3-1.7B_cond_flip_ci95']]}, chance-norm uncond diff CI {[round(x,3) for x in o['diff_vs_Qwen3-1.7B_uncond_norm_ci95']]}")
+    for c, q in o["same_pairs_core"].items():
+        L.append(f"  - {c} same pairs: acc={f(q['acc_better_poscons'])}, cond_flip={f(q['cond_flip_rate'])} (n_cond {q['n_cond']}), cr={f(q['share_correct_reversal'])}")
 open(os.path.join(RES, "analysis.md"), "w").write("\n".join(L) + "\n")
 print("\n".join(L))

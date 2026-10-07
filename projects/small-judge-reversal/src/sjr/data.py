@@ -1,4 +1,4 @@
-import os, re, random
+import os, re, random, difflib
 import pyarrow.parquet as pq
 from . import config as C
 from .prompts import chat_input
@@ -51,11 +51,52 @@ def split_pool(pool, n_dev=C.N_DEV, n_per=C.N_PER_RESAMPLE, seeds=C.RESAMPLE_SEE
         res[s] = pick
     return dev, res
 
-def make_full_len(tok, is_qwen3=False):
+def make_full_len(tok, is_qwen3=False, crits=("better", "W1", "W2", "length")):
     def full_len(r):
         best = 0
-        for crit in ("better", "W1", "W2", "length"):
+        for crit in crits:
             for a, b in ((r["chosen"], r["rejected"]), (r["rejected"], r["chosen"])):
                 best = max(best, len(tok(chat_input(tok, r["prompt"], a, b, crit, is_qwen3))["input_ids"]))
         return best
     return full_len
+
+
+# ---- non-code pair set (referee: >=200 non-code pairs, substantively different responses, no 150-token filter) ----
+NC_SECTIONS = ("chat", "chat-hard", "reasoning")  # reasoning restricted to non-code subsets (math-prm); hep-* excluded
+NC_N, NC_SEED, NC_MAX_FULL, NC_MAX_SIM = 200, 20261007, 600, 0.9
+
+def text_sim(a, b):
+    """Character-level difflib ratio in [0,1] (1 = identical)."""
+    return difflib.SequenceMatcher(None, a, b, autojunk=False).ratio()
+
+def noncode_select(rows, full_len, exclude_ids, n=NC_N, seed=NC_SEED, max_full=NC_MAX_FULL, max_sim=NC_MAX_SIM):
+    """Deterministic non-code pair set. Filters (in order): safety subsets / unknown subsets; code subsets (hep-*);
+    safety keyword in prompt; id already used (dev or main resamples); full judge input > max_full tokens
+    (full_len(row), max over the core passes); responses not substantively different (whitespace-normalised equal or
+    char similarity >= max_sim). No per-response length filter. Selection: proportional allocation of n over sections
+    (largest remainder, ties by section name), then random.Random(seed).sample of the sorted ids within each section.
+    Returns (sorted ids, counts, meta)."""
+    counts = {"total": len(rows), "safety_subset": 0, "unknown_subset": 0, "code_subset": 0, "safety_keyword": 0,
+              "already_used": 0, "full_prompt_too_long": 0, "not_substantively_different": 0}
+    pool = {}
+    for r in rows:
+        if r["subset"] in C.SAFETY_SUBSETS: counts["safety_subset"] += 1; continue
+        if r["subset"] not in SUB2SEC: counts["unknown_subset"] += 1; continue
+        if r["subset"].startswith("hep"): counts["code_subset"] += 1; continue
+        if is_safety_prompt(r["prompt"]): counts["safety_keyword"] += 1; continue
+        if r["id"] in exclude_ids: counts["already_used"] += 1; continue
+        if full_len(r) > max_full: counts["full_prompt_too_long"] += 1; continue
+        if " ".join(r["chosen"].split()) == " ".join(r["rejected"].split()) or text_sim(r["chosen"], r["rejected"]) >= max_sim:
+            counts["not_substantively_different"] += 1; continue
+        pool.setdefault(SUB2SEC[r["subset"]], []).append(r["id"])
+    counts["eligible"] = sum(len(v) for v in pool.values())
+    assert counts["eligible"] >= n, f"only {counts['eligible']} eligible non-code pairs (<{n})"
+    secs = sorted(pool)
+    quota = {s: n * len(pool[s]) // counts["eligible"] for s in secs}
+    rem = sorted(secs, key=lambda s: (-(n * len(pool[s]) % counts["eligible"]), s))
+    for s in rem[: n - sum(quota.values())]: quota[s] += 1
+    ids = []
+    for s in secs:
+        ids += random.Random(f"{seed}-{s}").sample(sorted(pool[s]), quota[s])
+    meta = {"pool_by_section": {s: len(pool[s]) for s in secs}, "quota_by_section": quota}
+    return sorted(ids), counts, meta

@@ -38,3 +38,10 @@
 - Qwen2.5-1.5B-Instruct: W1 cond_flip 0.000, W2 cond_flip 0.000 (n_cond 7); W1 cr share 0.000, W2 cr share 0.000; length acc 0.000 (n 72)
 - Qwen3-0.6B: W1 cond_flip 0.000, W2 cond_flip 0.000 (n_cond 3); W1 cr share 0.000, W2 cr share 0.000; length acc 0.014 (n 72)
 - Qwen3-1.7B: W1 cond_flip 0.023, W2 cond_flip 0.000 (n_cond 44); W1 cr share 0.010, W2 cr share 0.000; length acc 0.250 (n 72)
+
+## Optional judges (positive control; not part of H1/H2; core judges re-scored on the same pairs)
+- Qwen3-4B (resamples [1], n=100, A/B mass 0.989): acc=0.710, cond_flip=0.141 (n_cond 71) CI [0.068, 0.225], cr=0.100, pl=0.060, cb=0.200; minus Qwen3-1.7B same pairs: cond_flip diff CI [0.068, 0.225], chance-norm uncond diff CI [0.013, 0.227]
+  - Qwen2.5-0.5B-Instruct same pairs: acc=0.000, cond_flip=nan (n_cond 0), cr=0.000
+  - Qwen2.5-1.5B-Instruct same pairs: acc=0.130, cond_flip=0.000 (n_cond 13), cr=0.000
+  - Qwen3-0.6B same pairs: acc=0.080, cond_flip=0.000 (n_cond 8), cr=0.000
+  - Qwen3-1.7B same pairs: acc=0.430, cond_flip=0.000 (n_cond 43), cr=0.000
