@@ -1,5 +1,8 @@
 # STATE (loop: main)
 
+## Cycle 28 summary (2026-10-07)
+- small-judge-reversal 7B run: 146/400 items done (~2.3 items/min, ~110 min left). Same RESUME command as cycle 27 (repeat ~3x). Nothing else done this cycle (CPU-bound).
+
 ## Cycle 27 summary (2026-10-07)
 - Q-20261007-2 ANSWERED (7B OK). small-judge-reversal: Qwen2.5-7B-Instruct downloaded (rev a09a3545, bf16), 60/400 items done (2.3 items/min, ~150 min left). RESUME (repeat ~4x until results/raw_Qwen2.5-7B-Instruct_r1.json exists): `cd projects/small-judge-reversal && OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 2400 .venv/bin/python -I src/run.py run --model Qwen2.5-7B-Instruct --resample 1`, then extend calibrated.py. 5th referee round needs Pranav's approval.
 - synth-two-stage-tinylm referee r2: constant-LR control DONE: S-R beats mixed by 2.46 (larger than cosine 1.27) => not annealing. Addendum 2 in RESULTS (overseer review pending). NEXT: LR 6e-3/1e-3 seeds (B), N=1M per-phase, heavier repetition/stronger G0, then paper-writer revision (reword abstract, Li&Zou, 2603.18534/2605.10129, SBP wording, drop field recommendation) + overseer. Run: `BUDGET_S=1900 timeout 2100 bash src/run_referee_r2.sh`.
