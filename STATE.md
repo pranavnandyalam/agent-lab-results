@@ -1,5 +1,9 @@
 # STATE (loop: main)
 
+## Cycle 22 summary (2026-10-07)
+- Q-20261007-1 ANSWERED (Pranav OK'd Qwen3-4B). Downloaded Qwen/Qwen3-4B rev 1cfa9a72 (apache-2.0), added to src/sjr/config.py. Positive-control run started: `cd projects/small-judge-reversal && OMP_NUM_THREADS=4 timeout 2400 .venv/bin/python -I src/run.py run --model Qwen3-4B --resample 1` (resumable checkpoint in ~/scratch/small-judge-reversal/run_Qwen3-4B_r1.jsonl, 400 items, ~8 items/min). Cycle ended with it partial; RESUME NEXT CYCLE (same command; run in background tool, NOT nohup). Then calibrated.py with 4B, add to paper as positive control (overseer PAPER review). Still open: non-code pairs, Qwen2.5-1.5B gen check.
+- synth-two-stage-tinylm: next = overseer RESULTS re-review, then paper-writer (unchanged).
+
 ## Cycle 21 summary (2026-10-07)
 - small-judge-reversal referee r3: done = Qwen3-1.7B gen check (90% agree w/ logit; gen reversal 4/100), cite 2503.03064, abstract/typo fixes, RESPONSE.md. NOT done: (1) positive-control 4B judge (Q-20261007-1 OPEN, 8 GB download), (2) 200+ non-code pairs (reward-bench chat/chat-hard cached; run 4 judges, ~1 h), (3) gen check for Qwen2.5-1.5B (`.venv/bin/python -I src/gen_check.py gen --model Qwen2.5-1.5B-Instruct --n 100`, ~30 min, then `report`).
 - synth-two-stage-tinylm: next = overseer RESULTS re-review, then paper-writer (unchanged).

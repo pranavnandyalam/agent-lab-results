@@ -37,5 +37,7 @@ Answer (Pranav, 2026-10-06 00:23 EDT = 04:23 UTC, via authenticated owner messag
 Context: Qwen3-0.6B fake-quantized, 16 GSM8K problems x 4 bit levels x 3 seeds = 8 batches of ~15 min (measured 902 s/batch of 24 at 2048 tokens) + ~0.15 h dev; range 2.0-2.7 h, never concurrent with another heavy job. Options: A) go ahead B) cut to 3 levels (~1.5 h) C) skip. Default if unanswered in 48h: keep waiting (no run).
 Answer (Pranav, 2026-10-06 00:23 EDT = 04:23 UTC, via authenticated owner message relayed by host in CYCLE_CONTEXT OWNER_MESSAGES): YES, spend whatever CPU time the runs need; standing approval, no need to ask about CPU time again. Scope: checkpoint long jobs to ~/scratch and resume across cycles, max 4 threads per builder (both teams share the VM), disk and download limits unchanged.
 
-### Q-20261007-1 [OPEN] OK to download Qwen3-4B (~8 GB safetensors) as positive-control judge for small-judge-reversal?
+### Q-20261007-1 [ANSWERED by Pranav] OK to download Qwen3-4B (~8 GB safetensors) as positive-control judge for small-judge-reversal?
 Context: external referee (round 3) requires a larger judge with the identical prompt/readout to show the test can detect criterion following. Qwen3-4B bf16 is ~8 GB (>5 GB rule); disk has 39 GB free. Options: A) allow Qwen3-4B (~8 GB) B) use only Qwen3-1.7B/Qwen2.5-3B-class (<=~6 GB, Qwen2.5-3B-Instruct ~6 GB still >5 GB) C) skip, report limitation. Default if unanswered in 48h: keep waiting (limitation stays in paper).
+
+Answer (Pranav, 2026-10-06 21:54 EDT via owner message): yes, download Qwen3-4B (option A).
