@@ -41,3 +41,6 @@ Answer (Pranav, 2026-10-06 00:23 EDT = 04:23 UTC, via authenticated owner messag
 Context: external referee (round 3) requires a larger judge with the identical prompt/readout to show the test can detect criterion following. Qwen3-4B bf16 is ~8 GB (>5 GB rule); disk has 39 GB free. Options: A) allow Qwen3-4B (~8 GB) B) use only Qwen3-1.7B/Qwen2.5-3B-class (<=~6 GB, Qwen2.5-3B-Instruct ~6 GB still >5 GB) C) skip, report limitation. Default if unanswered in 48h: keep waiting (limitation stays in paper).
 
 Answer (Pranav, 2026-10-06 21:54 EDT via owner message): yes, download Qwen3-4B (option A).
+
+### Q-20261007-2 [OPEN] OK to download Qwen2.5-7B-Instruct (~15 GB bf16) as inverting-judge control for small-judge-reversal?
+Context: referee round 4 says the test's sensitivity is unshown because Qwen3-4B gives r=0.10 (no inversion). A >=7B judge with the identical prompt is the decisive control. Cost: ~15 GB download (>5 GB rule; 32 GB free) and ~3-4 h CPU for 300 pairs x 4 passes (can run 100 pairs first, ~1.5 h). Options: A) allow Qwen2.5-7B-Instruct bf16 B) use a 4-5 bit GGUF (~4.7 GB) via llama.cpp (needs package; logits readout differs slightly) C) skip; state in abstract that sensitivity is unshown. Default if unanswered in 48h: C.

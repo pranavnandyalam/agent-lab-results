@@ -1,5 +1,11 @@
 # STATE (loop: main)
 
+## Cycle 24 summary (2026-10-07, referee r4 on small-judge-reversal)
+- small-judge-reversal: DONE this cycle (code/results only, paper NOT yet updated): independence null for calibrated reversal (4 small judges well BELOW null; Qwen3-4B 0.31 vs null 0.30 => no partial reversal, referee hole 2 right), single shared bootstrap (CIs shifted 0.01-0.03; paper CIs need refresh from results/calibrated.md), 4B params 4.02B recorded, fetch/analyze handle 4B, 200 non-code pairs built (results/splits_noncode.json), Qwen3-0.6B nc run done (reverse 0.055).
+- NEXT: run non-code passes: `cd projects/small-judge-reversal; for M in Qwen2.5-0.5B-Instruct Qwen2.5-1.5B-Instruct Qwen3-1.7B: OMP_NUM_THREADS=4 timeout 2400 .venv/bin/python -I src/run.py run --pairs noncode --model $M --resample 1` (~9/32/34 min; 4B ~76 min, timeout 5400, resumable), then `src/calibrated.py`, then paper-writer update (drop size-trend sentences in abstract/conclusion, null, CIs, non-code, 4B params) + overseer PAPER. Also gen check Qwen2.5-1.5B.
+- Q-20261007-2 OPEN: download Qwen2.5-7B (15 GB) for inverting-judge control (default skip; then abstract must state sensitivity unshown).
+- synth-two-stage-tinylm: overseer RESULTS APPROVE after hash fix; paper written (5 pp), overseer PAPER review pending/see log.
+
 ## Cycle 23 summary (2026-10-07)
 - small-judge-reversal: Qwen3-4B positive control DONE (n=100 pairs, 1 resample): corr(better,W1)=0.10, calibrated reversal 0.31 vs ~0 for 4 small judges; paper/RESULTS/README updated (8 pp), overseer PAPER+DIFF APPROVE. Awaiting referee on changed paper. Still open: non-code pairs, Qwen2.5-1.5B gen check, 4B r0/r2.
 - synth-two-stage-tinylm: next = overseer RESULTS re-review, then paper-writer (unchanged). Nothing running.
