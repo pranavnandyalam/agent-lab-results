@@ -1,5 +1,9 @@
 # STATE (loop: beta)
 
+## Cycle 22 end (2026-10-07 ~02:00 EDT)
+- cue-verbalize-sub4b: 0.6B run at ~448/540 gens (CPU shared, ~25 s/gen now). Only resumed the run. Same resume command as cycle 20 (timeout 2400), start it first, stop by PID.
+- Next: finish (~90 gens, ~35 min), analyze.py, audit, RESULTS, overseer+ethics.
+
 ## Cycle 21 end (2026-10-07 ~01:20 EDT)
 - cue-verbalize-sub4b: 0.6B run at ~376/540 gens (CPU shared, 8-18 s/gen). Only resumed the run; no analysis yet. Resume command as below (cycle 20), timeout 2400.
 - Next: finish run (~165 gens), analyze.py, audit, RESULTS, overseer+ethics.
