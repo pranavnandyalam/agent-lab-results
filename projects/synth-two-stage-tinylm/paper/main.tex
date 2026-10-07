@@ -15,8 +15,8 @@
 
 \begin{document}
 
-\title{Synthetic-First Ordering Helps, but Not More Than Real Data:\\
-A Matched-Token Test of Two-Stage Synthetic Training in a Tiny Language Model}
+\title{Synthetic-First vs.\ Mixed Training in a Tiny Language Model:\\
+An Ordering Effect at One of Two Budgets, and No Gain over Matched-Token Real Data}
 
 \author{\IEEEauthorblockN{Autonomous Research Agent (Claude), on behalf of @pranavnandyalam}
 \IEEEauthorblockA{Produced by an autonomous AI agent (Claude) on behalf of @pranavnandyalam. Not peer reviewed.}}
@@ -25,9 +25,11 @@ A Matched-Token Test of Two-Stage Synthetic Training in a Tiny Language Model}
 
 % All numbers in this paper are copied from ../RESULTS.md and ../results/analysis.md
 % (output of src/analyze.py over ../results/grid/*/eval_R_val_perdoc.npz), commit 901da90f676e8fb71b5e3445e09fbcd22350d368.
+% Referee-round-1 numbers (per-phase schedule, LR 1e-3) are copied from ../results/referee_r1_ablation.md
+% (raw: ../results/referee_r1/r_val_ppl_raw.json) and the RESULTS.md addendum.
 
 \begin{abstract}
-A recent linear-regression analysis of SGD (Li and Zou, 2026) predicts that training on synthetic data first and real data second (\SR) avoids the error floor that mixing synthetic and real data incurs. We test the ordering prediction, and whether synthetic tokens are worth their training budget at all, in a 0.79M non-embedding-parameter GPT trained on TinyStories, with synthetic text sampled from a generator of the same architecture trained on a disjoint real split. With $N$ real tokens and $N$ synthetic tokens ($N\in\{1\text{M},4\text{M}\}$, 3 seeds, validation perplexity), \SR{} beats mixing at $N{=}4$M by 1.27 perplexity (95\% hierarchical-bootstrap CI $[-1.42,-1.11]$, all seeds) and beats the reverse order by 2.99; at $N{=}1$M the ordering difference is within noise ($-0.21$, CI $[-0.79,+0.22]$). The pre-registered criterion that the \SR{} advantage grows with $N$ is met (contrast 1.06 perplexity, CI excluding zero), with only two values of $N$. However, against controls with matched total tokens, neither synthetic arm helps: at $N{=}4$M, training two epochs on the same $N$ real tokens reaches 15.18~$\pm$~0.14 perplexity versus 16.12~$\pm$~0.28 for \SR{} and 17.39~$\pm$~0.20 for mixing; at $N{=}1$M, \SR{}, mixing and two-epoch real training are indistinguishable. The large gains of the synthetic arms over real-only training at $N$ tokens are thus accounted for by the extra optimization steps. This is a small-scale negative result for the practical value of self-generated synthetic data, not a refutation of the theory, whose conditions our setup does not fully satisfy.
+A recent linear-regression analysis of SGD (Li and Zou, 2026) predicts that training on synthetic data first and real data second (\SR) avoids the error floor that mixing synthetic and real data incurs. We test the ordering prediction, and whether synthetic tokens are worth their training budget at all, in a 0.79M non-embedding-parameter GPT trained on TinyStories, with synthetic text sampled from a same-architecture generator trained on a disjoint real split. With $N$ real and $N$ synthetic tokens ($N\in\{1\text{M},4\text{M}\}$, 3 seeds, validation perplexity), \SR{} beats mixing at $N{=}4$M by 1.27 perplexity (95\% hierarchical-bootstrap CI $[-1.42,-1.11]$, all seeds) and beats the reverse order by 2.99; at $N{=}1$M the ordering difference is within noise ($-0.21$, CI $[-0.79,+0.22]$). Restarting the learning-rate schedule at the real phase changes \SR{} only slightly (15.96~$\pm$~0.13 vs.\ 16.12~$\pm$~0.28; mixing 17.39~$\pm$~0.20), so the ordering effect at 4M is not explained by the real phase sitting in the low-learning-rate tail. However, against controls with matched total tokens, neither synthetic arm helps: at $N{=}4$M, two epochs on the same $N$ real tokens reach 15.18~$\pm$~0.14; at $N{=}1$M, \SR{}, mixing and two-epoch real training are indistinguishable. The gains of the synthetic arms over real-only training at $N$ tokens are thus accounted for by the extra optimization steps. This is a small-scale negative result for synthetic data from a same-architecture generator, not a refutation of the theory, whose conditions our setup does not fully satisfy.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -41,19 +43,21 @@ Two questions matter for practice. First, does the order (synthetic first vs.\ m
 
 \textbf{Contributions.}
 \begin{enumerate}
-\item A pre-registered, seed-paired test of synthetic-first (\SR) vs.\ mixed vs.\ reverse (\RS) ordering in a 0.79M-non-embedding-parameter GPT on TinyStories \cite{eldan2023tinystories} at two real-token budgets, with a hierarchical (seeds, then documents) bootstrap. \SR{} beats mixing by 1.27 perplexity at $N{=}4$M; at $N{=}1$M the difference is within noise.
+\item A pre-registered, seed-paired test of synthetic-first (\SR) vs.\ mixed vs.\ reverse (\RS) ordering in a 0.79M-non-embedding-parameter GPT on TinyStories \cite{eldan2023tinystories} at two real-token budgets, with a hierarchical (seeds, then documents) bootstrap. \SR{} beats mixing by 1.27 perplexity at $N{=}4$M; at $N{=}1$M the difference is within noise. A per-phase learning-rate-restart control at $N{=}4$M indicates that the effect is not an artifact of the shared schedule's low-learning-rate tail.
 \item Matched-total-token controls (fresh real tokens, and a second epoch over the same real tokens) showing that, in this setup, neither \SR{} nor mixing beats real-only training at the same number of steps; at $N{=}4$M two epochs of real data beat \SR{} by 0.94 perplexity.
-\item A transparent account of what the experiment cannot show (two values of $N$, one synthetic fraction, a schedule that violates a theorem condition), together with code, raw per-run results and exact commands.
+\item A transparent account of what the experiment cannot show (two values of $N$, one synthetic fraction, one weak generator, only two epochs of repetition), together with code, raw per-run results and exact commands.
 \end{enumerate}
 
 \section{Related Work}
-\textbf{Theory of ordering.} Li and Zou \cite{li2026synthetic} prove, for SGD in high-dimensional linear regression under distribution shift, that mixed training has an error floor and that two-stage training (synthetic, then real) avoids it, and give conditions under which synthetic pretraining beats real-only training. Their Section~5 reports a WikiText-103 language-model experiment with a pretrained teacher and states that it shows ``the same qualitative behavior as predicted by our theory''; the details are in their Appendix~H, which we could not retrieve (the arXiv HTML we fetched was truncated before it). Our work is therefore an independent test, not a replication of their LM setup. It differs in data (TinyStories), generator (a same-size model trained on a disjoint real split, not a stronger pretrained teacher), the inclusion of a reverse-order arm and a mixed-then-real-tail arm as recency controls, and, most importantly, matched-total-token real-only baselines. Marchi et al.\ \cite{marchi2026fisher} derive a minimum human-data fraction from a Fisher--Rao analysis; they do not study ordering.
+\textbf{Theory of ordering.} Li and Zou \cite{li2026synthetic} prove, for SGD in high-dimensional linear regression under distribution shift, that mixed training has an error floor and that two-stage training (synthetic, then real) avoids it, and give conditions under which synthetic pretraining beats real-only training. According to the parts of the paper we could retrieve, they also report a small language-model experiment (WikiText-103, with a pretrained teacher) that shows ``the same qualitative behavior as predicted by our theory''. Its details are in their Appendix~H.2, which we have \emph{not} read: the arXiv HTML we fetched was truncated before it and the PDF could not be parsed. We therefore make no side-by-side comparison with their LM experiment, and we cite the work as an arXiv preprint because we could not verify a publication venue. Our work is an independent test, not a replication of their LM setup. As far as we can tell from the retrieved text, it differs in data (TinyStories), generator (a same-architecture model trained on a disjoint real split, rather than a pretrained teacher), the inclusion of a reverse-order arm and a mixed-then-real-tail arm as recency controls, and, most importantly, matched-total-token real-only baselines. Marchi et al.\ \cite{marchi2026fisher} derive a minimum human-data fraction from a Fisher--Rao analysis; they do not study ordering.
 
 \textbf{Model collapse.} Shumailov et al.\ \cite{shumailov2023curse} show that recursive training on generated data removes distribution tails; Dohmatob et al.\ \cite{dohmatob2024strong} show that even a small synthetic fraction in a mixture can prevent gains from more data (mixed training only); Wang et al.\ \cite{wang2024finite} prove collapse for recursive training when real data is finite; Gerstgrasser et al.\ \cite{gerstgrasser2024collapse} contrast replacing vs.\ accumulating data across generations. We study a single generation and focus on ordering and budget accounting, not recursion.
 
-\textbf{Synthetic data in LM pretraining.} Zhu et al.\ \cite{zhu2025synthesize} report that training on self-generated data degrades LMs and propose token-level editing of human text to obtain semi-synthetic data. Kang et al.\ \cite{kang2025demystifying} study synthetic (rephrased) data in pretraining at scale; their abstract reports speedups from mixing about one third rephrased data with natural text and no advantage from rephrased data alone. Neither, to our reading of their abstracts (we have not read them in full), compares synthetic-first against mixed ordering at matched budgets in small models. Muennighoff et al.\ \cite{muennighoff2023scaling} find that, under a fixed compute budget, up to about four epochs of repeated data yield negligible loss changes compared with unique data; this motivates our two-epoch real-only control, which turns out to be the strongest baseline.
+\textbf{Synthetic data in LM pretraining.} Zhu et al.\ \cite{zhu2025synthesize} report that training on synthetic data degrades LMs and propose token-level editing of human text to obtain semi-synthetic data. Kang et al.\ \cite{kang2025demystifying} study synthetic (rephrased) data in pretraining at scale; their abstract reports speedups from mixing about one third rephrased data with natural text and no advantage from rephrased data alone. Neither, to our reading of their abstracts (we have not read them in full), compares synthetic-first against mixed ordering at matched budgets in small models. Muennighoff et al.\ \cite{muennighoff2023scaling} find that, under a fixed compute budget, up to about four epochs of repeated data yield negligible loss changes compared with unique data; this motivates our two-epoch real-only control, which turns out to be the strongest baseline.
 
-\textbf{Novelty statement.} A web search (2026-10-06/07; the Semantic Scholar API was rate-limited, so the check was not exhaustive) found no empirical ordering comparison of this kind on small LMs with matched-total-token controls. We claim no more than that.
+\textbf{Synthetic data versus repetition at scale.} Several recent works compare synthetic data against repeating real data at much larger scale, with far stronger generators than ours. Yang et al.\ \cite{yang2025sbp} (Synthetic Bootstrapped Pretraining) learn a model of relations between documents, synthesize a new corpus for joint training, and, in a compute-matched setup with 3B and 6B models, report consistent gains over ``a strong repetition baseline''. BeyondWeb \cite{maini2025beyondweb} reports large training speedups from carefully designed rephrased synthetic data, and notes that naive approaches yield only modest improvements. Kim et al.\ \cite{kim2025infinite} study pre-training with fixed data and unconstrained compute and show that epoching with strongly tuned regularization, ensembling and distillation improve data efficiency. These works establish that the repetition baseline is the right comparison and that well-built synthetic data can beat it; our negative result concerns a weak, same-architecture generator at a tiny scale and is consistent with BeyondWeb's remark on naive approaches. Our two-epoch baseline uses a standard, untuned weight decay (0.1), so it is, if anything, weaker than the baselines in \cite{kim2025infinite}. We have read only the abstracts of these three works.
+
+\textbf{Novelty statement.} A web search (2026-10-06/07; the Semantic Scholar API was rate-limited, so the check was not exhaustive) found no empirical comparison of synthetic-first versus mixed ordering on small LMs with matched-total-token controls. Matched-token repetition baselines themselves are not new (see above). We claim no more than that.
 
 \section{Method}
 \subsection{Data splits and synthetic corpus}
@@ -91,9 +95,9 @@ The pre-registered primary hypothesis H1 concerns $g(N)=\mathrm{PPL}(\text{mixed
 % Sources: results/S1_meta.json, results/S1_filter.json
  Generated and derived data are not redistributed.
 
-\textbf{Runs and seeds.} 7 arms $\times$ 2 budgets ($N\in\{1{,}048{,}576;\ 4{,}194{,}304\}$) $\times$ 3 seeds (0,1,2) $=$ 42 runs; the seed controls initialization and window order. The generator and S1f are fixed (seed 0) across all runs, so generator variance is not sampled. Metric: perplexity on all of $R_{\text{val}}$ with non-overlapping 256-token windows.
+\textbf{Runs and seeds.} 7 arms $\times$ 2 budgets ($N\in\{1{,}048{,}576;\ 4{,}194{,}304\}$) $\times$ 3 seeds (0,1,2) $=$ 42 runs; the seed controls initialization and window order. The generator and S1f are fixed (seed 0) across all runs, so generator variance is not sampled. After review, 6 further runs at $N{=}4$M were added (Section~\ref{sec:sched}): \SR{} with a per-phase schedule (seeds 0--2) and mixed, \SR{} and real-only-2ep at peak LR $10^{-3}$ (seed 0). Metric: perplexity on all of $R_{\text{val}}$ with non-overlapping 256-token windows.
 
-\textbf{Hardware and budget.} CPU only, 4 threads (PyTorch 2.14.1+cpu, Python 3.14.4, NumPy 2.5.3, tokenizers 0.23.2), one job at a time; throughput about 32k tokens/s (e.g.\ 31,892.6 tokens/s for \SR, $N{=}4$M, seed 0). The 42 grid runs logged about 2.0 hours of training time in total (sum of \texttt{train\_seconds\_this\_session}; one resumed run is counted only for its last session), plus 259.4\,s to train G0 and 201.1\,s to sample S1.
+\textbf{Hardware and budget.} CPU only, 4 threads (PyTorch 2.14.1+cpu, Python 3.14.4, NumPy 2.5.3, tokenizers 0.23.2), one job at a time; throughput about 32k tokens/s (e.g.\ 31,892.6 tokens/s for \SR, $N{=}4$M, seed 0). The 42 grid runs logged about 2.0 hours of training time in total (sum of \texttt{train\_seconds\_this\_session}; one resumed run is counted only for its last session), plus 259.4\,s to train G0 and 201.1\,s to sample S1; each of the 6 review runs took 266--302\,s.
 
 \section{Results}
 All runs completed with $n{=}3$ seeds; no result in this paper is preliminary.
@@ -131,7 +135,7 @@ real-only-2ep & $N$ ($\times$2 epochs) + 0 & 44.72 $\pm$ 1.25 & 43.54, 44.61, 46
 \subsection{Ordering (Family A, matched real tokens)}
 Table~\ref{tab:main} and Fig.~\ref{fig:ppl} give per-arm perplexities; Table~\ref{tab:diff} gives paired differences. At $N{=}4$M, \SR{} beats mixed by 1.27 perplexity (CI $[-1.42,-1.11]$; per-seed $-1.27,-1.43,-1.11$) and beats \RS{} by 2.99 (CI $[-3.23,-2.80]$). At $N{=}1$M, \SR{} vs.\ mixed is $-0.21$ (CI $[-0.79,+0.22]$) with inconsistent seed signs, and \SR{} vs.\ \RS{} is $-1.18$ (CI $[-2.38,+0.04]$), not meeting the rule.
 
-\textbf{H1.} The pre-registered criterion is met: $g(4\text{M})>0$ for all seeds with a CI excluding 0, and the contrast $g(4\text{M})-g(1\text{M})$ is $+1.06$ in the pre-registered sign (script output $-1.06$, CI $[-1.36,-0.64]$, per-seed $-1.24,-0.63,-1.33$). The \SR{} advantage over mixing thus grows from $N{=}1$M to $N{=}4$M. With two budgets this says nothing about an asymptotic floor, which is what the theory is about.
+\textbf{H1.} The pre-registered criterion is met: $g(4\text{M})>0$ for all seeds with a CI excluding 0, and the contrast $g(4\text{M})-g(1\text{M})$ is $+1.06$ in the pre-registered sign (script output $-1.06$, CI $[-1.36,-0.64]$, per-seed $-1.24,-0.63,-1.33$). This means only that the \SR{} advantage over mixing is larger at $N{=}4$M than at $N{=}1$M. With two budgets we do not read it as a trend in $N$, and it says nothing about an asymptotic floor, which is what the theory is about.
 
 \begin{table}[t]
 \centering
@@ -191,26 +195,57 @@ Both synthetic arms beat real-only($N$) by large margins (e.g.\ \SR{} by 9.87 pe
 \subsection{Recency controls}
 \RS{} is the worst $2N$ arm at $N{=}4$M, consistent with recency (training last on synthetic text hurts real-data perplexity). \MRT{} is best overall (13.30 at 4M; 32.56 at 1M), but it sees $2N$ real tokens and $1.5\times$ the steps, so it does not isolate ordering (H1b, descriptive).
 
+\subsection{Schedule-restart and learning-rate checks (added after review)}
+\label{sec:sched}
+In the main grid one warmup+cosine schedule spans all phases, so in \SR{} the real phase is trained at lower learning rates than the first half of mixed training. To test whether this drives the ordering effect, we reran \SR{} at $N{=}4$M with a \emph{per-phase} schedule: the same 5\% warmup and cosine decay to 10\% of the peak, restarted at the start of the real phase (step 512 of 1024), 3 seeds. Mixed training has a single phase, so per-phase and global schedules coincide for it. Table~\ref{tab:sched} gives the results. \SR-per-phase reaches 15.96~$\pm$~0.13, slightly lower than the global-schedule \SR{} (16.12~$\pm$~0.28) on all three seeds (paired differences $-0.06$, $-0.09$, $-0.34$); it remains about 1.4 perplexity better than mixed and about 0.8 worse than real-only-2ep. We ran no bootstrap for this comparison ($n{=}3$). The ordering effect at $N{=}4$M is therefore not produced by the real phase sitting in the low-learning-rate tail, and the matched-token conclusion is unchanged.
+
+As a sensitivity hint for the learning rate, we reran mixed, \SR{} and real-only-2ep at $N{=}4$M with peak LR $1\times10^{-3}$, \emph{seed 0 only}. All three are much worse than at $3\times10^{-3}$ (undertrained at this step count), and the ranking real-only-2ep $<$ \SR{} $<$ mixed is unchanged with smaller gaps (0.20 and 0.69 perplexity). With one seed this is a hint, not a result; no finer LR grid was run.
+
+\begin{table}[t]
+\centering
+\caption{Referee-round checks at $N{=}4$M: $R_{\text{val}}$ perplexity, mean $\pm$ sample std and per-seed values. Rows marked $^\ddagger$ are the main-grid runs (not re-run). LR $10^{-3}$ rows: seed 0 only (preliminary hint).}
+\label{tab:sched}
+% Source: results/referee_r1_ablation.md (generated by results/referee_r1/make_table.py;
+% raw values in results/referee_r1/r_val_ppl_raw.json); RESULTS.md addendum (referee round 1).
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}llcc@{}}
+\toprule
+arm & schedule, peak LR & mean $\pm$ std & per-seed \\
+\midrule
+\SR$^\ddagger$ & global, $3\!\times\!10^{-3}$ & 16.12 $\pm$ 0.28 & 15.895, 16.028, 16.437 \\
+\SR & per-phase, $3\!\times\!10^{-3}$ & 15.96 $\pm$ 0.13 & 15.839, 15.940, 16.102 \\
+mixed$^\ddagger$ & global, $3\!\times\!10^{-3}$ & 17.39 $\pm$ 0.20 & 17.163, 17.462, 17.548 \\
+real-only-2ep$^\ddagger$ & global, $3\!\times\!10^{-3}$ & 15.18 $\pm$ 0.14 & 15.064, 15.132, 15.341 \\
+\midrule
+mixed & global, $1\!\times\!10^{-3}$ & 22.88 (n=1) & 22.884 \\
+\SR & global, $1\!\times\!10^{-3}$ & 22.19 (n=1) & 22.195 \\
+real-only-2ep & global, $1\!\times\!10^{-3}$ & 21.99 (n=1) & 21.992 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Discussion and Limitations}
-\textbf{Interpretation.} Ordering matters in the direction the theory predicts: placing synthetic data before real data is better than mixing or placing it last, and the \SR{} advantage grows from 1M to 4M. A simple reading is recency: in a single continuous schedule, the data seen last at low learning rate has the largest effect on the final model, and in \SR{} that data is real. Our design cannot separate this from the theory's mechanism. The practically relevant comparison, however, is with matched-token real-only training, and there the synthetic data adds nothing here. One plausible reason: G0 is a model of the same size trained on 8.4M real tokens, and its own $R_{\text{val}}$ perplexity (15.43) is close to that of real-only-2ep at $N{=}4$M (15.18), so its samples (which include ungrammatical text; see the committed sample excerpts) may carry little information the student cannot get from a second pass over $N$ real tokens. We did not test this explanation.
+\textbf{Interpretation.} At $N{=}4$M, ordering matters in the direction the theory predicts: placing synthetic data before real data is better than mixing or placing it last; at $N{=}1$M we detect no ordering effect. One candidate explanation was a schedule artifact: in a single continuous schedule the real phase of \SR{} sits in the low-learning-rate tail. The per-phase restart (Section~\ref{sec:sched}) gives the real phase its own full schedule and leaves \SR{} slightly better, not worse, so that artifact does not explain the effect. A broader recency reading (the data seen last shapes the final model, and in \SR{} that data is real) remains open; the poor \RS{} result is consistent with it, and our design cannot separate it from the theory's mechanism. The practically relevant comparison, however, is with matched-token real-only training, and there the synthetic data adds nothing here. One plausible reason: G0 is a model of the same size trained on 8.4M real tokens, and its own $R_{\text{val}}$ perplexity (15.43) is close to that of real-only-2ep at $N{=}4$M (15.18), so its samples (which include ungrammatical text; see the committed sample excerpts) may carry little information the student cannot get from a second pass over $N$ real tokens. We did not test this explanation.
 
 \textbf{Threats to validity.}
 (i) \emph{Scale}: one tiny model (0.79M non-embedding parameters), one dataset of simple children's stories, two budgets; nothing here should be extrapolated to large models.
-(ii) \emph{Theory mismatch}: the theorem concerns linear regression and requires identical real-stage updates; our continuous cosine schedule violates this, and the planned per-stage-restart ablation (the H2-primary test) was not run. The negative result is thus about a practical recipe, not a refutation of the theorem.
-(iii) \emph{Repetition depth}: Family~B uses only 2 epochs. Synthetic data may still help when real data would have to be repeated many more times \cite{muennighoff2023scaling}; we did not test this.
-(iv) \emph{Fixed design choices}: one synthetic fraction (0.5), one generator, generation depth 1, temperature 1.0; generator variance is not sampled (S1f fixed across seeds). $N{=}2$M was dropped for compute.
-(v) \emph{Tuning}: the learning rate was chosen at 1M tokens on $R_{\text{dev}}$ and may not be optimal at 4M or for every arm.
-(vi) \emph{Statistics}: 3 seeds; the seed level of the bootstrap is coarse, and per-seed sign agreement is the main evidence. No multiple-comparison correction was applied across the 22 paired rows; only H1 was pre-registered as primary.
-(vii) \emph{Data quirks}: the sampler re-primes a row from its last 127 tokens when the context fills (6,063 times); generated documents are shorter than real ones; 0.75\% empty generated documents were filtered; at $N{=}4$M the \MRT{} arm sees 11,633 real tokens twice; one run (\SR, $N{=}1$M, seed 1) was resumed from a checkpoint.
-(viii) \emph{Deviations}: real-only-2N and the hierarchical bootstrap (replacing a document-only bootstrap) were added after pre-registration; both are reported, and conclusions do not depend on real-only-2N because the pre-registered real-only-2ep control gives the same picture.
+(ii) \emph{Theory mismatch}: the theorem concerns linear regression and requires identical real-stage updates; our main-grid continuous cosine schedule violates this. The per-phase restart was run for \SR{} only, at $N{=}4$M (not for \RS{}, \MRT{} or $N{=}1$M), and even then the real stage starts from a different model than in real-only training, so comparisons with real-only remain descriptive. The negative result is about a practical recipe, not a refutation of the theorem.
+(iii) \emph{Weak generator}: G0 is a same-architecture model trained on 8.4M real tokens. No stronger generator (larger model, pretrained teacher, or rephrasing) was tested, although work at larger scale finds that well-built synthetic data can beat repetition \cite{yang2025sbp,maini2025beyondweb}.
+(iv) \emph{Repetition depth}: Family~B uses only 2 epochs. Synthetic data may still help when real data would have to be repeated many more times \cite{muennighoff2023scaling}; heavier repetition (e.g.\ 4--16 epochs) was not tested.
+(v) \emph{Fixed design choices}: one synthetic fraction (0.5), generation depth 1, temperature 1.0; generator variance is not sampled (S1f fixed across seeds). Only two budgets; $N{=}2$M was dropped for compute and no further budgets were added.
+(vi) \emph{Tuning}: the learning rate was chosen at 1M tokens on $R_{\text{dev}}$ and was not re-tuned per arm or at 4M; the only additional check is one seed at $1\times10^{-3}$ (Section~\ref{sec:sched}). No LR above $3\times10^{-3}$ was tried at 4M.
+(vii) \emph{Statistics}: 3 seeds; the seed level of the bootstrap is coarse, and per-seed sign agreement is the main evidence. No multiple-comparison correction was applied across the 22 paired rows; only H1 was pre-registered as primary.
+(viii) \emph{Data quirks}: the sampler re-primes a row from its last 127 tokens when the context fills (6,063 times); generated documents are shorter than real ones; 0.75\% empty generated documents were filtered; at $N{=}4$M the \MRT{} arm sees 11,633 real tokens twice; one run (\SR, $N{=}1$M, seed 1) was resumed from a checkpoint.
+(ix) \emph{Deviations}: real-only-2N and the hierarchical bootstrap (replacing a document-only bootstrap) were added after pre-registration, and the schedule-restart and LR checks after review; both are reported, and conclusions do not depend on real-only-2N because the pre-registered real-only-2ep control gives the same picture.
 
 \textbf{What did not work.} Synthetic data did not beat matched-token real-only training at either budget, and the ordering effect was not detectable at $N{=}1$M.
 
 \section{Conclusion}
-In a tiny GPT on TinyStories, synthetic-first training beats mixing (by 1.27 perplexity at 4M real tokens) and reverse ordering, and the advantage grows from 1M to 4M real tokens, as the pre-registered H1 required. Yet neither synthetic arm beats spending the same budget on the real data: a second epoch over the same $N$ real tokens is as good at 1M and better by 0.94 perplexity at 4M. Studies of synthetic-data ordering should therefore report matched-total-token real-only baselines, including repeated-epoch ones; matching only real tokens can attribute step-count gains to synthetic data. Open questions are heavier repetition regimes, stronger generators, other synthetic fractions and a schedule that satisfies the theorem's conditions.
+In a tiny GPT on TinyStories, synthetic-first training beats mixing (by 1.27 perplexity) and reverse ordering at 4M real tokens, and this holds when the learning-rate schedule is restarted at the real phase; at 1M real tokens no ordering effect is detectable. With only two budgets we make no claim about how the effect scales with data. Yet neither synthetic arm beats spending the same budget on the real data: a second epoch over the same $N$ real tokens is as good at 1M and better by 0.94 perplexity at 4M. Studies of synthetic-data ordering should therefore report matched-total-token real-only baselines, including repeated-epoch ones; matching only real tokens can attribute step-count gains to synthetic data. Open questions are stronger generators, heavier repetition regimes (where real data must be repeated many more than two times), more budgets including $N{=}2$M, other synthetic fractions and a schedule that fully satisfies the theorem's conditions.
 
 \section*{Reproducibility Statement}
-{\sloppy Code, plans, per-run logs and per-document $R_{\text{val}}$ NLLs are in the lab repository, directory \path{projects/synth-two-stage-tinylm/}. Code, analysis and raw results are at commit \texttt{\seqsplit{901da90f676e8fb71b5e3445e09fbcd22350d368}}. Data and checkpoints are not committed (CDLA-Sharing-1.0 derivative data). From the project directory:\par}
+{\sloppy Code, plans, per-run logs and per-document $R_{\text{val}}$ NLLs are in the lab repository, directory \path{projects/synth-two-stage-tinylm/}. Code, analysis and raw results are at commit \texttt{\seqsplit{901da90f676e8fb71b5e3445e09fbcd22350d368}}; the review-round runs and \texttt{src/run\_referee\_r1.sh} were added in a later commit (results in \path{results/referee_r1_ablation.md}). Data and checkpoints are not committed (CDLA-Sharing-1.0 derivative data). From the project directory:\par}
 \begin{footnotesize}
 \begin{verbatim}
 ./fetch_data.sh
@@ -224,6 +259,9 @@ python src/make_plans.py
 BUDGET_S=... bash src/run_grid.sh
 bash src/run_extra.sh      # real-only-2N
 bash src/run_familyB.sh    # real-only-2ep
+BUDGET_S=2100 bash src/run_referee_r1.sh
+.venv/bin/python -I \
+  results/referee_r1/make_table.py
 .venv/bin/python -I src/analyze.py \
   > results/analysis.md
 python -I paper/make_figures.py

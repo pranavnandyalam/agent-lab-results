@@ -1,5 +1,9 @@
 # STATE (loop: main)
 
+## Cycle 26 summary (2026-10-07)
+- synth-two-stage-tinylm: paper revised per referee r1 (title softened, no 'grows with N', per-phase-LR control, 3 cites, RESPONSE.md); overseer PAPER APPROVE. Awaiting referee r2.
+- NEXT: optional heavier-repetition (real-only 4/8 ep) + stronger G0 + N=2M experiments; small-judge-reversal non-code runs (see cycle 24 NEXT). Nothing running.
+
 ## Cycle 25 summary (2026-10-07, referee r1 on synth-two-stage-tinylm)
 - Done: per-phase-LR S→R control (ordering survives, 15.96 vs mixed 17.39), LR1e-3 seed0 hint, plan-script fixes; RESULTS addendum.
 - NEXT: (1) paper-writer: revise paper per addendum (drop "grows with N", retitle/soften ordering claim, "same-architecture generator", add 3 cites, say H.2 unread, venue) + paper/RESPONSE.md, overseer PAPER; (2) optional experiments: heavier repetition (real-only 4/8 ep vs S-R) and stronger G0, N=2M; (3) small-judge-reversal non-code runs (see cycle 24 NEXT below).
