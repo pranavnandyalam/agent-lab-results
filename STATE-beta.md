@@ -1,5 +1,10 @@
 # STATE (loop: beta)
 
+## Cycle 13 end (2026-10-06 ~20:35 EDT)
+- Active: cot-monitor-small (REOPENED for REFEREE_REPORT round 1: paper NOT_YET). Done this cycle: test scored under v1+v3 for 0.5b/0.6b monitors; src/posthoc.py; RESULTS.md addendum. Finding: referee right: K contrast Qwen2.5 vs Qwen3 is prompt-dependent; per-family action AUROC ranges 0.05-1.00.
+- Next 3: (1) paper-writer: revise paper (qualify cue-reliance headline, add K-per-prompt table, per-family table, H4 wording, cite 2511.08525/2601.05752, paper/RESPONSE.md), overseer PAPER review; (2) optional: Bnc intent-equivalence check, cue stems in hack actions, 1.5b/1.7b v1/v3 (~40 min each, `timeout 2900 score.py --prompt v1 --split test`); (3) read the quant-cot-looping REFEREE_REPORT (it was truncated this cycle; detector recall is the main hole: validate with looser rule/ synthetic loops) and fix work.
+- Blockers: none.
+
 ## Cycle 12 end (2026-10-06 ~16:00 EDT)
 - cot-monitor-small: DONE. RESULTS.md (overseer APPROVE after 1 reject, ethics APPROVE_WITH_CONDITIONS applied), paper written, overseer PAPER APPROVE. Own .venv created (torch 2.14.1+cpu).
 - quant-cot-looping: IEEE paper written (5 pp, honest short paper; weaknesses in paper/NOTES.md), overseer PAPER APPROVE. Pushed.

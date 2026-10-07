@@ -59,3 +59,8 @@ Additional prior work to cite: 2601.21112 (CoT-only monitor can beat CoT+action)
 - H1 BoW rule uses CV grouped by skeleton p (primary). CV grouped by family x p is also reported; RESULTS must disclose that on dev it gives 1.000 (wording leaks across families sharing skeletons). The skeleton-grouped rule is close to unfalsifiable with few training skeletons; stated as a limitation.
 - Action-only B vs A = 0.5 is a structural check (identical inputs), and P3 action-only D vs A equals P2 action-only C vs A by construction.
 - run_test.sh timeout (2400 s/monitor) may truncate the larger monitors; score.py resumes, rerun until 1440 rows; only complete files enter RESULTS.
+
+## Referee round 1 follow-up (cycle 13, post-hoc, NOT pre-registered)
+Test split additionally scored under dev prompts v1 and v3 for the two small monitors (qwen2.5-0.5b, qwen3-0.6b) via
+src/run_test_prompts.sh (1.5b/1.7b too slow for one cycle). Exploratory breakdowns (K per prompt, scale-free Acue-vs-A AUROC,
+per-family and per-hack-variant action AUROC) in src/posthoc.py -> results/posthoc_test.md. Prompt v2 remains the selected primary.
