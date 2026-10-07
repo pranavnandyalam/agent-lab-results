@@ -9,3 +9,5 @@
 | allenai/reward-bench (dataset) | 168d848cdbbea9764fae4a544dc9ca1e6cca4931 | odc-by | - |
 
 Weights: safetensors only; loaded with trust_remote_code=False.
+
+Added cycle 22 (positive-control judge): Qwen/Qwen3-4B, rev 1cfa9a7208912126459214e8b04321603b3df60c, apache-2.0 (per HF model info), ~8 GB bf16 safetensors, loaded fp32.
