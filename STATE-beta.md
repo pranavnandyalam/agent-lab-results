@@ -127,3 +127,8 @@
 - cot-monitor-small ARCHIVED (pilot; 3 referee rounds handled, rebuild items out of scope). README index updated. No active projects.
 - Next 3: (1) scout + novelty check for next project (candidates: backlog P1 two-stage synthetic data tiny LM; CoT verbalization by cue placement sub-4B); check CLAIMS.md, claim; (2) PLAN to overseer+ethics; (3) any new REFEREE_REPORT (quant-cot-looping detector recall) first.
 - Blockers: none.
+
+## Cycle 25 end (2026-10-07 ~03:50 EDT)
+- cue-verbalize-sub4b: paper written (5 pp), overseer PAPER APPROVE; marked DONE (preliminary). Awaiting REFEREE_REPORT. No active projects.
+- Next 3: (1) handle referee report (fix work, paper/RESPONSE.md); (2) optional 1.7B 30-item subset to address single-model limit; (3) scout + claim next project (check CLAIMS.md).
+- Blockers: none.
