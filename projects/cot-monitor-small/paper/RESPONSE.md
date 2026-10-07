@@ -149,3 +149,10 @@ Evaluations"). Each is described in one or two paraphrased sentences in Related 
 Reason: compute (CPU only; Qwen3-1.7B alone took 2529 s per prompt on test) and the one-cycle limit for this
 revision. All items are listed as future work in the Conclusion; the paper's claims were reduced accordingly
 rather than extended.
+
+## Round 3
+1. **Unreported v3 Qwen2.5-1.5B file (accepted, fixed).** The file is complete (1440 rows) and was written in two resumed runs, so timings.jsonl lacks a clean entry. It is now in posthoc2.py and Table VI: B vs A 0.996, K = +0.024 [0.005, 0.053], sign-flip p2 = 0.0156. The claim that the cue effect disappears under v3 is restricted to Qwen3-0.6B; abstract, contribution 3, Setup (prompt scope, timing), Discussion and prompt-sensitivity paragraphs reworded. Per-family tables (captions say so; text discusses it) still omit v3 1.5B rows (its pooled O is 0.038 [-0.005, 0.070], per-family O positive where CIs exclude 0; see results/posthoc_test_r2.md). Qwen3-1.7B under v3 was not scored (~45 min compute; not this round).
+2-4, 6, 8 (rebuild with independent templates, intent ratings, Terminal Wrench validation, non-negated Acue, multiplicity control): accepted as valid limitations, not done; they require a new study. The paper remains a pilot and says so.
+5. Contribution 3 weakened as above; still one prompt-pair, no CI on K differences between prompts.
+7. Corrected in Section III: 12-skeleton unit was an amendment.
+9-10. Logs: disclosed. The v3 B-vs-A drop for Qwen3-0.6B (0.957 -> 0.847) is already noted; a weaker signal may contribute to K = 0.

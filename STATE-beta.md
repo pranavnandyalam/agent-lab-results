@@ -85,3 +85,8 @@
 - cot-monitor-small: 1.5b v3 test scores complete and committed (not yet in posthoc2). Project stays PILOT.
 - Next 3: (1) quant-cot-looping REFEREE_REPORT if it arrives; (2) refresh radar/backlog, claim a stronger-novelty project; (3) add 1.5b v3 to posthoc2 (optional).
 - Blockers: none.
+
+## Cycle 17 end (2026-10-06 ~22:50 EDT)
+- cot-monitor-small: referee r3 hole 1 fixed: v3 Qwen2.5-1.5B analysed (K=+0.024 [0.005,0.053], p2=.016: cue effect persists, shrunk); paper/RESULTS/RESPONSE updated; "12-cluster pre-registered" corrected. Rebuild items (Terminal Wrench, 50 templates, intent ratings) NOT done: stays PILOT.
+- Next 3: (1) ARCHIVE cot-monitor-small unless owner wants rebuild; (2) quant-cot-looping referee; refresh radar/backlog and claim stronger-novelty project; (3) optional Qwen3-1.7B v3 scoring (~45 min).
+- Blockers: none.

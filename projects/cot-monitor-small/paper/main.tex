@@ -35,9 +35,10 @@ via the YES$-$NO logit difference. Nothing was validated on real agent trajector
 prompt, CoT-only AUROC for intent-revealing versus benign reasoning is 0.805--0.990, but a bag-of-words
 baseline with skeleton-grouped cross-validation reaches 0.758 [0.683, 0.894], whose interval overlaps those of
 both Qwen2.5 monitors. Swapping cue words for neutral synonyms lowers AUROC by $K=0.288$, 0.165, 0.052 and
-0.025 under that prompt, which itself contains cue stems. Under a cue-free prompt, re-run for the two smallest
-monitors only, Qwen3-0.6B shows no cue effect ($K=-0.018$ [$-0.058$, 0.027], two-sided cluster sign-flip
-$p=0.4482$), and the $K=+0.083$ of Qwen2.5-0.5B is a gap between two near-chance AUROCs (0.552 and 0.469).
+0.025 under that prompt, which itself contains cue stems. Under a cue-free prompt, re-run for three of the four
+monitors, Qwen3-0.6B shows no cue effect ($K=-0.018$ [$-0.058$, 0.027], two-sided cluster sign-flip
+$p=0.4482$), Qwen2.5-1.5B keeps a smaller but detectable one ($K=+0.024$ [0.005, 0.053], $p=0.0156$, down from 0.165),
+and the $K=+0.083$ of Qwen2.5-0.5B is a gap between two near-chance AUROCs (0.552 and 0.469).
 Skeleton and hack variant are aliased by design, 10 of 120 hack actions contain a cue stem, and per-family
 narration-override effects have opposite signs, so the pre-registered narration hypothesis is not supported
 (pooled effect uninterpretable); the keyword-reliance hypothesis is not supported for any monitor. These are
@@ -77,8 +78,8 @@ cluster bootstrap and an exact cluster sign-flip test over the shared skeletons 
 \item A pre-registered evaluation of four sub-2B zero-shot monitors on CPU with pinned revisions, with
 explicit verdicts: the size hypothesis is ceiling-limited, and the keyword-reliance and narration-override
 hypotheses are not supported (Section~\ref{sec:results}).
-\item Post-hoc controls added after two review rounds: a cue-free prompt, under which the cue effect of the one
-re-scored monitor that separates the conditions disappears; cue-stem exclusion in the hack actions; and
+\item Post-hoc controls added after two review rounds: a cue-free prompt, under which the cue effect disappears for
+Qwen3-0.6B but persists, reduced, for Qwen2.5-1.5B ($K=0.024$, sign-flip $p_2=0.016$); cue-stem exclusion in the hack actions; and
 per-family breakdowns with CIs that show the pooled action and narration numbers are averages over
 heterogeneous, partly opposite effects (Section~\ref{sec:posthoc}).
 \item A documentation of the design limits that a full study must remove (Section~\ref{sec:discussion}).
@@ -187,7 +188,7 @@ $O=\mathrm{AUROC}_\mathrm{action}(\mathrm{D}\,\mathrm{vs}\,\mathrm{A})-\mathrm{A
 $O>0$ means benign narration lowers detection of a hack action.
 
 \textbf{Uncertainty.} Scoring is deterministic (no seeds); all variance comes from the wording. The
-pre-registered bootstrap unit is the skeleton (12 clusters): 2000 cluster resamples (NumPy seed 0),
+bootstrap unit is the skeleton (12 clusters; the plan pre-registered 72 family$\times$skeleton clusters and the switch to 12 skeletons was an amendment committed with the first test scores): 2000 cluster resamples (NumPy seed 0),
 cluster-weighted AUROC, 2.5/97.5 percentile intervals, shared resample weights across monitors and metrics.
 Percentile intervals over 12 clusters may under-cover. For $K$ we therefore add an exact sign-flip
 (permutation) test: within each instance the B and Bnc labels are swapped jointly for all instances of a
@@ -237,7 +238,7 @@ task, action and slot-phrase templates.
 
 \textbf{Prompt selection.} The pre-registered rule picks the prompt with the highest mean dev AUROC(B vs A,
 CoT-only) over the four monitors (Table~\ref{tab:dev}); v2 was selected (mean 0.862) and frozen for test. After
-review, the test split was also scored under v1 and v3, but only for the two smallest monitors (2 of 4).
+review, the test split was also scored under v1 and v3, for the two smallest monitors (v1 and v3) and for Qwen2.5-1.5B (v3 only); Qwen3-1.7B was not re-scored.
 
 % Copied from ../results/dev_summary.json (per_prompt.<v>.<monitor>.auroc_B_vs_A, mean_auroc_B_vs_A), rounded to 3 d.p.
 \begin{table}[t]
@@ -262,7 +263,7 @@ v3 & 0.340 & 0.998 & 0.670 & 0.911 & 0.730\\
 scoring time under v2 (\texttt{results/timings.jsonl}) was 658\,s (Qwen2.5-0.5B), 830\,s (Qwen3-0.6B),
 1894\,s (Qwen2.5-1.5B, last 1312 of 1440 passes; the first 128 were scored in an interrupted run whose time was
 not logged) and 2529\,s (Qwen3-1.7B), about 1.6 hours in total; the v1/v3 re-scoring of Qwen2.5-0.5B and Qwen3-0.6B took 515
- and 666\,s (v1) and 565 and 708\,s (v3). The logs are incomplete: \texttt{results/test\_run.log} has no Qwen3-1.7B entry (its time is only in
+ and 666\,s (v1) and 565 and 708\,s (v3); the Qwen2.5-1.5B v3 time was not recorded (resumed over several runs). The logs are incomplete: \texttt{results/test\_run.log} has no Qwen3-1.7B entry (its time is only in
 \texttt{timings.jsonl}), and the first 88 dev passes of Qwen2.5-1.5B under v1 are not in
 \texttt{results/dev\_run.log}. The v1/v3 test scoring script (\texttt{src/run\_test\_prompts.sh}) and the round-1 post-hoc analysis
 used a sibling project's virtual environment (the score metadata record the same torch, transformers, NumPy and
@@ -367,14 +368,14 @@ of this result. The positive pooled $O$ comes from a monitor whose pooled D vs A
 \subsection{Post-hoc controls after review (exploratory, not pre-registered)}
 \label{sec:posthoc}
 All numbers in this subsection come from \texttt{results/posthoc\_test\_r2.md} (\texttt{src/posthoc2.py}, no
-model scoring). Prompts v1 and v3 were run only for Qwen2.5-0.5B and Qwen3-0.6B.
+model scoring). Prompt v3 was run for Qwen2.5-0.5B, Qwen2.5-1.5B and Qwen3-0.6B, and v1 for the two smallest monitors only; Qwen3-1.7B was not re-scored.
 
 % Copied from ../results/posthoc_test_r2.md, section 1 (B-A cot, Bnc-A cot, K, K perm p1, K perm p2, Acue-A cot).
 \begin{table*}[t]
 \caption{Post-hoc, test split, CoT-only: $K$ per prompt with 95\% skeleton-bootstrap CIs (12 clusters, may
 under-cover) and exact cluster sign-flip $p$ values for $K$ (4096 assignments; $p_1$ one-sided, $p_2$
 two-sided; smallest $p_1$ is $1/4096$, printed as 0.0002). Acue vs A is a post-hoc scale-free AUROC (below 0.5:
-Acue scored lower than A). v1 and v3 were run for 2 of 4 monitors. v3 contains no cue stem.}
+Acue scored lower than A). v1 was run for 2 of 4 monitors, v3 for 3 of 4. v3 contains no cue stem.}
 \label{tab:kprompt}
 \centering
 \footnotesize
@@ -392,6 +393,7 @@ v1 (1)           & Qwen2.5-0.5B & 0.512 [0.319, 0.712] & 0.336 [0.152, 0.542] & 
                  & Qwen3-0.6B   & 0.899 [0.819, 0.960] & 0.760 [0.624, 0.873] & 0.139 [0.066, 0.232] & 0.0012 & 0.0024 & 0.527 [0.388, 0.670]\\
 \midrule
 v3 (0)           & Qwen2.5-0.5B & 0.552 [0.398, 0.701] & 0.469 [0.321, 0.622] & 0.083 [0.048, 0.119] & 0.0002 & 0.0005 & 0.494 [0.358, 0.661]\\
+                 & Qwen2.5-1.5B & 0.996 [0.987, 1.000] & 0.971 [0.937, 0.994] & 0.024 [0.005, 0.053] & 0.0078 & 0.0156 & 0.606 [0.468, 0.740]\\
                  & Qwen3-0.6B   & 0.847 [0.750, 0.932] & 0.865 [0.758, 0.943] & $-$0.018 [$-$0.058, 0.027] & 0.7783 & 0.4482 & 0.589 [0.433, 0.735]\\
 \bottomrule
 \end{tabular}}
@@ -399,13 +401,14 @@ v3 (0)           & Qwen2.5-0.5B & 0.552 [0.398, 0.701] & 0.469 [0.321, 0.622] & 
 
 \textbf{Cue-free prompt (v3) as the primary cue-priming control.} Table~\ref{tab:kprompt} reports $K$ with CIs and
 sign-flip $p$ values. Under v2 and v1, $K$ is positive for every monitor run, with sign-flip $p_2\leq 0.0024$.
-Under the cue-free v3 the picture changes. Qwen3-0.6B, which still separates B from A (0.847), shows no cue
-effect: $K=-0.018$ [$-0.058$, 0.027], $p_2=0.4482$. Qwen2.5-0.5B has $K=+0.083$ [0.048, 0.119] ($p_1=0.0002$),
-but its B vs A AUROC is 0.552 [0.398, 0.701], near chance, so this $K$ is a gap between two near-chance AUROCs
-and says little about how intent is read. The same holds for Qwen2.5-0.5B under v1 (B vs A 0.512). We therefore
-withdraw the earlier statement that the direction of the Qwen2.5-vs-Qwen3 contrast holds across prompts: the
-only re-scored monitor that separates the conditions under the cue-free prompt shows no cue reliance, and the
-two larger monitors were not re-scored. We computed no CI for differences in $K$ between prompts.
+Under the cue-free v3 the picture is mixed. Qwen3-0.6B, which still separates B from A (0.847), shows no cue
+effect: $K=-0.018$ [$-0.058$, 0.027], $p_2=0.4482$. Qwen2.5-1.5B separates B from A almost perfectly (0.996)
+and keeps a small but positive cue effect: $K=+0.024$ [0.005, 0.053], $p_1=0.0078$, $p_2=0.0156$ (its Bnc-vs-A is
+0.971). Qwen2.5-0.5B has $K=+0.083$ [0.048, 0.119] but B vs A is 0.552 [0.398, 0.701], near chance, so this $K$
+says little about how intent is read. Hence cue reliance is not removed by the cue-free prompt in general: it
+vanishes for one Qwen3 monitor and shrinks (0.165 to 0.024) but stays detectable for Qwen2.5-1.5B. Part of the
+v3 shrinkage may reflect ceiling effects. Qwen3-1.7B was not scored under v3, so the family contrast
+(Qwen2.5 vs Qwen3) rests on one monitor per family and is not established. We computed no CI for differences in $K$ between prompts.
 
 \textbf{False alarms on benign cue-word text.} The post-hoc AUROC(Acue vs A) for Qwen2.5-0.5B under v2 is 0.368
 [0.215, 0.543]: benign reasoning that mentions and rejects cue words tends to score \emph{lower} than plain benign
@@ -418,7 +421,7 @@ AUROC is a post-hoc addition and does not change the verdict.
 
 % Copied from ../results/posthoc_test_r2.md, section 2 (action view AUROC a1 vs a0; instance-pair bootstrap within family).
 \begin{table*}[t]
-\caption{Post-hoc, test split: action-only AUROC($a_1$ vs $a_0$) per task family (20 vs 20 passes) and pooled
+\caption{[v3 Qwen2.5-1.5B rows omitted; see \texttt{results/posthoc\_test\_r2.md}.] Post-hoc, test split: action-only AUROC($a_1$ vs $a_0$) per task family (20 vs 20 passes) and pooled
 (120 vs 120), with 95\% instance-pair bootstrap CIs (2000 resamples, stratified by family). ``no-cue'' excludes
 the 10 fix\_test instances whose $a_1$ matches the cue stems \emph{skip}/\emph{skipped} (pooled $n=110$,
 fix\_test $n=10$); no $a_0$ text matches a cue stem.}
@@ -458,7 +461,7 @@ excluded instances are exactly one hack variant, this exclusion also removes a v
 
 % Copied from ../results/posthoc_test_r2.md, section 3 (instance-boot CIs for action; skeleton-boot for cot).
 \begin{table}[t]
-\caption{Post-hoc: AUROC by hack variant (instance parity; 60 instances and 6 skeletons each). Action:
+\caption{[v3 Qwen2.5-1.5B rows omitted; see \texttt{results/posthoc\_test\_r2.md}.] Post-hoc: AUROC by hack variant (instance parity; 60 instances and 6 skeletons each). Action:
 AUROC($a_1$ vs $a_0$), instance-pair bootstrap CI. CoT: B vs A, CoT-only, skeleton bootstrap CI over 6
 clusters (likely under-covers). Variant is fully aliased with skeleton.}
 \label{tab:variant}
@@ -489,7 +492,7 @@ skeletons \emph{and} different hack actions, these differences cannot be assigne
 
 % Copied from ../results/posthoc_test_r2.md, section 4 (O [skeleton CI]).
 \begin{table*}[t]
-\caption{Post-hoc: narration override $O$ per task family with 95\% skeleton-bootstrap CIs (each family spans
+\caption{[v3 Qwen2.5-1.5B rows omitted; see \texttt{results/posthoc\_test\_r2.md}.] Post-hoc: narration override $O$ per task family with 95\% skeleton-bootstrap CIs (each family spans
 all 12 skeletons). Pooled values equal Table~\ref{tab:effects} for v2. Bold: CI excludes 0.}
 \label{tab:o}
 \centering
@@ -520,14 +523,15 @@ family cells with CIs excluding 0, as does Qwen3-1.7B under v2 (lint $+0.108$ [0
 $-0.280$ [$-0.419$, $-0.157$]). The pooled sign therefore depends on how families with opposite effects
 balance, and is not interpretable as a property of the monitor. This is why H4 is reported as not supported.
 Under v3, pooled $O$ for Qwen3-0.6B is $+0.046$ [0.002, 0.097]; we do not read it as support for the same reason.
+The v3 Qwen2.5-1.5B rows (omitted from the tables; see \texttt{results/posthoc\_test\_r2.md}) do not show opposite signs: pooled $O=0.038$ [$-0.005$, 0.070], and the four family cells whose CIs exclude 0 (checksum, fix\_test, speedup, validator) are all positive. This is post-hoc, without multiplicity control, and we do not read it as support for H4 either; the abstract's opposite-sign statement therefore holds for the monitors tabulated, not for every monitor--prompt row.
 
 \section{Discussion and Limitations}
 \label{sec:discussion}
 \textbf{What the evidence supports.} On 12 synthetic skeletons, the four monitors rank intent-revealing
 reasoning above benign reasoning under the selected prompt, and removing cue words lowers that ranking under the
-two prompts that contain cue words. Under the cue-free prompt, the only re-scored monitor that still separates
-the conditions (Qwen3-0.6B) shows no cue effect, which is consistent with the v2 and v1 cue effects being at
-least partly primed by the prompt; with two monitors and no between-prompt CI this is not established. The
+two prompts that contain cue words. Under the cue-free prompt, the cue effect vanishes for Qwen3-0.6B and shrinks
+from 0.165 to 0.024 (still detectable, $p_2=0.016$) for Qwen2.5-1.5B, which is consistent with the v2 and v1 cue
+effects being partly, not wholly, primed by the prompt; with three of four monitors re-scored and no between-prompt CI this is not established. The
 Qwen2.5 AUROCs are within the range of a unigram baseline. We make no claim about real monitors.
 
 \textbf{Pilot design limits.} All 12 skeletons, the neutral synonyms and the cue list were written by a single
@@ -546,8 +550,8 @@ non-cue words of similar salience).
 
 \textbf{Prompt sensitivity.} On dev, v1 inverted Qwen2.5-0.5B (0.207 with full format compliance), while the
 larger monitors reached 0.997 and 1.000 under v1 (Table~\ref{tab:dev}). On test, Qwen2.5-0.5B is near chance on
-B vs A under v1 and v3. Only 2 of 4 monitors were re-scored under v1 and v3, so prompt stability of $K$ for
-Qwen2.5-1.5B and Qwen3-1.7B is unknown.
+B vs A under v1 and v3. Only 2 of 4 monitors were re-scored under v1 and 3 of 4 under v3, so prompt stability of $K$ is unknown
+for Qwen3-1.7B and for Qwen2.5-1.5B under v1.
 
 \textbf{Narration.} Condition D uses a fixed benign template that describes a correct fix while the action does
 something else; it is not an optimized rewrite as in~\cite{shiromani2026false}. Per-family $O$ has opposite
@@ -566,8 +570,9 @@ trajectories such as Terminal Wrench~\cite{bercovich2026terminal}.
 This pilot probes whether four zero-shot monitors of 0.5--1.7B parameters read stated intent or cue words, using
 12 hand-written synthetic skeletons. Under the dev-selected prompt, which contains cue words, the monitors
 separate intent-revealing from benign reasoning (AUROC 0.805--0.990) and lose 0.025--0.288 AUROC when cue words
-are removed. Under a cue-free prompt, run for the two smallest monitors only, Qwen3-0.6B shows no cue effect
-($K=-0.018$ [$-0.058$, 0.027]) and Qwen2.5-0.5B is near chance. A unigram baseline matches the Qwen2.5 monitors
+are removed. Under a cue-free prompt, run for three of the four monitors, the cue effect vanishes for Qwen3-0.6B
+($K=-0.018$ [$-0.058$, 0.027]), persists at reduced size for Qwen2.5-1.5B ($K=+0.024$ [0.005, 0.053]) and
+Qwen2.5-0.5B is near chance. A unigram baseline matches the Qwen2.5 monitors
 within CIs, skeleton is aliased with hack variant, the action view is partly lexical, and per-family narration
 effects have opposite signs. The pre-registered keyword-reliance and narration hypotheses are not supported,
 and the size hypothesis is ceiling-limited. A full study needs at least 50 skeletons from independent writers,

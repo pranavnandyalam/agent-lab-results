@@ -24,8 +24,8 @@ from analyze import Boot, MONS, NBOOT, ROOT, SEED, auroc, ci, load_instances, lo
 from cues import CUE_RE, find_cues  # noqa: E402
 
 PROMPTS = ["v2", "v1", "v3"]
-# monitors analysed per prompt (task spec; other files e.g. a partially written v3 qwen2.5-1.5b are ignored)
-MON_OF = {"v2": MONS, "v1": ["qwen2.5-0.5b", "qwen3-0.6b"], "v3": ["qwen2.5-0.5b", "qwen3-0.6b"]}
+# monitors analysed per prompt (task spec; qwen3-1.7b v3 not scored)
+MON_OF = {"v2": MONS, "v1": ["qwen2.5-0.5b", "qwen3-0.6b"], "v3": ["qwen2.5-0.5b", "qwen2.5-1.5b", "qwen3-0.6b"]}
 
 
 def parse_posthoc(path):
