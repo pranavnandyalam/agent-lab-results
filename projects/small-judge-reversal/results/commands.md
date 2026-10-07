@@ -9,3 +9,6 @@ OMP_NUM_THREADS=4 timeout 600 .venv/bin/python -I src/project.py
 # Qwen2.5-1.5B r2 passed the shell timeout notice but its output file completed):
 #   for M in 4 core models, s in 0 1 2: OMP_NUM_THREADS=4 timeout 2400 .venv/bin/python -I src/run.py run --model $M --resample $s
 OMP_NUM_THREADS=2 .venv/bin/python -I src/analyze.py   # -> results/analysis.{json,md}
+
+## Calibrated re-analysis (cycle 19)
+`.venv/bin/python -I src/calibrated.py` -> results/calibrated.{json,md} (no model runs; reads raw_*.json).

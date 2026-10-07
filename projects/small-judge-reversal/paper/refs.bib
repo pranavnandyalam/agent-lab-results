@@ -1,6 +1,9 @@
 % Every entry below was fetched from its arXiv abstract page on 2026-10-06; title, authors, year and
-% venue/comment are taken from that page. Dropped (could not verify the role claimed in PLAN.md from the
-% fetched page, or fetch failed): arXiv 2606.19544, arXiv 2505.08498, Efron 1979 (projecteuclid 403).
+% venue/comment are taken from that page. Dropped in revision 1 (could not verify the role claimed in PLAN.md
+% from the fetched page, or fetch failed): arXiv 2505.08498, Efron 1979 (projecteuclid 403).
+% Added in revision 2 (referee round 1), abstracts fetched 2026-10-06: 2410.02205, 2601.21433, 2606.19544
+% (2606.19544 is cited for position bias in general, not for small judges: its abstract does not single them out).
+% 2609.32407 re-checked: abstract says 64 open-weight evaluators overall and "the verdicts of 50 judges" on LLMBar.
 
 @misc{song2025grp,
   title         = {{GRP}: Goal-Reversed Prompting for Zero-Shot Evaluation with {LLMs}},
@@ -130,4 +133,34 @@
   eprint        = {2604.23478},
   archivePrefix = {arXiv},
   note          = {arXiv preprint arXiv:2604.23478}
+}
+
+@misc{liu2024aligning,
+  title         = {Aligning with Logic: Measuring, Evaluating and Improving Logical Preference Consistency in Large Language Models},
+  author        = {Liu, Yinhong and Guo, Zhijiang and Liang, Tianya and Shareghi, Ehsan and Vuli{\'c}, Ivan and Collier, Nigel},
+  year          = {2024},
+  eprint        = {2410.02205},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  note          = {arXiv preprint arXiv:2410.02205}
+}
+
+@misc{elkins2026framing,
+  title         = {Framing Instability in {LLM} Ethical Stance: Auditing Negation Sensitivity in Moral Dilemmas},
+  author        = {Elkins, Katherine and Chun, Jon},
+  year          = {2026},
+  eprint        = {2601.21433},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI},
+  note          = {arXiv preprint arXiv:2601.21433}
+}
+
+@misc{norman2026reliability,
+  title         = {Reliability without Validity: A Systematic, Large-Scale Evaluation of {LLM}-as-a-Judge Models Across Agreement, Consistency, and Bias},
+  author        = {Norman, Justin D. and Rivera, Michael U. and Hughes, D. Alex},
+  year          = {2026},
+  eprint        = {2606.19544},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  note          = {arXiv preprint arXiv:2606.19544}
 }
