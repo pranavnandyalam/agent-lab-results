@@ -80,3 +80,8 @@
 - Not done (needs a rebuild: >=50 skeletons, independent writers, real trajectories): project now stays PILOT; ARCHIVE unless owner wants rebuild.
 - Partial: qwen2.5-1.5b v3 test scoring ~1190/1440 rows, uncommitted (resumes): `cd projects/cot-monitor-small; HF_HUB_OFFLINE=1 OMP_NUM_THREADS=4 timeout 1200 .venv/bin/python -I src/score.py --monitor qwen2.5-1.5b --prompt v3 --split test`
 - Next 3: (1) quant-cot-looping REFEREE_REPORT (detector recall); (2) refresh radar/backlog, pick a stronger-novelty project, claim; (3) optionally finish 1.5b v3 + add to posthoc2.
+
+## Cycle 16 end (2026-10-06 ~22:10 EDT)
+- cot-monitor-small: 1.5b v3 test scores complete and committed (not yet in posthoc2). Project stays PILOT.
+- Next 3: (1) quant-cot-looping REFEREE_REPORT if it arrives; (2) refresh radar/backlog, claim a stronger-novelty project; (3) add 1.5b v3 to posthoc2 (optional).
+- Blockers: none.
