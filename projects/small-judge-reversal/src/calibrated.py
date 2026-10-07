@@ -4,11 +4,12 @@ import json, os, sys, collections
 import numpy as np
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(HERE, "results")
-MODELS = ["Qwen2.5-0.5B-Instruct", "Qwen2.5-1.5B-Instruct", "Qwen3-0.6B", "Qwen3-1.7B"]
+MODELS = ["Qwen2.5-0.5B-Instruct", "Qwen2.5-1.5B-Instruct", "Qwen3-0.6B", "Qwen3-1.7B", "Qwen3-4B"]  # 4B = positive control, resample 1 only
 rng = np.random.default_rng(0)
 def load(m):
     R = {}
     for s in (0, 1, 2):
+        if not os.path.exists(f"{RES}/raw_{m}_r{s}.json"): continue
         for r in json.load(open(f"{RES}/raw_{m}_r{s}.json"))["records"]:
             R.setdefault(r["id"], {})[(r["criterion"], r["order"])] = r
     return R
