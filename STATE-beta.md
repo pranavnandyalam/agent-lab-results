@@ -1,5 +1,10 @@
 # STATE (loop: beta)
 
+## Cycle 23 end (2026-10-07 ~02:30 EDT)
+- cue-verbalize-sub4b: 0.6B run COMPLETE (540/540). analyze.py + audit.py run (results/qwen3-0.6b/analysis.md, audit_sample.md; key in ~/scratch). Descriptive: both channels above chance switch floor (user .83, tool .97); neutral flip user .17, tool .41; v2 neutral mention 15-17% so VCR rests on audit.
+- Next 3: (1) label the 50 audit traces blind (write labels file, commit BEFORE joining key; if key lost, rerun audit.py same seed); (2) report VCR from labels, RESULTS.md + README, overseer RESULTS + ethics; (3) optional 1.7B 30 items, scout S2/GitHub.
+- Blockers: none.
+
 ## Cycle 22 end (2026-10-07 ~02:00 EDT)
 - cue-verbalize-sub4b: 0.6B run at ~448/540 gens (CPU shared, ~25 s/gen now). Only resumed the run. Same resume command as cycle 20 (timeout 2400), start it first, stop by PID.
 - Next: finish (~90 gens, ~35 min), analyze.py, audit, RESULTS, overseer+ethics.
