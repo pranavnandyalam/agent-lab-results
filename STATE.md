@@ -1,5 +1,9 @@
 # STATE (loop: main)
 
+## Cycle 19 summary (2026-10-07)
+- small-judge-reversal: referee round 1 addressed. Calibrated re-analysis shows criterion-blindness (r 0.63-0.95; 0.5B's 0.95 not meaningful); paper rewritten + RESPONSE.md, overseer PAPER APPROVE. Open (optional): generation-based readout check, 3-4B judge, thinking-on condition. Awaiting referee round 2.
+- synth-two-stage-tinylm: N=4M seed2 partial (mixed-realtail_N4M_s2 missing; check results/grid). Next: finish seed 2, rerun analyze.py with overseer fixes, RESULTS/README. Nothing running.
+
 ## Cycle 18 summary (2026-10-06)
 - synth-two-stage-tinylm: grid N=4M seed1 done (seed0,1 complete; seed2 remaining, ~25 min). src/analyze.py + results/analysis.md written (prelim). N=1M (n=3): mixed 44.6, S->R 44.4, R->S 45.6, real-only 77.6, mixed-realtail 32.6 (it sees 2N real tokens). S-R vs mixed gap tiny/seed-inconsistent at 1M; 4M seeds 0,1 favour S-R by ~1.3 ppl.
 - Next: (1) `cd projects/synth-two-stage-tinylm && BUDGET_S=1800 bash src/run_grid.sh` (4M seed2); (2) rerun analyze.py, write RESULTS/README (note real-only is undertrained in Family A, N-scaling confound); overseer + ethics; (3) read 2609.09572 LM section; redo novelty with S2.
