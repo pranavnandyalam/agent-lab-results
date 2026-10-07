@@ -7,8 +7,12 @@ Slices (only R_train and S1f; never R_dev/R_val/R_gen):
   REAL2 = R_train[off2 : off2 + N]  real tokens of the mixed PHASE of mixed->real-tail, off2 = min(N, len-1-N)
           N=1M: off2 = N, fully disjoint from REAL. N=4M: R_train (8376976 tok) < 2N+1, so off2 = len-1-N and
           REAL2 overlaps REAL by N-off2 tokens (logged in A_slices.json); those tokens are seen twice in that arm.
-Nested budgets: the 1M slices are prefixes of the 4M slices."""
-import json, os
+Nested budgets: the 1M slices are prefixes of the 4M slices.
+Matched-total-token real-only controls (added after the main grid, see PLAN.md):
+  real-only-2N  = R_train[0 : min(2N, floor((len-1)/ctx)*ctx)]  fresh real tokens; N=4M capped at 8,376,832 tok
+  real-only-2ep = REAL then REAL again (two concat phases, independently shuffled): exactly 2N tokens, no cap
+Usage: python src/make_plans.py [OUT_DIR]  (default plans/; a different dir lets you diff against committed plans)."""
+import json, os, sys
 import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,7 +28,8 @@ def src(b, off, n):
 
 def main():
     lr_, ls_ = ntok(R), ntok(S)
-    os.makedirs(os.path.join(ROOT, "plans"), exist_ok=True)
+    out = os.path.abspath(sys.argv[1]) if len(sys.argv) > 1 else os.path.join(ROOT, "plans")
+    os.makedirs(out, exist_ok=True)
     info = {"ctx": CTX, "R_train_tokens": lr_, "S1f_tokens": ls_, "N": {}}
     for tag, N in NS.items():
         assert N % CTX == 0 and N + 1 <= lr_ and N + 1 <= ls_
@@ -36,14 +41,16 @@ def main():
             "S-R": [{"mode": "concat", "sources": [syn]}, {"mode": "concat", "sources": [real]}],
             "R-S": [{"mode": "concat", "sources": [real]}, {"mode": "concat", "sources": [syn]}],
             "mixed-realtail": [{"mode": "interleave", "sources": [real2, syn]}, {"mode": "concat", "sources": [real]}],
+            "real-only-2N": [{"mode": "concat", "sources": [src(R, 0, min(2 * N, (lr_ - 1) // CTX * CTX))]}],
+            "real-only-2ep": [{"mode": "concat", "sources": [real]}, {"mode": "concat", "sources": [real]}],
         }
         for arm, ph in arms.items():
-            json.dump({"phases": ph}, open(os.path.join(ROOT, f"plans/A_{arm}_N{tag}.json"), "w"))
+            json.dump({"phases": ph}, open(os.path.join(out, f"A_{arm}_N{tag}.json"), "w"))
         info["N"][tag] = {"N": N, "windows": N // CTX, "REAL": [0, N], "SYN": [0, N], "REAL2": [off2, off2 + N],
                           "REAL2_overlap_with_REAL_tokens": max(0, N - off2),
                           "total_tokens": {"real-only": N, "mixed": 2 * N, "S-R": 2 * N, "R-S": 2 * N,
                                            "mixed-realtail": 3 * N}}
-    json.dump(info, open(os.path.join(ROOT, "plans/A_slices.json"), "w"), indent=1)
+    json.dump(info, open(os.path.join(out, "A_slices.json"), "w"), indent=1)
     print(json.dumps(info, indent=1))
 
 if __name__ == "__main__":

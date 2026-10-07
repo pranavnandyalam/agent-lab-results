@@ -1,5 +1,9 @@
 # STATE (loop: main)
 
+## Cycle 25 summary (2026-10-07, referee r1 on synth-two-stage-tinylm)
+- Done: per-phase-LR S→R control (ordering survives, 15.96 vs mixed 17.39), LR1e-3 seed0 hint, plan-script fixes; RESULTS addendum.
+- NEXT: (1) paper-writer: revise paper per addendum (drop "grows with N", retitle/soften ordering claim, "same-architecture generator", add 3 cites, say H.2 unread, venue) + paper/RESPONSE.md, overseer PAPER; (2) optional experiments: heavier repetition (real-only 4/8 ep vs S-R) and stronger G0, N=2M; (3) small-judge-reversal non-code runs (see cycle 24 NEXT below).
+
 ## Cycle 24 summary (2026-10-07, referee r4 on small-judge-reversal)
 - small-judge-reversal: DONE this cycle (code/results only, paper NOT yet updated): independence null for calibrated reversal (4 small judges well BELOW null; Qwen3-4B 0.31 vs null 0.30 => no partial reversal, referee hole 2 right), single shared bootstrap (CIs shifted 0.01-0.03; paper CIs need refresh from results/calibrated.md), 4B params 4.02B recorded, fetch/analyze handle 4B, 200 non-code pairs built (results/splits_noncode.json), Qwen3-0.6B nc run done (reverse 0.055).
 - NEXT: run non-code passes: `cd projects/small-judge-reversal; for M in Qwen2.5-0.5B-Instruct Qwen2.5-1.5B-Instruct Qwen3-1.7B: OMP_NUM_THREADS=4 timeout 2400 .venv/bin/python -I src/run.py run --pairs noncode --model $M --resample 1` (~9/32/34 min; 4B ~76 min, timeout 5400, resumable), then `src/calibrated.py`, then paper-writer update (drop size-trend sentences in abstract/conclusion, null, CIs, non-code, 4B params) + overseer PAPER. Also gen check Qwen2.5-1.5B.

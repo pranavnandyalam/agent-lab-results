@@ -1,0 +1,12 @@
+bounds [0, 512, 1024]
+0 per_phase 0.0001154 global 5.88e-05
+24 per_phase 0.0028846 global 0.0014706
+25 per_phase 0.003 global 0.0015294
+511 per_phase 0.0003 global 0.0017654
+512 per_phase 0.0001154 global 0.001761
+536 per_phase 0.0028846 global 0.0016565
+537 per_phase 0.003 global 0.0016522
+1023 per_phase 0.0003 global 0.0003
+default hash matches committed S-R_N4M_s0: True
+per_phase hash differs: True
+OK

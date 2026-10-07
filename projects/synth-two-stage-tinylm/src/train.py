@@ -4,8 +4,10 @@ Plan JSON (paths relative to the project dir, or absolute): {"phases": [{"mode":
                         "sources": [{"bin": path, "offset": int, "tokens": int}, ...]}, ...]}
 Each source slice is cut into non-overlapping (ctx+1)-token windows. Within a phase, windows are
 shuffled (seeded): "concat" shuffles within each source and keeps sources in order; "interleave"
-shuffles all windows of the phase together. Phases run in order. ONE warmup(5%)+cosine LR schedule
-spans the whole run. Checkpoints (resumable) go to --ckpt. Eval PPL on --eval splits at the end
+shuffles all windows of the phase together. Phases run in order. Default (--lr_schedule global): ONE
+warmup(5%)+cosine LR schedule spans the whole run. --lr_schedule per_phase: the same warmup(5%)+cosine
+schedule restarted independently at the start of each plan phase (phase length in steps =
+phase windows / bs, boundaries at floor(cumulative windows / bs)). Checkpoints (resumable) go to --ckpt. Eval PPL on --eval splits at the end
 (per-doc NLL sums saved for document-level bootstrap)."""
 import argparse, hashlib, json, math, os, time
 import numpy as np
@@ -40,7 +42,10 @@ def file_sha256(path):
 
 def run_hash(plan, a):
     bins = sorted({s["bin"] for ph in plan["phases"] for s in ph["sources"]})
-    blob = {"plan": plan, "args": {k: getattr(a, k) for k in HASH_ARGS},
+    hargs = {k: getattr(a, k) for k in HASH_ARGS}
+    if getattr(a, "lr_schedule", "global") != "global":  # only non-default values enter the hash (old hashes unchanged)
+        hargs["lr_schedule"] = a.lr_schedule
+    blob = {"plan": plan, "args": hargs,
             "bin_sha256": {rel(b): file_sha256(resolve(b)) for b in bins}}
     return hashlib.sha256(json.dumps(blob, sort_keys=True).encode()).hexdigest()
 
@@ -75,6 +80,23 @@ def lr_at(step, total, peak, warm_frac=0.05, min_ratio=0.1):
         return peak * (step + 1) / warm
     p = (step - warm) / max(1, total - warm)
     return peak * (min_ratio + (1 - min_ratio) * 0.5 * (1 + math.cos(math.pi * min(1.0, p))))
+
+def phase_bounds(plan, ctx, bs):
+    """Step index where each phase starts, plus the total step count, e.g. [0, 512, 1024]."""
+    cum, b = 0, [0]
+    for ph in plan["phases"]:
+        cum += sum(s["tokens"] // ctx for s in ph["sources"])
+        b.append(cum // bs)
+    return b
+
+def lr_sched(step, total, peak, bounds=None):
+    """global: one schedule over [0, total). per_phase (bounds given): lr_at restarted inside each phase."""
+    if bounds is None:
+        return lr_at(step, total, peak)
+    for k in range(len(bounds) - 1):
+        if bounds[k] <= step < bounds[k + 1]:
+            return lr_at(step - bounds[k], bounds[k + 1] - bounds[k], peak)
+    return lr_at(step, total, peak)
 
 @torch.no_grad()
 def evaluate(model, bin_path, ctx, bs=64, max_tokens=None):
@@ -116,6 +138,7 @@ def main():
     ap.add_argument("--log_every", type=int, default=20)
     ap.add_argument("--eval", nargs="*", default=[], help="name=path.bin pairs")
     ap.add_argument("--eval_max_tokens", type=int, default=None)
+    ap.add_argument("--lr_schedule", choices=["global", "per_phase"], default="global")
     a = ap.parse_args()
     a.ckpt = resolve(a.ckpt)
     os.makedirs(a.ckpt, exist_ok=True)
@@ -129,6 +152,11 @@ def main():
                              {"params": nodecay, "weight_decay": 0.0}], lr=a.lr, betas=(0.9, 0.95))
     windows = build_windows(plan, a.ctx, a.seed)
     total = len(windows) // a.bs
+    bounds = None
+    if a.lr_schedule == "per_phase":
+        bounds = phase_bounds(plan, a.ctx, a.bs)
+        bounds[-1] = total
+        print(f"per_phase LR schedule, phase step bounds {bounds}", flush=True)
     step, ck = 0, os.path.join(a.ckpt, "last.pt")
     if os.path.exists(ck):
         st = torch.load(ck, weights_only=True)
@@ -152,7 +180,7 @@ def main():
             w = np.asarray(bins[b][s:s + a.ctx + 1], dtype=np.int64)
             xs.append(w[:-1]); ys.append(w[1:])
         x, y = torch.from_numpy(np.stack(xs)), torch.from_numpy(np.stack(ys))
-        lr = lr_at(step, total, a.lr)
+        lr = lr_sched(step, total, a.lr, bounds)
         for g in opt.param_groups:
             g["lr"] = lr
         _, loss = model(x, y)

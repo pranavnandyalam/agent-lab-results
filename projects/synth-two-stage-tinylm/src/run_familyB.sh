@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Matched-total-token real-only arm (real-only-2ep: N real tokens x 2 epochs (Family B) tokens; N=4M capped at R_train length). Same conventions as run_grid.sh.
+# Family B matched-total-token real-only arm (real-only-2ep: exactly 2N tokens = the same N real tokens x 2 epochs, no cap; plans from src/make_plans.py). Same conventions as run_grid.sh.
 set -u
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"; cd "$ROOT"
 export OMP_NUM_THREADS=4 MKL_NUM_THREADS=4

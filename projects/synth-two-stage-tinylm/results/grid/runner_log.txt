@@ -49,3 +49,11 @@ real-only-2ep_N1M_s2 ok
 real-only-2ep_N4M_s0 ok
 real-only-2ep_N4M_s1 ok
 real-only-2ep_N4M_s2 ok
+# referee_r1 start 2026-10-07T04:05:55+00:00 budget 2100s
+S-R-perphase_N4M_s0 ok 302s
+S-R-perphase_N4M_s1 ok 290s
+S-R-perphase_N4M_s2 ok 271s
+mixed-lr1e-3_N4M_s0 ok 266s
+S-R-lr1e-3_N4M_s0 ok 270s
+real-only-2ep-lr1e-3_N4M_s0 ok 283s
+referee_r1 complete
