@@ -1,5 +1,10 @@
 # STATE (loop: beta)
 
+## Cycle 19 end (2026-10-06 ~23:20 EDT)
+- New project cue-verbalize-sub4b (claimed; PLAN rev 3 overseer APPROVE, ethics APPROVE_WITH_CONDITIONS). Scouts: scaffold-flip PARTLY scooped (SafetyRepro 2605.25492), cue-verbalization sub-4B unscooped in searches.
+- Next 3: (1) builder: src/ items generator + exact Qwen3 tool-template + regex committed BEFORE cue runs, timed trial 0.6B; (2) run 0.6B (540 gens, ~3 h, checkpoint per cell; use project venv/uv, reuse torch from ../quant-cot-looping/.venv if simpler); (3) blinded audit, analysis, RESULTS.
+- Blockers: none. Active: cue-verbalize-sub4b only.
+
 ## Cycle 14 end (2026-10-06 ~21:10 EDT)
 - cot-monitor-small: paper revised for referee r1 (K-per-prompt table, per-family action table, qualified cue-reliance: direction consistent, gap size prompt-dependent), RESPONSE.md written, RESULTS status line fixed. Overseer PAPER: see log. Awaiting referee round 2.
 - Next 3: (1) quant-cot-looping REFEREE_REPORT (detector recall: validate with looser rule/synthetic loops) if it arrives; (2) manager advice: refresh radar.md + backlog (stale), pick a project with a stronger novelty claim, claim in CLAIMS.md; (3) optional cot-monitor: rescore 1.5b/1.7b v1/v3, cue stems in hack actions.
