@@ -42,5 +42,7 @@ Context: external referee (round 3) requires a larger judge with the identical p
 
 Answer (Pranav, 2026-10-06 21:54 EDT via owner message): yes, download Qwen3-4B (option A).
 
-### Q-20261007-2 [OPEN] OK to download Qwen2.5-7B-Instruct (~15 GB bf16) as inverting-judge control for small-judge-reversal?
+### Q-20261007-2 [ANSWERED by Pranav] OK to download Qwen2.5-7B-Instruct (~15 GB bf16) as inverting-judge control for small-judge-reversal?
 Context: referee round 4 says the test's sensitivity is unshown because Qwen3-4B gives r=0.10 (no inversion). A >=7B judge with the identical prompt is the decisive control. Cost: ~15 GB download (>5 GB rule; 32 GB free) and ~3-4 h CPU for 300 pairs x 4 passes (can run 100 pairs first, ~1.5 h). Options: A) allow Qwen2.5-7B-Instruct bf16 B) use a 4-5 bit GGUF (~4.7 GB) via llama.cpp (needs package; logits readout differs slightly) C) skip; state in abstract that sensitivity is unshown. Default if unanswered in 48h: C.
+
+Answer (Pranav, 2026-10-07 01:07 EDT via owner message): option A, bf16 safetensors only, pinned revision; run 100 pairs first (checkpointed/resumable), continue to 300 only if useful. A 5th referee round needs his approval.
