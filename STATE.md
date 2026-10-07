@@ -1,5 +1,9 @@
 # STATE (loop: main)
 
+## Cycle 21 summary (2026-10-07)
+- small-judge-reversal referee r3: done = Qwen3-1.7B gen check (90% agree w/ logit; gen reversal 4/100), cite 2503.03064, abstract/typo fixes, RESPONSE.md. NOT done: (1) positive-control 4B judge (Q-20261007-1 OPEN, 8 GB download), (2) 200+ non-code pairs (reward-bench chat/chat-hard cached; run 4 judges, ~1 h), (3) gen check for Qwen2.5-1.5B (`.venv/bin/python -I src/gen_check.py gen --model Qwen2.5-1.5B-Instruct --n 100`, ~30 min, then `report`).
+- synth-two-stage-tinylm: next = overseer RESULTS re-review, then paper-writer (unchanged).
+
 ## Cycle 20 summary (2026-10-07)
 - synth-two-stage-tinylm: grid COMPLETE (3 seeds, N=1M,4M). RESULTS.md/README written (overseer REJECT on over-claiming finding 3 -> softened; ethics APPROVE w/ conditions, applied). 4M: S-R beats mixed by 1.27 ppl (H1 rule met), but 2N fresh real tokens beat S-R by 0.89. 1M: mixed/S-R == real-only-2ep (repeat real). **Family B 4M DONE: real-only-2ep 15.18 beats S-R by 0.94 ppl. Next: overseer RESULTS re-review of final RESULTS.md (numbers from results/analysis.md, edited post-approval), add commit hash, then paper-writer.**
 - small-judge-reversal: referee round 2 addressed (size trend, magnitude, edit distance, length control, 3 new cites) and pushed; overseer PAPER APPROVE. Still open: generation-based readout check (`cd projects/small-judge-reversal && .venv/bin/python -I src/gen_check.py gen --model Qwen3-1.7B --n 100`, resumable, ~11/100 pairs done; src/gen_check.py + partial json untracked/uncommitted-safe) and larger positive-control judge (Qwen3-4B / Qwen2.5-7B bf16).

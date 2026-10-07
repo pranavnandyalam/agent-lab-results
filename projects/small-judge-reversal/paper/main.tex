@@ -36,11 +36,13 @@ A post-hoc readout that averages the A-minus-B logit over both orders, following
 shows that the pair-dependent shift under ``worse'' is positively correlated with the shift under ``better''
 (Pearson $r$ = 0.95, 0.63, 0.90, 0.63; OLS slope 0.82, 0.39, 0.67, 0.26). For the three smaller judges, whose
 calibrated ``better'' accuracy is 0.50--0.61, the shift keeps most of its size (median magnitude ratio
-0.82--0.90). Qwen3-1.7B has content signal (accuracy 0.81) and shows an attenuated shift (consistent with weak partial reversal): its shift shrinks to
-about a third (median ratio 0.35) but keeps its sign in 0.76 of pairs. Within each family, $r$ falls with size
-(post hoc, two sizes per family). On this sample, for these small judges, the logit readout is dominated by a
-pair-dependent shift that the negated question does not invert. We did not validate the readout against generated
-verdicts or run a larger positive-control judge.
+0.82--0.90). Qwen3-1.7B has content signal (accuracy 0.81) and shows an attenuated shift: its shift shrinks to
+about a third (median ratio 0.35) but keeps its sign in 0.76 of pairs, which fits either a weak partial reversal or
+simply lower confidence under the negated prompt. On this sample, for these small judges, the logit readout is dominated by a
+pair-dependent shift that the negated question does not invert. A greedy-generation check for Qwen3-1.7B (100 pairs, 400 judgments) agrees with the logit argmax on 90\% of
+judgments (0.83 under ``better'', 0.97 under ``worse'') and shows 4/100 correct reversals versus 1/100 by logit;
+we did not run a larger positive-control judge or the generation check for the other judges.
+% Source: ../results/gen_check_summary.json (pair-category agreement 0.77; position-locked 0.22 vs 0.43).
 \end{abstract}
 % Sources: argmax counts ../results/analysis.json; r, same-sign, cal. acc. ../results/calibrated.json;
 % slopes, ratios, edit distance ../results/referee2.md (sections c, d).
@@ -71,13 +73,13 @@ presentation orders, and finds a pair-dependent shift that mostly keeps its sign
 \begin{enumerate}
 \item A four-judgment negation design with two readouts: a pair-level argmax taxonomy and an order-averaged
 logit difference that removes a constant letter offset; the latter applies existing swap
-calibration~\cite{wang2023fair,zeng2024rankfusion} and is not a new method (Section~\ref{sec:method}).
+calibration~\cite{wang2023fair,zeng2024rankfusion,wang2025distribution} and is not a new method (Section~\ref{sec:method}).
 \item An evaluation of four sub-2B Qwen judges (thinking off) on 300 RewardBench pairs with pinned model and
 data revisions (Section~\ref{sec:setup}).
 \item The finding, for these judges and this sample, that the order-averaged logit shift under ``worse'' is
 positively correlated with that under ``better''; for the three smaller judges it also keeps most of its
-magnitude, while Qwen3-1.7B shows an attenuated shift (consistent with weak partial reversal). The correlation persists on non-code pairs and
-high-mass pairs (Section~\ref{sec:results}).
+magnitude, while Qwen3-1.7B shows an attenuated shift (either weak partial reversal or lower confidence under ``worse''). The correlation persists on non-code pairs and
+high-mass pairs (a self-selected subset for Qwen3-1.7B) (Section~\ref{sec:results}).
 \item A correction of our own pre-registered framing: under a letter-biased null the position-locking
 hypothesis is nearly implied by letter marginals, so argmax taxonomies can misattribute a criterion-insensitive
 pair-dependent shift to position bias (Sections~\ref{sec:results} and~\ref{sec:disc}).
@@ -121,6 +123,9 @@ validating it on our task.
 LLM-RankFusion~\cite{zeng2024rankfusion} queries both permutations of a pair and combines the ``A'' and ``B''
 token probabilities into an order-agnostic preference. Our $d_q$ is an application of this precedent to the
 A-minus-B logit, used here as a diagnostic, not proposed as a new method.
+Wang et al.~\cite{wang2025distribution} show that taking the mean of the judgment distribution beats the greedy mode
+across pointwise, pairwise and listwise settings; our order-averaged logit is in the same spirit (a distribution-level
+readout rather than argmax), but we use it to probe criterion sensitivity, not to improve accuracy.
 
 \textbf{Negation in language models.} Pretrained LMs often fail to distinguish negated from affirmative
 probes~\cite{kassner2020negated}, and larger LMs can perform worse on negated prompts~\cite{jang2022negated}.
@@ -363,7 +368,7 @@ $\le0.083$), and $\Delta$ is 0.000 to 0.013. For Qwen3-1.7B the shift shrinks to
 (median ratio 0.35, slope 0.26) without usually changing sign: $P_C(\mathrm{better})=0.678$ and
 $P_C(\mathrm{W1})=0.543$, so $S=1.22$ [1.18, 1.26] and $\Delta=0.135$ [0.11, 0.16]. A full reversal would put
 $P_C(\mathrm{W1})$ near $1-P_C(\mathrm{better})$; the observed value lies between the blind and the
-following case, closer to the blind one. We read this as an attenuated shift, consistent with a weak partial reversal but also with lower confidence under "worse". The $S\approx1$ values of
+following case, closer to the blind one. We read this as an attenuated shift, consistent with a weak partial reversal but also with lower confidence under ``worse''. The $S\approx1$ values of
 the three smaller judges (1.002, 0.997, 1.014) are not evidence of criterion following, because a letter-only
 judge also gives $S=1$; their $\Delta\approx0$ and $P_C\approx0.5$ fit the letter-dominated reading.
 % Source: ../results/referee2.md section (c) == ../results/referee2.json c_per_judge.
@@ -410,8 +415,8 @@ cannot say how the judges behave on HEP pairs with larger edits. (ii)~\emph{Form
 restricting to pairs with A/B mass $>0.9$ on all four passes ($n$ = 300, 288, 286, 140) gives $r$ = 0.95, 0.60,
 0.91, 0.63. For Qwen3-1.7B, whose mean mass is 0.745 and 25.2\% of whose better/W1 passes have mass below 0.5,
 this filter keeps 140 of 300 pairs and selects pairs with lower calibrated accuracy (0.72 vs.\ 0.81 overall), so
-the subset is not representative. (iii)~\emph{Not done}: we did not check the logit readout against generated
-verdicts.
+the subset is not representative. (iii)~\emph{Partly checked}: the logit readout was compared with greedy generated verdicts for Qwen3-1.7B only
+(90\% judgment agreement, pair-category agreement 0.77); not for the other three judges.
 % Source: ../results/calibrated.md (non-hep, hep, mass>0.9 rows incl. acc_cal 0.72); mass statistics from
 % ../RESULTS.md Limitations; edit-distance bins ../results/referee2.md section (d).
 
@@ -468,7 +473,7 @@ preference for a response.
 necessarily a quality judgment. Calibrated ``better'' accuracy is near chance (0.50--0.61) for three judges; only
 Qwen3-1.7B (0.81) shows clear content signal. For Qwen2.5-0.5B, $d$ is tiny relative to the letter offset (median
 $|d_\mathrm{better}|$ 0.047 vs.\ mean offset 2.80), so its $r=0.95$ is not evidence of a coherent preference.
-(iv)~\emph{Readout}: no generation-based check was run; for Qwen3-1.7B the A/B mass is low on a quarter of
+(iv)~\emph{Readout}: a generation check was run for Qwen3-1.7B only (first 100 pairs of resample 0, greedy, 16 tokens, regex parse); the other three judges are not validated. For Qwen3-1.7B the A/B mass is low on a quarter of
 passes, and the mass$>$0.9 subset ($n=140$) is a selected sample.
 (v)~\emph{Sample}: code-heavy; HEP pairs differ by a median of one token (204 of 217 by fewer than five), so HEP results concern one-word bug edits; the non-HEP subset is small ($n=83$); chat has 12
 pairs.
@@ -477,12 +482,10 @@ pre-registered but, given the letter rates, nearly tautological.
 (vii)~\emph{Protocol deviation}: the development-set mass check was run for one judge only.
 (viii)~\emph{Novelty}: the related-work scan used arXiv and web search only.
 
-\textbf{What was not done (planned for a next cycle).} (a)~\emph{Readout validation}: no generation-based
-check; greedy decoding on at least 100 pairs per judge, compared with the logit verdicts, is needed.
-(b)~\emph{Positive control}: no larger judge (e.g.\ Qwen3-4B or Qwen2.5-7B) was run. Without a judge that is
+\textbf{What was not done (planned for a next cycle).} (a)~\emph{Readout validation}: done for Qwen3-1.7B only (100 pairs $\times$ 4 judgments, greedy, 16 tokens; 90\% agreement with logit argmax, generated reversal 4/100 vs.\ 1/100; results/gen\_check.md); pair-level argmax categories are sensitive to the readout (category agreement 0.77; position-locked 0.22 generated vs.\ 0.43 logit; P(A) under ``better'' 0.49 vs.\ 0.33), so the argmax taxonomy, and in particular the position-locking share, should not be over-read; the other three judges are not validated. (b)~\emph{Positive control}: no larger judge (e.g.\ Qwen3-4B or Qwen2.5-7B) was run. Without a judge that is
 known to reverse under this exact prompt and readout, we cannot separate ``these judges are criterion-blind''
 from ``this test cannot detect criterion following''; the length analysis is only a partial substitute.
-(c)~No thinking-enabled condition (budget rule; Section~\ref{sec:setup}), no calibrated re-analysis of W2, and
+(c)~A non-code sample with substantively different responses was not added. (d)~No thinking-enabled condition (budget rule; Section~\ref{sec:setup}), no calibrated re-analysis of W2, and
 no prompt-wording search beyond W1/W2.
 
 \section{Conclusion}
@@ -494,9 +497,9 @@ correlated with that under ``better'' ($r$ = 0.63 to 0.90 for the three judges t
 0.95 for Qwen2.5-0.5B, whose shift is tiny relative to its letter offset), including on non-code pairs and
 high-mass pairs. On this sample, which is dominated by one-word code edits, and for these small judges, the
 readout is dominated by a shift that the negated question does not invert; for the three smaller judges it keeps
-most of its size, while Qwen3-1.7B, the only judge with clear content signal (calibrated accuracy 0.81), shows a
-attenuated shift (possibly weak partial reversal). The correlation falls with size within both families, a post-hoc observation on two sizes
-each. A generation-based readout check and a larger positive-control judge are needed before this can be called
+most of its size, while Qwen3-1.7B, the only judge with clear content signal (calibrated accuracy 0.81), shows an
+attenuated shift (weak partial reversal or lower confidence under ``worse''). The correlation falls with size within both families, a post-hoc observation on two sizes
+each. We ran a generation check for Qwen3-1.7B only (90\% agreement with the logit argmax, 100 pairs) and no larger positive-control judge; the latter is needed before this can be called
 criterion-blindness rather than a limit of the test.
 
 \section*{Reproducibility Statement}
@@ -515,6 +518,10 @@ OMP_NUM_THREADS=4 .venv/bin/python -I \
 OMP_NUM_THREADS=4 .venv/bin/python -I \
   src/run.py run --model $M --resample $s
 .venv/bin/python -I src/analyze.py
+# generation check (seed 0, revision in results/gen_check_*.json):
+OMP_NUM_THREADS=4 .venv/bin/python -I \
+  src/gen_check.py gen --model Qwen3-1.7B --n 100
+.venv/bin/python -I src/gen_check.py report
 .venv/bin/python -I src/calibrated.py
 .venv/bin/python -I src/referee2.py
 # venv with paper/requirements-paper.txt:

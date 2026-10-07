@@ -1,0 +1,122 @@
+{
+ "Qwen3-1.7B": {
+  "n_judgments": 400,
+  "n_pairs_complete": 100,
+  "n_parsed": 400,
+  "parse_rate": 1.0,
+  "agree_with_logit": 0.9025,
+  "agree_by_criterion": {
+   "better": {
+    "n": 200,
+    "agree": 0.835
+   },
+   "W1": {
+    "n": 200,
+    "agree": 0.97
+   }
+  },
+  "n_pairs_all4_parsed": 100,
+  "pair_category_agreement": 0.77,
+  "P_A_gen": {
+   "better": 0.495,
+   "W1": 0.11
+  },
+  "P_A_logit": {
+   "better": 0.33,
+   "W1": 0.1
+  },
+  "metrics_gen": {
+   "n": 100,
+   "share_correct_reversal": 0.04,
+   "share_position_locked": 0.22,
+   "share_criterion_blind": 0.1,
+   "share_reversed_consistent": 0.0,
+   "share_other": 0.64,
+   "acc_better_poscons": 0.51,
+   "n_cond": 51,
+   "cond_flip_rate": 0.0784313725490196,
+   "uncond_flip_rate": 0.07,
+   "uncond_flip_chance_norm": -0.24,
+   "n_noncr": 96,
+   "pos_locked_share_of_noncr": 0.22916666666666666,
+   "acc_ci": [
+    0.41,
+    0.6
+   ]
+  },
+  "metrics_logit_same_pairs": {
+   "n": 100,
+   "share_correct_reversal": 0.01,
+   "share_position_locked": 0.43,
+   "share_criterion_blind": 0.1,
+   "share_reversed_consistent": 0.0,
+   "share_other": 0.46,
+   "acc_better_poscons": 0.44,
+   "n_cond": 44,
+   "cond_flip_rate": 0.022727272727272728,
+   "uncond_flip_rate": 0.03,
+   "uncond_flip_chance_norm": -0.29333333333333333,
+   "n_noncr": 99,
+   "pos_locked_share_of_noncr": 0.43434343434343436,
+   "acc_ci": [
+    0.34,
+    0.53
+   ]
+  },
+  "metrics_logit_all_complete": {
+   "n": 100,
+   "share_correct_reversal": 0.01,
+   "share_position_locked": 0.43,
+   "share_criterion_blind": 0.1,
+   "share_reversed_consistent": 0.0,
+   "share_other": 0.46,
+   "acc_better_poscons": 0.44,
+   "n_cond": 44,
+   "cond_flip_rate": 0.022727272727272728,
+   "uncond_flip_rate": 0.03,
+   "uncond_flip_chance_norm": -0.29333333333333333,
+   "n_noncr": 99,
+   "pos_locked_share_of_noncr": 0.43434343434343436,
+   "acc_ci": [
+    0.34,
+    0.53
+   ]
+  },
+  "unparsable_examples": [],
+  "top_generations": [
+   [
+    "B",
+    129
+   ],
+   [
+    "A",
+    51
+   ],
+   [
+    "B\n\n**Reason:**  \nResponse B is",
+    34
+   ],
+   [
+    "Response A is better. \n\n**Reas",
+    26
+   ],
+   [
+    "Response A is better.\n\n**Reaso",
+    19
+   ],
+   [
+    "B\n\n**Reasoning:**  \nResponse B",
+    13
+   ],
+   [
+    "Response B is worse. \n\n**Reaso",
+    12
+   ],
+   [
+    "B\n\n**Reason:** Response B is w",
+    11
+   ]
+  ],
+  "mean_sec_per_judgment": 4.440363355775008
+ }
+}
