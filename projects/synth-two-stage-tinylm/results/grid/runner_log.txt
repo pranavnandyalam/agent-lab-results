@@ -46,3 +46,6 @@ real-only-2N_N4M_s2 ok
 real-only-2ep_N1M_s0 ok
 real-only-2ep_N1M_s1 ok
 real-only-2ep_N1M_s2 ok
+real-only-2ep_N4M_s0 ok
+real-only-2ep_N4M_s1 ok
+real-only-2ep_N4M_s2 ok
