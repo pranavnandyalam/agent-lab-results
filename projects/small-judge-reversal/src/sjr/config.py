@@ -8,6 +8,7 @@ MODELS = {  # pinned revisions (also in results/models.md)
     "Qwen3-0.6B": ("Qwen/Qwen3-0.6B", "c1899de289a04d12100db370d81485cdf75e47ca"),
     "Qwen3-1.7B": ("Qwen/Qwen3-1.7B", "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e"),
     "Qwen3-4B": ("Qwen/Qwen3-4B", "1cfa9a7208912126459214e8b04321603b3df60c"),
+    "Qwen2.5-7B-Instruct": ("Qwen/Qwen2.5-7B-Instruct", "a09a35458c702b33eeacc393d103063234e8bc28"),  # apache-2.0; bf16
 }
 FILTER_TOKENIZER = "Qwen2.5-0.5B-Instruct"  # tokenizer used for all length filters
 SECTIONS = {
@@ -26,4 +27,6 @@ N_PER_RESAMPLE = 100
 RESAMPLE_SEEDS = [0, 1, 2]
 DEV_SEED = 12345
 MIN_POOL = 350
+# per-model load dtype (default float32); 7B loaded bf16 because fp32 (~30 GB) exceeds RAM
+DTYPES = {"Qwen2.5-7B-Instruct": "bfloat16"}
 SCRATCH = os.path.expanduser("~/scratch/small-judge-reversal")

@@ -1,0 +1,9 @@
+0 const 5.88e-05 global 5.88e-05
+25 const 0.0015294 global 0.0015294
+51 const 0.003 global 0.003
+52 const 0.003 global 0.003
+512 const 0.003 global 0.001761
+1023 const 0.003 global 0.0003
+default hash matches committed S-R_N4M_s0: True
+lr_const hash differs: True
+OK

@@ -18,7 +18,7 @@ class Judge:
         self.name, self.is_qwen3 = name, name.startswith("Qwen3")
         self.tok = load_tokenizer(name)
         self.model = AutoModelForCausalLM.from_pretrained(repo, revision=rev, trust_remote_code=False,
-                                                          torch_dtype=torch.float32, use_safetensors=True)
+                                                          torch_dtype=getattr(torch, C.DTYPES.get(name, "float32")), use_safetensors=True)
         self.model.eval()
         self.ids = {}
         for t in ["A", "B", " A", " B"]:

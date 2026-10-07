@@ -25,3 +25,5 @@ Added cycle 22 (positive-control judge): Qwen/Qwen3-4B, rev 1cfa9a72089121264592
 | Qwen3-4B | 1cfa9a7208 | 4,022,468,096 | 3,633,511,936 | 4,022,468,096 | 8,044,936,192 |
 
 <!-- PARAMS:END -->
+
+Added cycle (2026-10-07, owner approval Q-20261007-2; inverting-judge control): Qwen/Qwen2.5-7B-Instruct, rev a09a35458c702b33eeacc393d103063234e8bc28, apache-2.0 (per HF model info card_data), ~15 GB bf16 safetensors (allow_patterns *.safetensors, *.json, tokenizer*, vocab.json, merges.txt), loaded **bf16** (not fp32: fp32 ~30 GB exceeds 23 GB RAM), trust_remote_code=False.

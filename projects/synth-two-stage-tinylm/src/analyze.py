@@ -37,27 +37,31 @@ def h1_contrast(a_arm="S-R", b_arm="mixed"):
     nd = len(D[0]["4M"][0][1])
     lo, hi = hier(lambda s, ix: _p(D[s]["4M"][0], ix) - _p(D[s]["4M"][1], ix) - _p(D[s]["1M"][0], ix) + _p(D[s]["1M"][1], ix), len(seeds), nd)
     return per, float(np.mean(per)), lo, hi, len(seeds)
-print("# Family A analysis (R_val perplexity; lower is better; PRELIMINARY unless n=3)\n")
-print("| N | arm | n seeds | R_val ppl mean ± std | per-seed |\n|---|---|---|---|---|")
-for N in ["1M", "4M"]:
-    for arm in ARMS:
-        v = [ppl(*load(arm, N, s)) for s in range(3) if load(arm, N, s)]
-        if v: print(f"| {N} | {arm} | {len(v)} | {np.mean(v):.2f} ± {np.std(v, ddof=1) if len(v)>1 else float('nan'):.2f} | {', '.join(f'{x:.2f}' for x in v)} |")
-print("\n## Paired differences (a − b, ppl; negative = a better)\n")
-print("| N | a vs b | n | mean diff | hierarchical-bootstrap 95% CI | per-seed diffs | rule met (sign agree & CI excl. 0) |\n|---|---|---|---|---|---|---|")
-for N in ["1M", "4M"]:
-    for a, b in [("S-R","mixed"),("S-R","real-only"),("mixed","real-only"),("S-R","R-S"),("S-R","mixed-realtail"),("mixed","real-only-2N"),("S-R","real-only-2N"),("mixed","real-only-2ep"),("S-R","real-only-2ep"),("real-only-2ep","real-only"),("real-only-2ep","real-only-2N")]:
-        r = paired(a, b, N, range(3))
-        if r:
-            per, m, lo, hi, n = r
-            met = (all(x > 0 for x in per) or all(x < 0 for x in per)) and (lo > 0 or hi < 0) and n == 3
-            print(f"| {N} | {a} − {b} | {n} | {m:+.2f} | [{lo:+.2f}, {hi:+.2f}] | {', '.join(f'{x:+.2f}' for x in per)} | {met} |")
+def main():
+    print("# Family A analysis (R_val perplexity; lower is better; PRELIMINARY unless n=3)\n")
+    print("| N | arm | n seeds | R_val ppl mean ± std | per-seed |\n|---|---|---|---|---|")
+    for N in ["1M", "4M"]:
+        for arm in ARMS:
+            v = [ppl(*load(arm, N, s)) for s in range(3) if load(arm, N, s)]
+            if v: print(f"| {N} | {arm} | {len(v)} | {np.mean(v):.2f} ± {np.std(v, ddof=1) if len(v)>1 else float('nan'):.2f} | {', '.join(f'{x:.2f}' for x in v)} |")
+    print("\n## Paired differences (a − b, ppl; negative = a better)\n")
+    print("| N | a vs b | n | mean diff | hierarchical-bootstrap 95% CI | per-seed diffs | rule met (sign agree & CI excl. 0) |\n|---|---|---|---|---|---|---|")
+    for N in ["1M", "4M"]:
+        for a, b in [("S-R","mixed"),("S-R","real-only"),("mixed","real-only"),("S-R","R-S"),("S-R","mixed-realtail"),("mixed","real-only-2N"),("S-R","real-only-2N"),("mixed","real-only-2ep"),("S-R","real-only-2ep"),("real-only-2ep","real-only"),("real-only-2ep","real-only-2N")]:
+            r = paired(a, b, N, range(3))
+            if r:
+                per, m, lo, hi, n = r
+                met = (all(x > 0 for x in per) or all(x < 0 for x in per)) and (lo > 0 or hi < 0) and n == 3
+                print(f"| {N} | {a} − {b} | {n} | {m:+.2f} | [{lo:+.2f}, {hi:+.2f}] | {', '.join(f'{x:+.2f}' for x in per)} | {met} |")
 
-print("\n## H1 contrast: g(4M) - g(1M), g = ppl(S-R) - ppl(mixed) (negative = S-R advantage grows with N)\n")
-r = h1_contrast()
-if r:
-    per, m, lo, hi, n = r
-    print(f"n seeds = {n}; mean {m:+.2f}; hierarchical-bootstrap 95% CI [{lo:+.2f}, {hi:+.2f}]; per-seed {', '.join(f'{x:+.2f}' for x in per)}")
-print("\nNote: with 3 seeds the seed-level bootstrap is coarse; per-seed signs are the primary evidence. Rows with n<3 are preliminary and never count as 'rule met'.")
-print("real-only-2ep = Family B: the same N real tokens, 2 epochs (matched total tokens/steps, no extra fresh real data).")
-print("real-only-2N = real-only with matched TOTAL tokens (2N; 4M capped at R_train length 8.38M) to separate step-count from synthetic-data effects.")
+    print("\n## H1 contrast: g(4M) - g(1M), g = ppl(S-R) - ppl(mixed) (negative = S-R advantage grows with N)\n")
+    r = h1_contrast()
+    if r:
+        per, m, lo, hi, n = r
+        print(f"n seeds = {n}; mean {m:+.2f}; hierarchical-bootstrap 95% CI [{lo:+.2f}, {hi:+.2f}]; per-seed {', '.join(f'{x:+.2f}' for x in per)}")
+    print("\nNote: with 3 seeds the seed-level bootstrap is coarse; per-seed signs are the primary evidence. Rows with n<3 are preliminary and never count as 'rule met'.")
+    print("real-only-2ep = Family B: the same N real tokens, 2 epochs (matched total tokens/steps, no extra fresh real data).")
+    print("real-only-2N = real-only with matched TOTAL tokens (2N; 4M capped at R_train length 8.38M) to separate step-count from synthetic-data effects.")
+
+if __name__ == "__main__":  # importable (helpers reused by src/analyze_r2.py)
+    main()

@@ -103,10 +103,10 @@ def flags_from(recs, worse="W1"):
     return {pid: M.pair_flags(j, worse) for pid, j in per.items()
             if all(k in j for k in [("better", "cf"), ("better", "rf"), (worse, "cf"), (worse, "rf")])}
 
-def env_info():
+def env_info(model=None):
     import torch, transformers
     return {"python": platform.python_version(), "torch": torch.__version__, "transformers": transformers.__version__,
-            "threads": torch.get_num_threads(), "dtype": "float32", "machine": platform.machine()}
+            "threads": torch.get_num_threads(), "dtype": C.DTYPES.get(model, "float32"), "machine": platform.machine()}
 
 def trial(model, n, pairs="main"):
     from sjr.judge import Judge, set_threads
@@ -125,7 +125,7 @@ def trial(model, n, pairs="main"):
     flags = list(flags_from(recs).values())
     secs = [d["sec"] for d in recs]; toks = [d["n_tokens"] for d in recs]
     out = {"mode": "trial", "pairs": pairs, "model": model, "revision": C.MODELS[model][1], "dev_pair_ids": ids,
-           "token_ids": judge.ids, "env": env_info(), "load_sec": t_load, "n_passes": len(recs),
+           "token_ids": judge.ids, "env": env_info(model), "load_sec": t_load, "n_passes": len(recs),
            "wall_sec": wall, "sec_per_pass_mean": statistics.mean(secs), "sec_per_pass_wall": wall / len(recs),
            "mean_prompt_tokens": statistics.mean(toks), "max_prompt_tokens": max(toks),
            "mass_AB_mean": statistics.mean(d["mass_AB"] for d in recs),
@@ -170,7 +170,7 @@ def run(model, resample, pairs="main"):
     t0 = time.perf_counter()
     recs = run_items(judge, items, ckpt)
     out = {"mode": "run", "pairs": pairs, "model": model, "revision": C.MODELS[model][1], "resample": resample,
-           "token_ids": judge.ids, "env": env_info(), "wall_sec_this_invocation": time.perf_counter() - t0,
+           "token_ids": judge.ids, "env": env_info(model), "wall_sec_this_invocation": time.perf_counter() - t0,
            "records": recs}
     with open(os.path.join(RES, f"raw{nc}_{model}_r{resample}.json"), "w") as f: json.dump(out, f)
 

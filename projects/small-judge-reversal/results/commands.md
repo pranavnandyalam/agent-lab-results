@@ -22,3 +22,14 @@ OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 1200 .venv/bin/python -I src/run.py 
 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 1500 .venv/bin/python -I src/run.py run --pairs noncode --model Qwen3-0.6B --resample 1   # -> results/raw_nc_Qwen3-0.6B_r1.json
 # remaining non-code passes (resumable; rerun same command after a timeout): M in Qwen2.5-0.5B-Instruct Qwen2.5-1.5B-Instruct Qwen3-1.7B [Qwen3-4B]
 #   OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 2400 .venv/bin/python -I src/run.py run --pairs noncode --model $M --resample 1
+
+## Qwen2.5-7B-Instruct inverting-judge control (2026-10-07)
+timeout 1500 .venv/bin/python -I ~/scratch/small-judge-reversal/dl7b.py   # snapshot_download pinned SHA a09a3545..., allow_patterns safetensors/json/tokenizer
+# Minimal code change: config.DTYPES maps Qwen2.5-7B-Instruct -> bfloat16 (all other models unchanged, float32);
+# judge.Judge uses it for torch_dtype; run.env_info records it. DTYPE DIFFERENCE: Qwen3-4B (and all smaller judges) ran fp32,
+# the 7B runs bf16 (fp32 does not fit in RAM). Prompt, passes (core 4, resample 1, 100 pairs = 400 items) and readout identical.
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 600 .venv/bin/python -I src/run.py trial --model Qwen2.5-7B-Instruct --n 2   # 8 passes, 35.1 s/pass -> results/trial_Qwen2.5-7B-Instruct.json
+# chunk 1 (05:33-05:59 UTC, killed by timeout as planned): 60/400 items in checkpoint ~/scratch/small-judge-reversal/run_Qwen2.5-7B-Instruct_r1.jsonl
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 1560 .venv/bin/python -I src/run.py run --model Qwen2.5-7B-Instruct --resample 1
+# resume (same command, repeat until results/raw_Qwen2.5-7B-Instruct_r1.json exists; ~26 s/pass -> ~150 min for the remaining 340):
+#   OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 timeout 2400 .venv/bin/python -I src/run.py run --model Qwen2.5-7B-Instruct --resample 1

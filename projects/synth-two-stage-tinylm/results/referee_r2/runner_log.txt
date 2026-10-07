@@ -1,0 +1,10 @@
+# referee_r2 start 2026-10-07T05:23:28+00:00 budget 1950s
+S-R-constLR_N4M_s0 ok 343s
+mixed-constLR_N4M_s0 ok 378s
+S-R-constLR_N4M_s1 ok 309s
+mixed-constLR_N4M_s1 ok 309s
+S-R-constLR_N4M_s2 ok 352s
+budget stop before mixed-constLR_N4M_s2 (elapsed 1691s, est 300s)
+# referee_r2 start 2026-10-07T06:00:51+00:00 budget 500s
+mixed-constLR_N4M_s2 ok 300s
+budget stop before mixed-lr6e-3_N4M_s0 (elapsed 300s, est 300s)

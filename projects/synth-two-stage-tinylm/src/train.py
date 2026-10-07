@@ -7,7 +7,8 @@ shuffled (seeded): "concat" shuffles within each source and keeps sources in ord
 shuffles all windows of the phase together. Phases run in order. Default (--lr_schedule global): ONE
 warmup(5%)+cosine LR schedule spans the whole run. --lr_schedule per_phase: the same warmup(5%)+cosine
 schedule restarted independently at the start of each plan phase (phase length in steps =
-phase windows / bs, boundaries at floor(cumulative windows / bs)). Checkpoints (resumable) go to --ckpt. Eval PPL on --eval splits at the end
+phase windows / bs, boundaries at floor(cumulative windows / bs)). --lr_const (only with the global
+schedule): the same 5% linear warmup, then a FLAT LR at peak until the end (no decay). Checkpoints (resumable) go to --ckpt. Eval PPL on --eval splits at the end
 (per-doc NLL sums saved for document-level bootstrap)."""
 import argparse, hashlib, json, math, os, time
 import numpy as np
@@ -45,6 +46,8 @@ def run_hash(plan, a):
     hargs = {k: getattr(a, k) for k in HASH_ARGS}
     if getattr(a, "lr_schedule", "global") != "global":  # only non-default values enter the hash (old hashes unchanged)
         hargs["lr_schedule"] = a.lr_schedule
+    if getattr(a, "lr_const", False):
+        hargs["lr_const"] = True
     blob = {"plan": plan, "args": hargs,
             "bin_sha256": {rel(b): file_sha256(resolve(b)) for b in bins}}
     return hashlib.sha256(json.dumps(blob, sort_keys=True).encode()).hexdigest()
@@ -74,10 +77,12 @@ def build_windows(plan, ctx, seed):
             raise SystemExit(f"bad mode {ph['mode']}")
     return order
 
-def lr_at(step, total, peak, warm_frac=0.05, min_ratio=0.1):
+def lr_at(step, total, peak, warm_frac=0.05, min_ratio=0.1, const=False):
     warm = max(1, int(round(warm_frac * total)))
     if step < warm:
         return peak * (step + 1) / warm
+    if const:
+        return peak
     p = (step - warm) / max(1, total - warm)
     return peak * (min_ratio + (1 - min_ratio) * 0.5 * (1 + math.cos(math.pi * min(1.0, p))))
 
@@ -89,10 +94,10 @@ def phase_bounds(plan, ctx, bs):
         b.append(cum // bs)
     return b
 
-def lr_sched(step, total, peak, bounds=None):
-    """global: one schedule over [0, total). per_phase (bounds given): lr_at restarted inside each phase."""
+def lr_sched(step, total, peak, bounds=None, const=False):
+    """global: one schedule over [0, total) (const: warmup then flat). per_phase (bounds given): lr_at restarted inside each phase."""
     if bounds is None:
-        return lr_at(step, total, peak)
+        return lr_at(step, total, peak, const=const)
     for k in range(len(bounds) - 1):
         if bounds[k] <= step < bounds[k + 1]:
             return lr_at(step - bounds[k], bounds[k + 1] - bounds[k], peak)
@@ -139,7 +144,10 @@ def main():
     ap.add_argument("--eval", nargs="*", default=[], help="name=path.bin pairs")
     ap.add_argument("--eval_max_tokens", type=int, default=None)
     ap.add_argument("--lr_schedule", choices=["global", "per_phase"], default="global")
+    ap.add_argument("--lr_const", action="store_true", help="warmup (5%%) then constant peak LR, no decay (global schedule only)")
     a = ap.parse_args()
+    if a.lr_const and a.lr_schedule != "global":
+        raise SystemExit("--lr_const is only defined for --lr_schedule global")
     a.ckpt = resolve(a.ckpt)
     os.makedirs(a.ckpt, exist_ok=True)
     plan = json.load(open(resolve(a.plan)))
@@ -180,7 +188,7 @@ def main():
             w = np.asarray(bins[b][s:s + a.ctx + 1], dtype=np.int64)
             xs.append(w[:-1]); ys.append(w[1:])
         x, y = torch.from_numpy(np.stack(xs)), torch.from_numpy(np.stack(ys))
-        lr = lr_sched(step, total, a.lr, bounds)
+        lr = lr_sched(step, total, a.lr, bounds, a.lr_const)
         for g in opt.param_groups:
             g["lr"] = lr
         _, loss = model(x, y)
