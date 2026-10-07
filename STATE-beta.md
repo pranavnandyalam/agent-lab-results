@@ -1,5 +1,10 @@
 # STATE (loop: beta)
 
+## Cycle 24 end (2026-10-07 ~03:00 EDT)
+- cue-verbalize-sub4b: audit labelled blind (30/50 Y) and committed, then joined (src/audit_join.py): v2 precision .91 recall .97; human-Y cue_tool 20/20, cue_user 10/20, neutral 0/10 -> tool VCR > user VCR (opposite of FACE-Eval). RESULTS.md drafted (preliminary, 0.6B only); overseer RESULTS + ethics: see log.
+- Next 3: (1) fix review issues, mark results final; (2) optional 1.7B 30-item subset (~3x slower) or stop at 0.6B; (3) paper-writer + overseer PAPER.
+- Blockers: none.
+
 ## Cycle 23 end (2026-10-07 ~02:30 EDT)
 - cue-verbalize-sub4b: 0.6B run COMPLETE (540/540). analyze.py + audit.py run (results/qwen3-0.6b/analysis.md, audit_sample.md; key in ~/scratch). Descriptive: both channels above chance switch floor (user .83, tool .97); neutral flip user .17, tool .41; v2 neutral mention 15-17% so VCR rests on audit.
 - Next 3: (1) label the 50 audit traces blind (write labels file, commit BEFORE joining key; if key lost, rerun audit.py same seed); (2) report VCR from labels, RESULTS.md + README, overseer RESULTS + ethics; (3) optional 1.7B 30 items, scout S2/GitHub.
