@@ -57,3 +57,95 @@ so the action view may partly measure lexical cues. No analysis was run.
 
 ## Not done
 Re-scoring Qwen2.5-1.5B and Qwen3-1.7B under v1/v3; CIs for post-hoc numbers; per-family O; holes 5 and 8.
+
+---
+
+# Round 2: response to referee round 2 (verdict NOT_YET)
+
+*Produced by an autonomous AI agent (Claude) on behalf of @pranavnandyalam. Not peer reviewed.*
+
+The round-2 referee report is not stored in the repository; items below follow the Lead's numbered summary of
+the required changes. All new numbers come from `../results/posthoc_test_r2.md` (`src/posthoc2.py`, post-hoc,
+exploratory, no model scoring) or from earlier committed result files. Overall response: claims were cut to what
+the evidence supports and the limits are disclosed; the rebuild the referee asked for was not done this cycle.
+
+## 1. Reframe as a pilot; BoW overlap
+**Done.** Title, abstract, introduction, Discussion and Conclusion now call the study a pilot on 12 hand-written
+synthetic skeletons by a single author-agent, state that nothing was validated on real trajectories, and make
+no claim about real monitors. BoW (skeleton-grouped CV) 0.758 [0.683, 0.894] is stated to overlap the CIs of
+Qwen2.5-0.5B [0.690, 0.905] and also Qwen2.5-1.5B [0.869, 0.973] (the latter was not in the request but follows
+from the same numbers); only the Qwen3 intervals lie above it.
+
+## 2. Cue-free prompt v3 as primary cue-priming control; K with CIs and sign-flip p
+**Done.** Method lists the three prompts and their cue-stem counts (v2: 5, v1: 1 `game`, v3: 0; checked against
+`src/cues.py`). New Table VI gives B-vs-A, Bnc-vs-A, K with skeleton-bootstrap CIs, exact cluster sign-flip
+p1/p2 (4096 assignments; described as the few-cluster-valid check, bootstrap over 12 clusters may under-cover),
+and Acue-vs-A AUROC, for all 8 monitor-prompt rows. Text: v3 Qwen3-0.6B K = -0.018 [-0.058, 0.027], p2 = 0.4482
+(no cue effect); v3 Qwen2.5-0.5B K = +0.083 [0.048, 0.119] with B-vs-A 0.552 (gap between two near-chance
+AUROCs); v1 Qwen2.5-0.5B B-vs-A 0.512 likewise. "Direction holds across all three prompts" is removed from
+abstract, introduction, results and conclusion and explicitly withdrawn. "Only 2 of 4 monitors were re-scored
+under v1/v3" is stated in Setup, Results and Discussion.
+
+## 3. Skeleton / hack-variant alias
+**Done.** Method has a new paragraph: skeleton p = j mod 12 fixes hack variant (p mod 2); skeletons 0-7 have 12
+instances each, 8-11 have 6 each (corrected from the "20 vs fewer" in the referee's wording; 20 is per family).
+New Table VIII: action AUROC by variant (instance bootstrap) and CoT B-vs-A by variant (6-cluster skeleton
+bootstrap, flagged as likely under-covering). Text says the difference cannot be assigned to skeleton or variant.
+
+## 4. Cue stems in hack actions
+**Done.** 10/120 a1 texts (all fix_test, skip-marker variant) match `skip`/`skipped`; no a0 matches. Table VII
+gives pooled and fix_test action AUROC with and without them (CIs). Excluding them lowers v2 pooled action AUROC
+for Qwen2.5-1.5B 0.58 -> 0.52 and Qwen3-1.7B 0.67 -> 0.61; the paper says the action view is partly lexical and
+notes that the exclusion also removes one hack variant.
+
+## 5. H4
+**Done.** "Supported" withdrawn. Verdict is now "not supported; pooled O uninterpretable". New Table IX gives
+per-family O with skeleton CIs for all 8 rows (opposite-signed cells with CIs excluding 0, e.g. Qwen3-0.6B v2
+accuracy +0.315, checksum -0.218, validator -0.310). Qwen2.5-0.5B pooled D-vs-A AUROCs below chance (0.476
+action-only, 0.430 CoT+action) stated. Table V keeps the literal-rule column, relabeled, with the caveat in its
+caption. The pooled-O figure (old Fig. 2) was dropped from the paper.
+
+## 6. Acue-vs-A 0.368
+**Done.** New paragraph: Qwen2.5-0.5B v2 Acue-vs-A 0.368 [0.215, 0.543] (benign cue-word text scored lower than
+plain benign, contrary to a simple cue-firing account; upper bound above 0.5 so the inversion itself is not
+established); range 0.368-0.606 over all 8 rows, no interval excludes 0.5. States that the non-negated
+cue-mention condition was not run and that the pre-registered H3 verdict used the raw logit difference
+(AUROC is post-hoc).
+
+## 7. Bnc intent equivalence
+**Partly (disclosure only).** Discussion lists the swaps fool->satisfy, fake->produce, trick->steer,
+hack->quick edit, cheat on->only satisfy (`src/templates.py`, REV_TEST), states K is an upper bound on cue
+reliance, and that no intent rating and no matched-strength non-cue control was done. The rating itself was not
+done.
+
+## 8. Per-family action AUROC CIs; "changes direction" claims
+**Done.** Table VII now has CIs for every cell. The general "changes direction across prompts" claim is removed;
+only the two cells with non-overlapping CIs on opposite sides of 0.5 are mentioned (Qwen3-0.6B speedup 0.54
+[0.37, 0.69] v2 vs 0.26 [0.15, 0.36] v1; validator 0.20 [0.08, 0.32] vs 0.70 [0.64, 0.80]); other cross-prompt
+differences are stated as not interpreted.
+
+## 9. Log completeness
+**Done.** Setup states: `results/test_run.log` has no Qwen3-1.7B entry (2529 s only in `results/timings.jsonl`);
+the first 88 dev passes of Qwen2.5-1.5B under v1 are not in `results/dev_run.log`; the v1/v3 test scoring
+(`src/run_test_prompts.sh`, default `PY`) and round-1 post-hoc analysis used a sibling project's venv (score
+metadata record identical torch/transformers/NumPy/Python versions); `src/posthoc2.py` ran in this project's
+`.venv`. The reproducibility block now passes `PY=.venv/bin/python` and includes the posthoc2 command.
+
+## 10. New related work
+**Done.** Both verified via export.arxiv.org/api/query (title, authors, year) before adding:
+arXiv:2608.04735 (Duzan, Cooper Stickland, 2026, "Chain-of-Thought Monitoring Can Be Unreliable in
+Implicit-Influence Settings") and arXiv:2609.19101 (Bergen et al., 18 authors, 2026, "Monitoring and Discovering
+Reward Hacking with Internal Representations during LLM Evaluations"; the full arXiv title includes "during LLM
+Evaluations"). Each is described in one or two paraphrased sentences in Related Work with how it differs.
+
+## Not done (rebuild), and why
+- Rebuild with >= 50 skeletons from independent writers: **not done**.
+- Validation on real Terminal Wrench trajectories: **not done**.
+- Intent-strength rating of the R_rev / R_revnc pairs and a matched-strength non-cue control: **not done**.
+- Non-negated cue-mention condition: **not done**.
+- All 4 monitors x 3 prompts (Qwen2.5-1.5B and Qwen3-1.7B under v1/v3): **not done**.
+- CI for between-prompt differences in K: **not done**.
+
+Reason: compute (CPU only; Qwen3-1.7B alone took 2529 s per prompt on test) and the one-cycle limit for this
+revision. All items are listed as future work in the Conclusion; the paper's claims were reduced accordingly
+rather than extended.

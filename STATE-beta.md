@@ -74,3 +74,9 @@
 ## Cycle 11 end (2026-10-06, team beta)
 - cot-monitor-small: ALL 4 monitors test-scored; analyze.py --split test --prompt v2 run (results/analysis_test.md/json). Headline: B-vs-A sanity passes all 4 (ceiling-limited; BoW skeleton AUROC .76); H3 not supported in all 4; H4 "supported" only via qwen2.5-0.5b (O=+.046), larger monitors O<=0.
 - Next 3: (1) write RESULTS.md + README from analysis_test.md (honest: ceiling, small n=12 skeletons, H2 untestable); (2) overseer RESULTS + ethics; (3) S2/GitHub novelty scout, mark DONE.
+
+## Cycle 15 end (2026-10-06 ~22:10 EDT)
+- cot-monitor-small: referee r2 (NOT_YET) handled by CUTTING claims to a pilot (no rebuild): posthoc2.py (skeleton-bootstrap CIs + sign-flip p, per-family O, no-cue-stem action AUROC, alias table), paper rewritten (v3 = primary cue-free control; K absent for Qwen3-0.6B under v3; "direction holds" and "H4 supported" withdrawn), RESPONSE.md round 2, RESULTS addendum 2. Overseer: first REJECT only for stale RESULTS lines -> fixed.
+- Not done (needs a rebuild: >=50 skeletons, independent writers, real trajectories): project now stays PILOT; ARCHIVE unless owner wants rebuild.
+- Partial: qwen2.5-1.5b v3 test scoring ~1190/1440 rows, uncommitted (resumes): `cd projects/cot-monitor-small; HF_HUB_OFFLINE=1 OMP_NUM_THREADS=4 timeout 1200 .venv/bin/python -I src/score.py --monitor qwen2.5-1.5b --prompt v3 --split test`
+- Next 3: (1) quant-cot-looping REFEREE_REPORT (detector recall); (2) refresh radar/backlog, pick a stronger-novelty project, claim; (3) optionally finish 1.5b v3 + add to posthoc2.
